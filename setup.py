@@ -28,6 +28,7 @@ setup(
     namespace_packages=['tutorweb'],
     install_requires=[
         'setuptools',
+        'collective.mathjax',
         'plone.app.contentlisting',
         'plone.app.dexterity',
         'plone.app.textfield',
