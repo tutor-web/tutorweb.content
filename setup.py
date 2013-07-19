@@ -28,9 +28,10 @@ setup(
     namespace_packages=['tutorweb'],
     install_requires=[
         'setuptools',
-        'plone.subrequest',
-        'Products.TutorWeb',
-        'lxml',
+        'plone.app.contentlisting',
+        'plone.app.dexterity',
+        'plone.app.textfield',
+        'collective.z3cform.datagridfield',
     ],
     extras_require={
         'test': [
@@ -38,6 +39,8 @@ setup(
         ],
     },
     entry_points="""
+        [z3c.autoinclude.plugin]
+        target = plone
     """,
     include_package_data=True,
     zip_safe=False,
