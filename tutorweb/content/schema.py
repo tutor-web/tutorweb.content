@@ -59,3 +59,19 @@ class IStaticQuestion(model.Schema):
         output_mime_type='text/html',
         allowed_mime_types=('text/html', 'text/plain',),
         required=False)
+
+class ILecture(model.Schema):
+    """A lecture contains Slides and quiz questions"""
+    title = schema.TextLine(
+        title=_(u'Title'),
+        description=_(u'The title of the lecture'),
+        required=True)
+    hist_selection = schema.Float(
+        title=_(u'Historical Selection probability'),
+        description=_(u'''The chance that a question before this given as part
+                      of this lecture. A negative value will mean the default
+                      for this tutorial is used.'''),
+        default=-1.0,
+        min=-1.0,
+        max=1.0,
+        required=True)
