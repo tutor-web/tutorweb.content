@@ -33,6 +33,7 @@ setup(
         'plone.app.dexterity',
         'plone.app.textfield',
         'collective.z3cform.datagridfield',
+        'collective.transmogrifier',
     ],
     extras_require={
         'test': [
