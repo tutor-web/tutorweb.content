@@ -2,7 +2,7 @@ from zope import schema
 
 from plone.app.textfield import RichText
 from plone.autoform import directives as form
-from plone.namedfile.field import NamedBlobImage
+from plone.namedfile.field import NamedBlobImage, NamedBlobFile
 from plone.supermodel import model
 
 from collective.z3cform.datagridfield import DictRow
@@ -29,9 +29,10 @@ class IStaticQuestion(model.Schema):
         description=_(u'The title of the question'),
         required=True)
     image = NamedBlobImage(
-        title=_(u'Question Title'),
-        description=_(u'The title of the question'),
+        title=_(u'Question Image'),
+        description=_(u'An image associated to the question'),
         required=False)
+    #TODO: Make this check box do something useful
     processLatex = schema.Bool(
         title=_(u'Process LaTeX formulae?'),
         description=_(u'Convert $$ surrounded LaTeX formulae into graphics'),
@@ -75,3 +76,6 @@ class ILecture(model.Schema):
         min=-1.0,
         max=1.0,
         required=True)
+    Pdf=NamedBlobFile(
+        title=_(u'Generated lecture PDF'),
+        required=False)
