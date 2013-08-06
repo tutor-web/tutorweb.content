@@ -37,20 +37,20 @@ class IStaticQuestion(model.Schema):
         description=_(u'Convert $$ surrounded LaTeX formulae into graphics'),
         default=True,
         required=False)
-    question = RichText(
+    text = RichText(
         title=u"Question text",
         default_mime_type='text/html',
         output_mime_type='text/html',
         allowed_mime_types=('text/html', 'text/plain',),
         required=False)
-    answers = schema.List(
+    choices = schema.List(
         title=_(u"Answers"),
         description=_(u'''Specify the answer text, if the answer is correct
                         and if the answer should be in a randomized order
                         when displayed in a quiz.'''),
         value_type=DictRow(title=u"tablerow", schema=IStaticQuestionAnswer),
         required=False)
-    form.widget(answers=
+    form.widget(choices=
                 'collective.z3cform.datagridfield.DataGridFieldFactory')
     explanation = RichText(
         title=u"Explanation text",
