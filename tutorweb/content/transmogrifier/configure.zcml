@@ -1,0 +1,19 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
+    i18n_domain="tutorweb.content">
+
+    <utility
+        component=".latex.LatexSourceSection"
+        name="tutorweb.content.transmogrifier.latex.source"
+        />
+
+    <transmogrifier:registerConfig
+        name="tutorweb.content.latexquizimport"
+        title="Quiz LaTeX import"
+        description="Import quiz items from a LaTeX file"
+        configuration="latexquizimport.cfg"
+        />
+
+</configure>
