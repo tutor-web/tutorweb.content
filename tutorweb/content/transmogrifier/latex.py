@@ -33,10 +33,10 @@ class LatexSourceSection(object):
             # Convert rich text fields into dicts
             for field in ['text', 'explanation']:
                 if field in item:
-                    #TODO: What's the actual data structure required here?
                     item[field] = dict(
                         contenttype='text/plain',
-                        text="\n".join(item[field]),
+                        data="\n".join(item[field]),
+                        encoding='utf-8',
                     )
 
             # Unless otherwise marked, last item is correct
@@ -48,6 +48,7 @@ class LatexSourceSection(object):
             # Set portal type for content
             if '_type' not in item:
                 item['_type'] = 'tw_question'
+                item['processLatex'] = True
 
             return item
         item = {}

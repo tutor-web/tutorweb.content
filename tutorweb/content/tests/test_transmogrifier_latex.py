@@ -31,9 +31,11 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
                 '_type': 'tw_question',
                 'id': 'q03',
                 'title': 'Sum',
+                'processLatex': True,
                 'text': {
                     'contenttype': 'text/plain',
-                    'text': 'Find the values of $x$ and $y$ such that the sum of the first  20',
+                    'data': 'Find the values of $x$ and $y$ such that the sum of the first  20',
+                    'encoding': 'utf-8',
                 },
                 'choices': [
                     {'correct': False, 'randomize': True, 'text': '$x=20$ and $y=190$.'},
@@ -42,7 +44,8 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
                 ],
                 'explanation': {
                     'contenttype': 'text/plain',
-                    'text': 'We use that $\\log(a^x b^y) = x \\log a + y \\log b$. By rules for logarithm we get the sum'
+                    'data': 'We use that $\\log(a^x b^y) = x \\log a + y \\log b$. By rules for logarithm we get the sum',
+                    'encoding': 'utf-8',
                 },
             },
         ])
@@ -54,7 +57,8 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
             '_type': 'tw_question',
             'id': 'camel',
             'title': "I'm a camel",
-            'explanation': {'contenttype': 'text/plain', 'text': 'I\nGot 2 humps, see'},
+            'processLatex': True,
+            'explanation': {'contenttype': 'text/plain', 'data': 'I\nGot 2 humps, see', 'encoding': 'utf-8'},
         }])
 
     def createSource(self, tex):
