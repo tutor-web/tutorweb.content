@@ -2,4 +2,11 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="tutorweb.content">
+
+    <browser:page name="data"
+      for="tutorweb.content.schema.IStaticQuestion"
+      class=".question.StaticQuestionStruct"
+      permission="cmf.ManagePortal"
+      /><!--NB: Regular users should not see these, they'll go via an allocation -->
+
 </configure>

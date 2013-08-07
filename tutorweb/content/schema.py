@@ -76,6 +76,24 @@ class ILecture(model.Schema):
         min=-1.0,
         max=1.0,
         required=True)
-    Pdf=NamedBlobFile(
+    pdf=NamedBlobFile(
         title=_(u'Generated lecture PDF'),
+        required=False)
+
+class ITutorial(model.Schema):
+    """A Tutorial contains lectures"""
+    title = schema.TextLine(
+        title=_(u'Title'),
+        description=_(u'The title of the tutorial'),
+        required=True)
+    hist_selection = schema.Float(
+        title=_(u'Default Historical Selection probability'),
+        description=_(u'''The chance that a question before this given as part
+                      of this lecture.'''),
+        default=0.0,
+        min=0.0,
+        max=1.0,
+        required=True)
+    pdf=NamedBlobFile(
+        title=_(u'Generated tutorial PDF'),
         required=False)
