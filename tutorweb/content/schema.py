@@ -67,7 +67,7 @@ class ILecture(model.Schema):
         title=_(u'Title'),
         description=_(u'The title of the lecture'),
         required=True)
-    hist_selection = schema.Float(
+    histsel = schema.Float(
         title=_(u'Historical Selection probability'),
         description=_(u'''The chance that a question before this given as part
                       of this lecture. A negative value will mean the default
@@ -86,7 +86,7 @@ class ITutorial(model.Schema):
         title=_(u'Title'),
         description=_(u'The title of the tutorial'),
         required=True)
-    hist_selection = schema.Float(
+    histsel = schema.Float(
         title=_(u'Default Historical Selection probability'),
         description=_(u'''The chance that a question before this given as part
                       of this lecture.'''),
