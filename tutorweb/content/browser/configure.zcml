@@ -9,4 +9,18 @@
       permission="cmf.ManagePortal"
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
 
+    <browser:page name="view"
+      for="tutorweb.content.schema.ILecture"
+      permission="zope2.View"
+      class=".tw_lecture.LectureView"
+      template="tw_lecture_view.pt"
+      />
+
+    <browser:page name="view"
+      for="tutorweb.content.schema.ITutorial"
+      permission="zope2.View"
+      class=".tw_tutorial.TutorialView"
+      template="tw_tutorial_view.pt"
+      />
+
 </configure>

@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="collective.qna">
+<body>
+
+<metal:content-core fill-slot="content-core">
+
+  <dl class="enableFormTabbing">
+
+    <dt id="fieldsetlegend-lectures">Lectures</dt>
+    <dd id="fieldset-lectures">
+
+      <ul>
+        <li><a href="#TODO:">Update all slides PDF</a></li>
+      </ul>
+
+      <table class="listing">
+        <thead>
+          <th>Id</th>
+          <th>Lecture name</th>
+          <th>Slide download</th>
+          <th>Num. slides</th>
+          <th>Num. questions</th>
+        </thead>
+        <tbody>
+          <tr tal:repeat="item view/lectureListing">
+            <td tal:content="item/getId">lec01</td>
+            <td>
+              <a href="#" tal:attributes="href item/getURL"
+                          tal:content="item/Title">slide</a>
+            </td>
+            <td>
+              <a tal:attributes="href string:TODO:">
+                <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
+                Download PDF
+              </a>
+            </td>
+            <td tal:content="string:TODO:"></td>
+            <td tal:content="string:TODO:"></td>
+          </tr>
+        </tbody>
+      </table>
+    </dd>
+
+    <dt id="fieldsetlegend-literature">Literature</dt>
+    <dd id="fieldset-literature">
+      <p>TODO:</p>
+    </dd>
+
+    <dt id="fieldsetlegend-courses">Related courses</dt>
+    <dd id="fieldset-courses">
+      <p>TODO:</p>
+    </dd>
+
+    <dt id="fieldsetlegend-sponsors">Sponsors</dt>
+    <dd id="fieldset-Sponsors">
+      <p>TODO:</p>
+    </dd>
+
+</metal:content-core>
+
+</body>
+</html>
