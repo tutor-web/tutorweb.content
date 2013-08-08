@@ -11,7 +11,9 @@
 
   <!--TODO: If logged in -->
   <ul>
-    <li><a href="#TODO:">Take a quiz on this lecture</a></li>
+    <li><a tal:attributes="href string:${context/@@plone_portal_state/portal_url}/++resource++tutorweb.quiz/load.html?${context/absolute_url}/quizdb-sync">
+      Take a quiz on this lecture</a></li>
+    <li><a href="#TODO:">Download all lecture slides</a></li>
   </ul>
 
   <dl class="enableFormTabbing">
@@ -20,11 +22,7 @@
     <dd id="fieldset-slides">
 
       <ul>
-        <li><a href="#TODO:">
-          <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
-          Download all slides as PDF
-        </a></li>
-        <li><a href="#TODO:">Regenerate slide PDF</a></li>
+        <li><a href="#TODO:">Update all slides PDF</a></li>
       </ul>
 
       <table class="listing">
@@ -55,21 +53,19 @@
     <!--TODO: Permissions-->
     <dt id="fieldsetlegend-questions">Questions</dt>
     <dd id="fieldset-questions">
-      <ul>
-        <li><a href="#TODO:">
-          <img src="tex.png" tal:attributes="src string:${context/absolute_url}/tex.png">
-          Download questions as TeX
-        </a></li>
-        <li><form>
+      <h3>Upload / download replacement questions</h3>
+      <a href="#">Download questions in TeX</a>
+      <form>
         <div>
           <label for="lecture-media">Update questions from TeX file</label>
         </div>
         <div>
           <input type="file" name="media" id="lecture-media" />
+        </div>
+        <div>
           <input type="submit" value="Upload">
         </div>
-      </form></li>
-      </ul>
+      </form>
       <table class="listing">
         <thead>
           <th>Id</th>
