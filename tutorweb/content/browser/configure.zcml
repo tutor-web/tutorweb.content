@@ -4,14 +4,14 @@
     i18n_domain="tutorweb.content">
 
     <browser:page name="data"
-      for="tutorweb.content.schema.IStaticQuestion"
-      class=".question.StaticQuestionStruct"
+      for="tutorweb.content.schema.ILaTeXQuestion"
+      class=".question.LaTeXQuestionStruct"
       permission="cmf.ManagePortal"
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
 
     <browser:page name="tex"
-      for="tutorweb.content.schema.IStaticQuestion"
-      class=".question.StaticQuestionTeXView"
+      for="tutorweb.content.schema.ILaTeXQuestion"
+      class=".question.LaTeXQuestionTeXView"
       permission="cmf.ManagePortal"
       />
 

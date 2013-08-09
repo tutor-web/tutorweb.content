@@ -27,7 +27,7 @@ class BaseQuestionStruct(BrowserView):
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps(self.asDict())
 
-class StaticQuestionStruct(BaseQuestionStruct):
+class LaTeXQuestionStruct(BaseQuestionStruct):
     def asDict(self):
         """Pull fields out into struct"""
         def renderRichField(f):
@@ -48,7 +48,7 @@ class StaticQuestionStruct(BaseQuestionStruct):
         )
         return out
 
-class StaticQuestionTeXView(BrowserView):
+class LaTeXQuestionTeXView(BrowserView):
     """Render question in TeX form"""
     def __call__(self):
         context = self.context

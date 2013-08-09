@@ -13,7 +13,7 @@
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
      <element value="Slide"/>
-     <element value="tw_question"/>
+     <element value="tw_latexquestion"/>
  </property>
 
  <!-- Class used for content items -->

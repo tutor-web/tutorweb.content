@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<object name="tutorweb.content.tw_question" meta_type="Dexterity FTI"
+<object name="tutorweb.content.tw_latexquestion" meta_type="Dexterity FTI"
    i18n:domain="tutorweb.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="">Question</property>
- <property name="description" i18n:translate="">Question with fixed question and answer</property>
+ <property name="title" i18n:translate="">LaTeX Question</property>
+ <property name="description" i18n:translate="">Question with fixed question and answer written in LaTeX</property>
  <property name="content_icon">form_icon.png</property>
  <property name="allow_discussion">False</property>
 
@@ -18,7 +18,7 @@
  <property name="klass">plone.dexterity.content.Container</property>
 
  <!-- Schema interface -->
- <property name="schema">tutorweb.content.schema.IStaticQuestion</property>
+ <property name="schema">tutorweb.content.schema.ILaTeXQuestion</property>
  <property name="model_file"></property>
  <property name="model_source"></property>
 

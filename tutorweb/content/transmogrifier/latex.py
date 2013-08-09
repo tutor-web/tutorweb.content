@@ -47,7 +47,7 @@ class LatexSourceSection(object):
 
             # Set portal type for content
             if '_type' not in item:
-                item['_type'] = 'tw_question'
+                item['_type'] = 'tw_latexquestion'
                 item['processLatex'] = True
 
             return item

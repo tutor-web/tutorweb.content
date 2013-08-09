@@ -28,7 +28,7 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
         self.assertEqual(len(qns), 1)
         self.assertEqual(qns, [
             {
-                '_type': 'tw_question',
+                '_type': 'tw_latexquestion',
                 'id': 'q03',
                 'title': 'Sum',
                 'processLatex': True,
@@ -54,7 +54,7 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
         """Trailing space gets removed from fields"""
         qns = [x for x in self.createSource("%ID camel       \n%title I'm a camel\n%Explanation  I   \nGot 2 humps, see")]
         self.assertEqual(qns, [{
-            '_type': 'tw_question',
+            '_type': 'tw_latexquestion',
             'id': 'camel',
             'title': "I'm a camel",
             'processLatex': True,
