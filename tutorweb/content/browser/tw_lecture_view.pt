@@ -62,8 +62,6 @@
         </div>
         <div>
           <input type="file" name="media" id="lecture-media" />
-        </div>
-        <div>
           <input type="submit" value="Upload">
         </div>
       </form>
