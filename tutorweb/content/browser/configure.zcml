@@ -9,11 +9,23 @@
       permission="cmf.ManagePortal"
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
 
+    <browser:page name="tex"
+      for="tutorweb.content.schema.IStaticQuestion"
+      class=".question.StaticQuestionTeXView"
+      permission="cmf.ManagePortal"
+      />
+
     <browser:page name="view"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"
       class=".tw_lecture.LectureView"
       template="tw_lecture_view.pt"
+      />
+
+    <browser:page name="tex"
+      for="tutorweb.content.schema.ILecture"
+      class=".tw_lecture.LectureTeXView"
+      permission="cmf.ManagePortal"
       />
 
     <browser:page name="view"

@@ -54,8 +54,9 @@
     <dt id="fieldsetlegend-questions">Questions</dt>
     <dd id="fieldset-questions">
       <h3>Upload / download replacement questions</h3>
-      <a href="#">Download questions in TeX</a>
-      <form>
+      <a tal:attributes="href string:${context/absolute_url}/tex">Download questions in TeX form</a>
+      <form method="POST" enctype="multipart/form-data"
+            tal:attributes="action string:${context/absolute_url}/tex-upload">
         <div>
           <label for="lecture-media">Update questions from TeX file</label>
         </div>
