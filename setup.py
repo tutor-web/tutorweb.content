@@ -32,6 +32,7 @@ setup(
         'plone.app.contentlisting',
         'plone.app.dexterity',
         'plone.app.textfield',
+        'plone.intelligenttext',
         'collective.z3cform.datagridfield',
         'collective.transmogrifier',
         'plone.app.transmogrifier',

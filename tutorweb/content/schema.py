@@ -38,9 +38,9 @@ class ILaTeXQuestion(model.Schema):
         required=False)
     text = RichText(
         title=u"Question text",
-        default_mime_type='text/html',
+        default_mime_type='text/x-tex',
         output_mime_type='text/html',
-        allowed_mime_types=('text/html', 'text/plain',),
+        allowed_mime_types=('text/html', 'text/x-tex',),
         required=False)
     choices = schema.List(
         title=_(u"Answers"),
@@ -54,9 +54,9 @@ class ILaTeXQuestion(model.Schema):
     explanation = RichText(
         title=u"Explanation text",
         description=_(u'Displayed to the student after the question is asked'),
-        default_mime_type='text/html',
+        default_mime_type='text/x-tex',
         output_mime_type='text/html',
-        allowed_mime_types=('text/html', 'text/plain',),
+        allowed_mime_types=('text/html', 'text/x-tex',),
         required=False)
 
 class ILecture(model.Schema):

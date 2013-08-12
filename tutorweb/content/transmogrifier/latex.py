@@ -34,7 +34,7 @@ class LatexSourceSection(object):
             for field in ['text', 'explanation']:
                 if field in item:
                     item[field] = dict(
-                        contenttype='text/plain',
+                        contenttype='text/x-tex',
                         data="\n".join(item[field]),
                         encoding='utf-8',
                     )

@@ -27,5 +27,11 @@
         description="Tutorweb content profile"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
+    <genericsetup:importStep
+        name="default"
+        title="Tutorweb content"
+        description="Install MIME transformations"
+        handler="tutorweb.content.setuphandlers.installTransforms"
+        />
 
 </configure>
