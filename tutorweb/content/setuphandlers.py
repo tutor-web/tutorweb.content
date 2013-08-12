@@ -10,6 +10,11 @@ def installTransforms(context, logger=None):
         return
 
     transforms = getToolByName(context, 'portal_transforms')
+    try:
+        transforms.unregisterTransform('tex_to_html')
+        logger.info('Unregistered tex_to_html')
+    except AttributeError:
+        pass  # Not there yet, doesn't matter
     transforms.manage_addTransform('tex_to_html', 'tutorweb.content.transforms.tex_to_html')
     logger.info('Registered tex_to_html')
 
