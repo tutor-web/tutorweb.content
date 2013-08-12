@@ -41,4 +41,11 @@
       template="tw_tutorial_view.pt"
       />
 
+  <browser:viewlet
+      name="tutorweb.content.mathjax.config"
+      manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+      template="mathjax_config.pt"
+      permission="zope2.View"
+      />
+
 </configure>
