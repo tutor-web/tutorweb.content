@@ -1,6 +1,7 @@
 import cgi
 import json
 
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 
 class BaseQuestionStruct(BrowserView):
@@ -28,17 +29,27 @@ class BaseQuestionStruct(BrowserView):
         return json.dumps(self.asDict())
 
 class LaTeXQuestionStruct(BaseQuestionStruct):
+    def portalTransforms(self):
+        if getattr(self, '_pt', None) is None:
+            self._pt = getToolByName(self.context, 'portal_transforms')
+        return self._pt
+
     def asDict(self):
         """Pull fields out into struct"""
         def renderRichField(f):
             if f is None:
                 return ''
             return f.output
+        def renderTeX(f):
+            return self.portalTransforms().convertTo(
+                'text/html', f,
+                mimetype='text/x-tex',
+            ).getData()
 
         choices = self.context.choices
         out = dict(
             text=renderRichField(self.context.text),
-            choices=['<div>%s</div>' % cgi.escape(x['text']) for x in choices],
+            choices=[renderTeX(x['text']) for x in choices],
             fixed_order=[i for (i, x) in enumerate(choices) if not x['randomize']],
             random_order=[i for (i, x) in enumerate(choices) if x['randomize']],
             answer=dict(
