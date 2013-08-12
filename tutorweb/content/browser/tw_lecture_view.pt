@@ -11,7 +11,7 @@
 
   <!--TODO: If logged in -->
   <ul>
-    <li><a tal:attributes="href string:${context/@@plone_portal_state/portal_url}/++resource++tutorweb.quiz/load.html?${context/absolute_url}/quizdb-sync">
+    <li><a tal:attributes="href view/quizUrl">
       Take a quiz on this lecture</a></li>
     <li><a href="#TODO:">Download all lecture slides</a></li>
   </ul>
