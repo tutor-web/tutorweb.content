@@ -25,8 +25,19 @@ class BaseQuestionStruct(BrowserView):
         raise NotImplementedError
 
     def __call__(self):
-        self.request.response.setHeader('Content-Type', 'application/json')
-        return json.dumps(self.asDict())
+        try:
+            out = self.asDict()
+            self.request.response.setStatus(200)
+            self.request.response.setHeader("Content-type", "application/json")
+            return json.dumps(out)
+        except Exception, ex:
+            self.request.response.setStatus(500)
+            self.request.response.setHeader("Content-type", "application/json")
+            return json.dumps(dict(
+                error= ex.__class__.__name__,
+                message= str(ex),
+            ))
+
 
 class LaTeXQuestionStruct(BaseQuestionStruct):
     def portalTransforms(self):
