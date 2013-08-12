@@ -53,7 +53,7 @@ class LatexSourceSection(object):
             return item
         item = {}
         defaultfield = 'text'
-        for line in (l.strip() for l in file):
+        for line in (l.strip().decode('utf8') for l in file):
             if not line:
                 pass
             elif line == '%===':
