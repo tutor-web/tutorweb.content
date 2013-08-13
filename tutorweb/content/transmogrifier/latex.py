@@ -79,18 +79,23 @@ class LatexSourceSection(object):
                 # Format tag: Don't understand anything other than LaTeX
                 if line != '%format latex':
                     raise ValueError('Unknown format %s' % line)
-            elif re.search(r'^\w\) ', line):
+            elif re.search(r'^\w\)', line):
                 # a) -- z) choices. Use file ordering.
                 if 'choices' not in item:
                     item['choices'] = []
                 item['choices'].append(dict(
-                    text=re.sub(r'^\w\) ', '', line),
+                    text=re.sub(r'^\w\)\s*', '', line),
                     randomize=True,
                 ))
-            elif re.search(r'^\w\.(true|false)\) ', line):
+            elif re.search(r'^\w\.(true|false)\)', line):
                 # a.true) choices
-                #TODO:
-                raise NotImplementedError
+                if 'choices' not in item:
+                    item['choices'] = []
+                item['choices'].append(dict(
+                    text=re.sub(r'^\w\.(true|false)\)\s*', '', line),
+                    randomize=True,
+                    correct=(re.search(r'^\w\.true\)', line) is not None),
+                ))
             else:
                 # Line that needs appending to
                 if defaultfield not in item:
