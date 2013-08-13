@@ -59,6 +59,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
 
         choices = self.context.choices
         out = dict(
+            title=self.context.title,
             text=renderRichField(self.context.text),
             choices=[renderTeX(x['text']) for x in choices],
             fixed_order=[i for (i, x) in enumerate(choices) if not x['randomize']],
