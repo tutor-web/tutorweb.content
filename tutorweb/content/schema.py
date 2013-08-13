@@ -95,3 +95,13 @@ class ITutorial(model.Schema):
     pdf=NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
         required=False)
+
+class IDepartment(model.Schema):
+    title = schema.TextLine(
+        title=_(u'Department title'),
+        description=_(u"The name of the department, e.g. 'Fishery science department'"),
+        required=True)
+    code = schema.TextLine(
+        title=_(u'Department code'),
+        description=_(u"The short code for the department, e.g. 'FISH'"),
+        required=True)

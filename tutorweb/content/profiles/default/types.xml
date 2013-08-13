@@ -3,4 +3,5 @@
   <object name="tw_latexquestion" meta_type="Dexterity FTI"/>
   <object name="tw_lecture" meta_type="Dexterity FTI"/>
   <object name="tw_tutorial" meta_type="Dexterity FTI"/>
+  <object name="tw_department" meta_type="Dexterity FTI"/>
 </object>
