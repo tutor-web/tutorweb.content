@@ -1,9 +1,11 @@
 import urllib
 
+from AccessControl import getSecurityManager
 from zope.component import getMultiAdapter
 from ZPublisher.HTTPRequest import FileUpload
 
 from collective.transmogrifier.interfaces import ITransmogrifier
+from Products.CMFCore import permissions
 from Products.Five.browser import BrowserView
 
 from tutorweb.content.schema import IQuestion
@@ -37,6 +39,10 @@ class LectureView(BrowserView):
             lecUri=self.context.absolute_url() + '/quizdb-sync',
         ))
         return out
+
+    def canEdit(self):
+        """Return true iff user can edit this lecture"""
+        return getSecurityManager().checkPermission(permissions.ModifyPortalContent, self)
 
 class LectureTeXView(BrowserView):
     """Render all questions from lecture in TeX form"""
