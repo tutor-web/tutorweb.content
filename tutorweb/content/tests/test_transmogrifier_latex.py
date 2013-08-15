@@ -84,6 +84,45 @@ c.false)x = 21
             'explanation': {'contenttype': 'text/x-tex', 'data': 'I\nGot 2 humps, see', 'encoding': 'utf-8'},
         }])
 
+    def test_multipleQns(self):
+        qns = [x for x in self.createSource("""
+%ID q1
+%title Sum
+Find the values of $x$ and $y$ such that the sum of the first  20
+a) $x=20$ and $y=190$.
+b) $x = 190$ and $y = 20$.
+c) $x = 20$ and $y = 20$.
+%Explanation
+Seems obvious now, doesn't it?
+Well, duh.
+
+%===
+%ID q2
+%title Sum
+Find the values of $x$ and $y$ such that the sum of the first  20
+a) $x=20$ and $y=190$.
+b) $x = 190$ and $y = 20$.
+c) $x = 20$ and $y = 20$.
+%Explanation
+You should have worked it out the first time.
+%===
+%ID q3
+%title Sum
+Find the values of $x$ and $y$ such that the sum of the first  20
+a) $x=20$ and $y=190$.
+b) $x = 190$ and $y = 20$.
+c) $x = 20$ and $y = 20$.
+%Explanation
+Don't catch on quickly, do you?
+        """)]
+        self.assertEqual(len(qns), 3)
+        self.assertTrue([q['id'] for q in qns], ['q1', 'q2', 'q3'])
+        self.assertTrue([q['explanation'] for q in qns], [
+            {'contenttype': 'text/x-tex', 'data': """Seems obvious now, doesn't it?\nWell, duh.""", 'encoding': 'utf-8'},
+            {'contenttype': 'text/x-tex', 'data': """You should have worked it out the first time.""", 'encoding': 'utf-8'},
+            {'contenttype': 'text/x-tex', 'data': """Don't catch on quickly, do you?""", 'encoding': 'utf-8'},
+        ])
+
     def createSource(self, tex):
         if hasattr(self, 'tf'):
             self.tf.close()
