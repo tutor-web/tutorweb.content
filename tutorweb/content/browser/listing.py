@@ -56,6 +56,19 @@ class ListingView(BrowserView):
             ))
         return out
 
+    def fileListing(self):
+        """Listing of all file items"""
+        listing = self.context.restrictedTraverse('@@folderListing')(
+            Type="File",
+        )
+        out = []
+        for l in listing:
+            out.append(dict(
+                url=l.getURL(),
+                title=l.Title(),
+            ))
+        return out
+
     def contentCount(self, target):
         """Return counts of child content grouped by portal_type"""
         listing = target.restrictedTraverse('@@folderListing')()

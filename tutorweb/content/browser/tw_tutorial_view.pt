@@ -55,7 +55,12 @@
 
     <dt id="fieldsetlegend-literature">Literature</dt>
     <dd id="fieldset-literature">
-      <p>TODO:</p>
+      <ul tal:repeat="item view/fileListing">
+        <li>
+          <a tal:attributes="href item/url"
+             tal:content="item/title">lit</a>
+        </li>
+      </ul>
     </dd>
 
     <dt id="fieldsetlegend-courses">Related courses</dt>
