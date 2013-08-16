@@ -26,6 +26,34 @@ class ListingViewTest(IntegrationTestCase):
             '/plone/dept1/tut1/lec1/qn1',
         ])
 
+    def test_lectureListing(self):
+        """Get counts of questions within lectures"""
+        portal = self.layer['portal']
+        self.path = 'dept1/tut1'
+        login(portal, MANAGER_ID);
+
+        # Has one question out of the box
+        self.assertEquals(self.getView().lectureListing(), [
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'pdf': None, 'questions': 1, 'slides': 0},
+        ])
+
+        # Can add some more
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn2",
+            title="Unittest D1 T1 L1 Q2",
+        )
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn3",
+            title="Unittest D1 T1 L1 Q3",
+        )
+        self.assertEquals(self.getView().lectureListing(), [
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'pdf': None, 'questions': 3, 'slides': 0},
+        ])
+
     def test_fileListing(self):
         """Can get listings for any files within current node"""
         portal = self.layer['portal']

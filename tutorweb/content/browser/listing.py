@@ -31,9 +31,20 @@ class ListingView(BrowserView):
     def lectureListing(self):
         """Listing of all lecture items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
-            portal_type="tw_lecture",
+            Type="Lecture",
         )
-        return listing
+        out = []
+        for o in (l.getObject() for l in listing):
+            contentCount = self.contentCount(o)
+            out.append(dict(
+                url=o.absolute_url(),
+                id=o.id,
+                title=o.Title(),
+                slides=contentCount['Slides'],
+                questions=contentCount['Question'],
+                pdf=None,  #TODO:
+            ))
+        return out
 
     def tutorialListing(self):
         """Listing of all tutorial items"""
@@ -108,7 +119,11 @@ class ListingView(BrowserView):
         listing = target.restrictedTraverse('@@folderListing')()
         out = defaultdict(int)
         for l in listing:
-            out[l.Type()] += 1
+            if l.PortalType() in ['tw_latexquestion']:
+                #TODO: Should really be checking for IQuestion
+                out['Question'] += 1
+            else:
+                out[l.Type()] += 1
         return out
 
     def quizUrl(self):
