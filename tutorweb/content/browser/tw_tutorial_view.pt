@@ -65,7 +65,16 @@
 
     <dt id="fieldsetlegend-courses">Related courses</dt>
     <dd id="fieldset-courses">
-      <p>TODO:</p>
+      <h4>Primary course</h4>
+      <ul>
+        <li><a tal:attributes="href context/primarycourse/to_object/absolute_url"
+               tal:content="context/primarycourse/to_object/Title">course</a></li>
+      </ul>
+      <h4>Other courses this tutorial appears in</h4>
+      <ul tal:repeat="item view/relatedCourses">
+        <li><a tal:attributes="href item/url"
+               tal:content="item/title">course</a></li>
+      </ul>
     </dd>
 
     <dt id="fieldsetlegend-sponsors">Sponsors</dt>

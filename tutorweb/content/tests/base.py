@@ -2,6 +2,8 @@ from unittest import TestCase
 
 from zope.app.intid.interfaces import IIntIds
 from zope.component import getUtility
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 from z3c.relationfield.relation import RelationValue
 
 from plone.app.testing import PloneSandboxLayer
@@ -76,9 +78,14 @@ class TestFixture(PloneSandboxLayer):
             id="course1",
             title="Unittest C1",
         )
-        portal['dept1']['course1'].tutorials = relations([
+        setRelations(portal['dept1']['course1'], 'tutorials', [
             portal['dept1']['tut1'],
         ])
+        setRelations(
+            portal['dept1']['tut1'],
+            'primarycourse',
+            portal['dept1']['course1'],
+        )
 
     def tearDownPloneSite(self, portal):
         pass
@@ -104,7 +111,12 @@ class FunctionalTestCase(TestCase):
     layer = TUTORWEB_CONTENT_FUNCTIONAL_TESTING
 
 
-def relations(objs):
-    """Turn list of objects into list of relations"""
+def setRelations(target, field, objs):
+    """Configure a relation field"""
     intids = getUtility(IIntIds)
-    return [RelationValue(intids.getId(obj)) for obj in objs]
+    val = (
+        [RelationValue(intids.getId(obj)) for obj in objs]
+        if type(objs) is list
+        else RelationValue(intids.getId(objs)))
+    setattr(target, field, val)
+    notify(ObjectModifiedEvent(target))

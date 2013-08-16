@@ -2,12 +2,14 @@ from collections import defaultdict
 import urllib
 
 from AccessControl import getSecurityManager
-from zope.component import getMultiAdapter
+from zc.relation.interfaces import ICatalog
+from zope.component import getMultiAdapter, getUtility
+from zope.app.intid.interfaces import IIntIds
 
 from Products.CMFCore import permissions
 from Products.Five.browser import BrowserView
 
-from tutorweb.content.schema import IQuestion
+from tutorweb.content.schema import IQuestion, ICourse
 
 
 class ListingView(BrowserView):
@@ -86,6 +88,20 @@ class ListingView(BrowserView):
                 files=contentCount['File'],
             ))
         return out
+
+    def relatedCourses(self):
+        """All courses that have this tutorial as part of them"""
+        values = getUtility(ICatalog).findRelations(dict(
+            to_id=getUtility(IIntIds).getId(self.context),
+            from_interfaces_flattened=ICourse,
+        ))
+        out = []
+        for v in values:
+            out.append(dict(
+                url=v.from_object.absolute_url(),
+                title=v.from_object.Title(),
+            ))
+        return sorted(out, key=lambda k: k['title'])
 
     def contentCount(self, target):
         """Return counts of child content grouped by portal_type"""

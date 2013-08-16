@@ -4,7 +4,7 @@ from Products.CMFCore.utils import getToolByName
 
 from plone.app.testing import setRoles, login
 
-from .base import IntegrationTestCase, relations
+from .base import IntegrationTestCase, setRelations
 from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
 
 
@@ -72,13 +72,37 @@ class ListingViewTest(IntegrationTestCase):
         ])
 
         # Add to course1's list
-        portal['dept1']['course1'].tutorials = relations([
+        setRelations(portal['dept1']['course1'], 'tutorials', [
             portal['dept1']['tut1'],
             portal['dept1']['tut2'],
         ])
         self.assertEquals(self.getView().courseListing(), [
             {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
              'tutorials': 2, 'url': 'http://nohost/plone/dept1/course1'},
+        ])
+
+    def test_relatedCourses(self):
+        """Tutorials should know what courses they are related to"""
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID);
+        self.path = 'dept1/tut1'
+
+        self.assertEquals(self.getView().relatedCourses(), [
+            dict(url='http://nohost/plone/dept1/course1', title='Unittest C1'),
+        ])
+
+        # Add another course that also has tut1.
+        portal['dept1'].invokeFactory(
+            type_name="tw_course",
+            id="course2",
+            title="Unittest C2",
+        )
+        setRelations(portal['dept1']['course2'], 'tutorials', [
+            portal['dept1']['tut1'],
+        ])
+        self.assertEquals(self.getView().relatedCourses(), [
+            dict(url='http://nohost/plone/dept1/course1', title='Unittest C1'),
+            dict(url='http://nohost/plone/dept1/course2', title='Unittest C2'),
         ])
 
     def test_quizUrl(self):
