@@ -1,7 +1,9 @@
 from zope import schema
+from z3c.relationfield.schema import RelationList, RelationChoice
 
 from plone.app.textfield import RichText
 from plone.autoform import directives as form
+from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.namedfile.field import NamedBlobImage, NamedBlobFile
 from plone.supermodel import model
 
@@ -111,6 +113,11 @@ class ITutorial(model.Schema):
         min=0.0,
         max=1.0,
         required=True)
+    primarycourse = RelationChoice(
+        title=_(u'Primary Course'),
+        description=_(u"The main course this tutorial is part of"),
+        source=ObjPathSourceBinder(Type='Course'),
+        required=True)
     pdf=NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
         required=False)
@@ -124,3 +131,21 @@ class IDepartment(model.Schema):
         title=_(u'Department code'),
         description=_(u"The short code for the department, e.g. 'FISH'"),
         required=True)
+
+class ICourse(model.Schema):
+    title = schema.TextLine(
+        title=_(u'Course title'),
+        description=_(u"The name of the course"),
+        required=True)
+    code = schema.TextLine(
+        title=_(u'Course code'),
+        description=_(u"The short code for the course, e.g. '101'"),
+        required=True)
+    tutorials = RelationList(
+        title=_(u'Course tutorials'),
+        description=_(u"All tutorials this course contains"),
+        default=[],
+        value_type=RelationChoice(
+            source=ObjPathSourceBinder(Type='Tutorial'),
+        ),
+        required=False)

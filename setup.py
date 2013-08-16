@@ -31,6 +31,7 @@ setup(
         'collective.mathjax',
         'plone.app.contentlisting',
         'plone.app.dexterity',
+        'plone.app.relationfield',
         'plone.app.textfield',
         'plone.app.vocabularies',
         'plone.intelligenttext',
