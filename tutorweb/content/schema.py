@@ -84,10 +84,29 @@ class ITutorial(model.Schema):
         title=_(u'Title'),
         description=_(u'The title of the tutorial'),
         required=True)
+    code = schema.TextLine(
+        title=_(u'Tutorial code'),
+        description=_(u'Numeric code for this tutorial.'),
+        required=True)
+    language = schema.Choice(
+        title=_(u'Language'),
+        description=_(u'Language tutorial notes are in'),
+        vocabulary=u'plone.app.vocabularies.SupportedContentLanguages',
+        default='English',
+        required=True)
+    author = schema.TextLine(
+        title=_(u'Author'),
+        description=_(u'Author(s) of the tutorial'),
+        required=True)
+    credits = schema.Int(
+        title=_(u'Credits'),
+        description=_(u'Number of Credits given for the tutorial'),
+        default=0,
+        required=True)
     histsel = schema.Float(
         title=_(u'Default Historical Selection probability'),
-        description=_(u'''The chance that a question before this given as part
-                      of this lecture.'''),
+        description=_(u'''The default chance that a question from previous lectures
+                      is given as part of the current'''),
         default=0.0,
         min=0.0,
         max=1.0,

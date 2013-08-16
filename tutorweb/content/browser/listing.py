@@ -1,3 +1,4 @@
+from collections import defaultdict
 import urllib
 
 from AccessControl import getSecurityManager
@@ -29,6 +30,44 @@ class ListingView(BrowserView):
         """Listing of all lecture items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
             portal_type="tw_lecture",
+        )
+        return listing
+
+    def tutorialListing(self):
+        """Listing of all tutorial items"""
+        listing = self.context.restrictedTraverse('@@folderListing')(
+            portal_type="tw_tutorial",
+        )
+        out = []
+        for o in (l.getObject() for l in listing):
+            contentCount = self.contentCount(o)
+            out.append(dict(
+                url=o.absolute_url(),
+                id=o.id,
+                title=o.Title(),
+                language=o.language,
+                courses=contentCount['Courses'],
+                code=o.code,
+                pdf=None,  #TODO:
+                files=contentCount['File'],
+                lectures=contentCount['Lecture'],
+                author=o.author,
+                credits=o.credits,
+            ))
+        return out
+
+    def contentCount(self, target):
+        """Return counts of child content grouped by portal_type"""
+        listing = target.restrictedTraverse('@@folderListing')()
+        out = defaultdict(int)
+        for l in listing:
+            out[l.Type()] += 1
+        return out
+
+    def courseListing(self):
+        """Listing of all course items"""
+        listing = self.context.restrictedTraverse('@@folderListing')(
+            portal_type="Course",
         )
         return listing
 

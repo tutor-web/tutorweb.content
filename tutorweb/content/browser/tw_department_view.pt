@@ -7,63 +7,66 @@
       i18n:domain="collective.qna">
 <body>
 
+<metal:content-title fill-slot="content-title">
+  <h1 class="documentFirstHeading"
+      tal:content="string:${context/title} (${context/code})">title (code)</h1>
+</metal:content-title>
+
 <metal:content-core fill-slot="content-core">
 
-  <!--TODO: If logged in -->
-  <ul>
-    <li><a tal:attributes="href view/quizUrl">
-      Take a quiz on this lecture</a></li>
-    <li><a href="#TODO:">Download all lecture slides</a></li>
-  </ul>
-
   <dl class="enableFormTabbing">
-
-    <dt id="fieldsetlegend-courses">Courses</dt>
-    <dd id="fieldset-courses">
-
-      <table class="listing">
-        <thead>
-          <th>Id</th>
-          <th>Slide name</th>
-          <th>Examples</th>
-          <th>Alternative</th>
-          <th>Details</th>
-          <th>Handout</th>
-        </thead>
-        <tbody>
-          <tr tal:repeat="item view/slideListing">
-            <td tal:content="item/getId">sl01</td>
-            <td>
-              <a href="#" tal:attributes="href item/getURL"
-                          tal:content="item/Title">slide</a>
-            </td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-          </tr>
-        </tbody>
-      </table>
-    </dd>
 
     <dt id="fieldsetlegend-tutorials">Tutorials</dt>
     <dd id="fieldset-tutorials">
       <table class="listing">
         <thead>
-          <th>Id</th>
-          <th>Question name</th>
-          <th>Answers</th>
-          <th>Answers correct</th>
+          <th>Name</th>
+          <th>Language</th>
+          <th>Code</th>
+          <th>Pdf</th>
+          <th>Credits</th>
+          <th>Courses</th>
+          <th>Literature</th>
+          <th>Number of Lectures</th>
         </thead>
         <tbody>
-          <tr tal:repeat="item view/questionListing">
-            <td tal:content="item/getId">q01</td>
+          <tr tal:repeat="item view/tutorialListing">
+            <td>
+              <a href="#" tal:attributes="href item/url"
+                          tal:content="item/title">tutorial</a>
+            </td>
+            <td tal:content="item/language">q01</td>
+            <td tal:content="item/courses">q01</td>
+            <td tal:content="item/code">q01</td>
+            <td tal:content="item/pdf">q01</td>
+            <td tal:content="item/files">q01</td>
+            <td tal:content="item/credits">q01</td>
+            <td tal:content="item/lectures">q01</td>
+          </tr>
+        </tbody>
+      </table>
+    </dd>
+
+    <dt id="fieldsetlegend-courses">Courses</dt>
+    <dd id="fieldset-courses">
+      <table class="listing">
+        <thead>
+          <th>Course name</th>
+          <th>Code</th>
+          <th>Number of tutorials</th>
+          <th>Literature</th>
+        </thead>
+        <tbody>
+          <tr tal:repeat="item view/courseListing">
+            <td tal:content="item/getId">couse01</td>
             <td>
               <a href="#" tal:attributes="href item/getURL"
-                          tal:content="item/Title">question</a>
+                          tal:content="item/Title">course</a>
             </td>
-            <td tal:content="string:TODO:">q01</td>
-            <td tal:content="string:TODO:">q01</td>
+            <td tal:content="string:TODO:"></td>
+            <td tal:content="string:TODO:"></td>
+            <td tal:content="string:TODO:"></td>
+            <td tal:content="string:TODO:"></td>
           </tr>
         </tbody>
       </table>
