@@ -1,5 +1,9 @@
 from unittest import TestCase
 
+from zope.app.intid.interfaces import IIntIds
+from zope.component import getUtility
+from z3c.relationfield.relation import RelationValue
+
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
@@ -67,6 +71,14 @@ class TestFixture(PloneSandboxLayer):
             id="qn1",
             title="Unittest D1 T1 L1 Q1",
         )
+        portal['dept1'].invokeFactory(
+            type_name="tw_course",
+            id="course1",
+            title="Unittest C1",
+        )
+        portal['dept1']['course1'].tutorials = relations([
+            portal['dept1']['tut1'],
+        ])
 
     def tearDownPloneSite(self, portal):
         pass
@@ -90,3 +102,9 @@ class IntegrationTestCase(TestCase):
 
 class FunctionalTestCase(TestCase):
     layer = TUTORWEB_CONTENT_FUNCTIONAL_TESTING
+
+
+def relations(objs):
+    """Turn list of objects into list of relations"""
+    intids = getUtility(IIntIds)
+    return [RelationValue(intids.getId(obj)) for obj in objs]

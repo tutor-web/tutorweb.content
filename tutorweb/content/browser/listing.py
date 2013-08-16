@@ -69,6 +69,24 @@ class ListingView(BrowserView):
             ))
         return out
 
+    def courseListing(self):
+        """Listing of all course items"""
+        listing = self.context.restrictedTraverse('@@folderListing')(
+            Type="Course",
+        )
+        out = []
+        for o in (l.getObject() for l in listing):
+            contentCount = self.contentCount(o)
+            out.append(dict(
+                url=o.absolute_url(),
+                id=o.id,
+                title=o.Title(),
+                code=o.code,
+                tutorials=len(o.tutorials),
+                files=contentCount['File'],
+            ))
+        return out
+
     def contentCount(self, target):
         """Return counts of child content grouped by portal_type"""
         listing = target.restrictedTraverse('@@folderListing')()
@@ -76,13 +94,6 @@ class ListingView(BrowserView):
         for l in listing:
             out[l.Type()] += 1
         return out
-
-    def courseListing(self):
-        """Listing of all course items"""
-        listing = self.context.restrictedTraverse('@@folderListing')(
-            portal_type="Course",
-        )
-        return listing
 
     def quizUrl(self):
         """Return URL to the quiz for this lecture"""

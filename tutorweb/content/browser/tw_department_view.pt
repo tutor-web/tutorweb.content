@@ -58,15 +58,13 @@
         </thead>
         <tbody>
           <tr tal:repeat="item view/courseListing">
-            <td tal:content="item/getId">couse01</td>
             <td>
-              <a href="#" tal:attributes="href item/getURL"
-                          tal:content="item/Title">course</a>
+              <a href="#" tal:attributes="href item/url"
+                          tal:content="item/title">course</a>
             </td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
+            <td tal:content="item/code">course01</td>
+            <td tal:content="item/tutorials"></td>
+            <td tal:content="item/files"></td>
           </tr>
         </tbody>
       </table>

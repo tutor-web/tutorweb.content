@@ -4,7 +4,7 @@ from Products.CMFCore.utils import getToolByName
 
 from plone.app.testing import setRoles, login
 
-from .base import IntegrationTestCase
+from .base import IntegrationTestCase, relations
 from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
 
 
@@ -46,6 +46,39 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(self.getView().fileListing(), [
             {'title': 'File A', 'url': 'http://nohost/plone/dept1/tut1/filea.pdf'},
             {'title': 'File B', 'url': 'http://nohost/plone/dept1/tut1/fileb.pdf'},
+        ])
+
+    def test_courseListing(self):
+        """Can get listings for any courses within current node"""
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID);
+        self.path = 'dept1'
+
+        # Here's one we made earlier
+        self.assertEquals(self.getView().courseListing(), [
+            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+             'tutorials': 1, 'url': 'http://nohost/plone/dept1/course1'},
+        ])
+
+        # Add another tutorial, doesn't automatically appear in course1
+        portal['dept1'].invokeFactory(
+            type_name="tw_tutorial",
+            id="tut2",
+            title="Unittest D1 T2",
+        )
+        self.assertEquals(self.getView().courseListing(), [
+            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+             'tutorials': 1, 'url': 'http://nohost/plone/dept1/course1'},
+        ])
+
+        # Add to course1's list
+        portal['dept1']['course1'].tutorials = relations([
+            portal['dept1']['tut1'],
+            portal['dept1']['tut2'],
+        ])
+        self.assertEquals(self.getView().courseListing(), [
+            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+             'tutorials': 2, 'url': 'http://nohost/plone/dept1/course1'},
         ])
 
     def test_quizUrl(self):
