@@ -9,12 +9,13 @@
 
 <metal:content-core fill-slot="content-core">
 
-  <!--TODO: If logged in -->
-  <ul>
-    <li><a tal:attributes="href view/quizUrl">
-      Take a quiz on this lecture</a></li>
-    <li><a href="#TODO:">Download all lecture slides</a></li>
-  </ul>
+  <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
+    <ul>
+      <li><a tal:attributes="href view/quizUrl">
+        Take a quiz on this lecture</a></li>
+      <li><a href="#TODO:">Download all lecture slides</a></li>
+    </ul>
+  </tal:t>
 
   <dl class="enableFormTabbing">
 
