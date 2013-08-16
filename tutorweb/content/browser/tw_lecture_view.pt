@@ -21,9 +21,11 @@
     <dt id="fieldsetlegend-slides">Slides</dt>
     <dd id="fieldset-slides">
 
-      <ul>
-        <li><a href="#TODO:">Update all slides PDF</a></li>
-      </ul>
+      <tal:t tal:condition="view/canEdit">
+        <ul>
+          <li><a href="#TODO:">Update all slides PDF</a></li>
+        </ul>
+      </tal:t>
 
       <table class="listing">
         <thead>
