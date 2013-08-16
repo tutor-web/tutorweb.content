@@ -99,7 +99,6 @@ class LatexSourceSection(object):
             else:
                 # Line that needs appending to
                 if defaultfield not in item:
-                    #TODO: Guessed
                     item[defaultfield] = []
                 item[defaultfield].append(line)
         if item.keys():
