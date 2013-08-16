@@ -1,8 +1,8 @@
-import cgi
 import json
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+
 
 class BaseQuestionStruct(BrowserView):
     def asDict(self):
@@ -20,7 +20,7 @@ class BaseQuestionStruct(BrowserView):
                 "explanation": "<div>\nThe symbol for the set of all irrational numbers (b)\n</div>",
                 "correct": [0, 2]
             }))
-        }        
+        }
         """
         raise NotImplementedError
 
@@ -34,8 +34,8 @@ class BaseQuestionStruct(BrowserView):
             self.request.response.setStatus(500)
             self.request.response.setHeader("Content-type", "application/json")
             return json.dumps(dict(
-                error= ex.__class__.__name__,
-                message= str(ex),
+                error=ex.__class__.__name__,
+                message=str(ex),
             ))
 
 
@@ -51,6 +51,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
             if f is None:
                 return ''
             return f.output
+
         def renderTeX(f):
             return self.portalTransforms().convertTo(
                 'text/html', f,
@@ -70,6 +71,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
             ),
         )
         return out
+
 
 class LaTeXQuestionTeXView(BrowserView):
     """Render question in TeX form"""
