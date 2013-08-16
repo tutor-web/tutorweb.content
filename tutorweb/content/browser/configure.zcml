@@ -15,13 +15,6 @@
       permission="cmf.ManagePortal"
       />
 
-    <browser:page name="view"
-      for="tutorweb.content.schema.ILecture"
-      permission="zope2.View"
-      class=".tw_lecture.LectureView"
-      template="tw_lecture_view.pt"
-      />
-
     <browser:page name="tex"
       for="tutorweb.content.schema.ILecture"
       class=".tw_lecture.LectureTeXView"
@@ -35,10 +28,24 @@
       />
 
     <browser:page name="view"
+      for="tutorweb.content.schema.ILecture"
+      permission="zope2.View"
+      class=".listing.ListingView"
+      template="tw_lecture_view.pt"
+      />
+
+    <browser:page name="view"
       for="tutorweb.content.schema.ITutorial"
       permission="zope2.View"
-      class=".tw_tutorial.TutorialView"
+      class=".listing.ListingView"
       template="tw_tutorial_view.pt"
+      />
+
+    <browser:page name="view"
+      for="tutorweb.content.schema.IDepartment"
+      permission="zope2.View"
+      class=".listing.ListingView"
+      template="tw_department_view.pt"
       />
 
   <browser:viewlet
