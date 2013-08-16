@@ -6,6 +6,7 @@
     i18n_domain="tutorweb.content">
 
     <include package="plone.app.contentlisting" />
+    <include package="plone.app.contenttypes" />
     <include package="plone.app.dexterity" />
     <include package="plone.app.relationfield" />
     <include package="collective.z3cform.datagridfield" />

@@ -30,6 +30,7 @@ setup(
         'setuptools',
         'collective.mathjax',
         'plone.app.contentlisting',
+        'plone.app.contenttypes',
         'plone.app.dexterity',
         'plone.app.relationfield',
         'plone.app.textfield',
