@@ -58,7 +58,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
                 mimetype='text/x-tex',
             ).getData()
 
-        choices = self.context.choices
+        choices = self.context.choices or []
         out = dict(
             title=self.context.title,
             text=renderRichField(self.context.text),
