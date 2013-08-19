@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import transaction
+
 from zope.app.intid.interfaces import IIntIds
 from zope.component import getUtility
 from zope.event import notify
@@ -73,6 +75,26 @@ class TestFixture(PloneSandboxLayer):
             id="qn1",
             title="Unittest D1 T1 L1 Q1",
         )
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn2",
+            title="Unittest D1 T1 L1 Q2",
+        )
+        portal['dept1']['tut1'].invokeFactory(
+            type_name="tw_lecture",
+            id="lec2",
+            title="Unittest D1 T1 L2",
+        )
+        portal['dept1']['tut1']['lec2'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn1",
+            title="Unittest D1 T1 L2 Q1",
+        )
+        portal['dept1']['tut1']['lec2'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn2",
+            title="Unittest D1 T1 L2 Q2",
+        )
         portal['dept1'].invokeFactory(
             type_name="tw_course",
             id="course1",
@@ -86,6 +108,7 @@ class TestFixture(PloneSandboxLayer):
             'primarycourse',
             portal['dept1']['course1'],
         )
+        transaction.commit()
 
     def tearDownPloneSite(self, portal):
         pass

@@ -24,6 +24,7 @@ class ListingViewTest(IntegrationTestCase):
         login(portal, MANAGER_ID);
         self.assertEquals([q.getPath() for q in self.getView().questionListing()], [
             '/plone/dept1/tut1/lec1/qn1',
+            '/plone/dept1/tut1/lec1/qn2',
         ])
 
     def test_lectureListing(self):
@@ -32,26 +33,30 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1'
         login(portal, MANAGER_ID);
 
-        # Has one question out of the box
+        # Each has 2 questions out of the box
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
-             'pdf': None, 'questions': 1, 'slides': 0},
+             'pdf': None, 'questions': 2, 'slides': 0},
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
         # Can add some more
         portal['dept1']['tut1']['lec1'].invokeFactory(
             type_name="tw_latexquestion",
-            id="qn2",
-            title="Unittest D1 T1 L1 Q2",
-        )
-        portal['dept1']['tut1']['lec1'].invokeFactory(
-            type_name="tw_latexquestion",
             id="qn3",
             title="Unittest D1 T1 L1 Q3",
         )
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_latexquestion",
+            id="qn4",
+            title="Unittest D1 T1 L1 Q4",
+        )
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
-             'pdf': None, 'questions': 3, 'slides': 0},
+             'pdf': None, 'questions': 4, 'slides': 0},
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
     def test_fileListing(self):
