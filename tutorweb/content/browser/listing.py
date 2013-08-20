@@ -20,6 +20,7 @@ class ListingView(BrowserView):
         """Listing of all question items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
             object_provides=IQuestion.__identifier__,
+            sort_on="id",
         )
         return listing
 
@@ -27,6 +28,7 @@ class ListingView(BrowserView):
         """Listing of all slide items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
             portal_type="Slide",
+            sort_on="id",
         )
         return listing
 
@@ -35,6 +37,7 @@ class ListingView(BrowserView):
         """Listing of all lecture items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
             Type="Lecture",
+            sort_on="id",
         )
         out = []
         for o in (l.getObject() for l in listing):
@@ -52,7 +55,8 @@ class ListingView(BrowserView):
     def tutorialListing(self):
         """Listing of all tutorial items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
-            portal_type="tw_tutorial",
+            Type="Tutorial",
+            sort_on="id",
         )
         out = []
         for o in (l.getObject() for l in listing):
@@ -75,6 +79,7 @@ class ListingView(BrowserView):
         """Listing of all file items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
             Type="File",
+            sort_on="id",
         )
         out = []
         for l in listing:
