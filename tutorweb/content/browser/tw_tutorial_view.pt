@@ -14,6 +14,17 @@
 
 <metal:content-core fill-slot="content-core">
 
+  <ul>
+    <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
+      <li><a tal:attributes="href view/quizUrl">
+        Take a drill on this tutorial</a></li>
+    </tal:t>
+    <tal:t tal:condition="context/portal_membership/isAnonymousUser">
+      <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
+    </tal:t>
+    <li><a href="#TODO:">Download tutorial notes</a></li>
+  </ul>
+
   <dl class="enableFormTabbing">
 
     <dt id="fieldsetlegend-lectures">Lectures</dt>

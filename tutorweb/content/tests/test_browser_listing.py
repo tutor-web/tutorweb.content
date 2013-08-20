@@ -41,7 +41,14 @@ class ListingViewTest(IntegrationTestCase):
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
-        # Can add some more
+    def test_lectureMultipleListing(self):
+        """Get counts of questions within lectures"""
+        portal = self.layer['portal']
+        self.path = 'dept1/tut1'
+        login(portal, MANAGER_ID);
+
+        # Add some more lectures, we see them in the view too
+        # NB: This is a separate test since otherwise we trip over memoize
         portal['dept1']['tut1']['lec1'].invokeFactory(
             type_name="tw_latexquestion",
             id="qn3",
@@ -140,8 +147,13 @@ class ListingViewTest(IntegrationTestCase):
 
     def test_quizUrl(self):
         """Should formulate a quiz URL"""
-        self.path = 'dept1/tut1/lec1'
-
+        self.path = 'dept1/tut1/lec2'
+        self.assertEquals(
+            self.getView().quizUrl(),
+            """http://nohost/plone/++resource++tutorweb.quiz/load.html?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync""",
+        )
+        # For the tutorial above it formulates a link to the first lecture
+        self.path = 'dept1/tut1'
         self.assertEquals(
             self.getView().quizUrl(),
             """http://nohost/plone/++resource++tutorweb.quiz/load.html?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync""",

@@ -6,6 +6,8 @@ from zc.relation.interfaces import ICatalog
 from zope.component import getMultiAdapter, getUtility
 from zope.app.intid.interfaces import IIntIds
 
+from plone.memoize import view
+
 from Products.CMFCore import permissions
 from Products.Five.browser import BrowserView
 
@@ -28,6 +30,7 @@ class ListingView(BrowserView):
         )
         return listing
 
+    @view.memoize
     def lectureListing(self):
         """Listing of all lecture items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
@@ -134,10 +137,19 @@ class ListingView(BrowserView):
         )
         out = portal_state.portal_url()
         out += "/++resource++tutorweb.quiz/load.html?"
-        out += urllib.urlencode(dict(
-            tutUri=self.context.aq_parent.absolute_url() + '/quizdb-sync',
-            lecUri=self.context.absolute_url() + '/quizdb-sync',
-        ))
+        if self.context.portal_type == 'tw_lecture':
+            out += urllib.urlencode(dict(
+                tutUri=self.context.aq_parent.absolute_url() + '/quizdb-sync',
+                lecUri=self.context.absolute_url() + '/quizdb-sync',
+            ))
+        elif self.context.portal_type == 'tw_tutorial':
+            # Start a quiz based on the first lecture
+            out += urllib.urlencode(dict(
+                tutUri=self.context.absolute_url() + '/quizdb-sync',
+                lecUri=self.lectureListing()[0]['url'] + '/quizdb-sync',
+            ))
+        else:
+            raise NotImplemented
         return out
 
     def canEdit(self):

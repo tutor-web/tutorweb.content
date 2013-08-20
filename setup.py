@@ -36,6 +36,7 @@ setup(
         'plone.app.textfield',
         'plone.app.vocabularies',
         'plone.intelligenttext',
+        'plone.memoize',
         'collective.z3cform.datagridfield',
         'collective.transmogrifier',
         'plone.app.transmogrifier',
