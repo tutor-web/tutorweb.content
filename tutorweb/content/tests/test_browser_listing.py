@@ -159,6 +159,17 @@ class ListingViewTest(IntegrationTestCase):
             """http://nohost/plone/++resource++tutorweb.quiz/load.html?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync""",
         )
 
+        # Create a new tutorial with no lectures, not going to be very interesting
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID);
+        portal['dept1'].invokeFactory(
+            type_name="tw_tutorial",
+            id="tut2",
+            title="Unittest D1 T2",
+        )
+        self.path = 'dept1/tut2'
+        self.assertEquals(self.getView().quizUrl(), '#')
+
     def test_canEdit(self):
         """Make sure regular users can't edit"""
         portal = self.layer['portal']

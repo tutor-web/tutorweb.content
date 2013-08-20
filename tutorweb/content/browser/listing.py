@@ -142,6 +142,9 @@ class ListingView(BrowserView):
             ))
         elif self.context.portal_type == 'tw_tutorial':
             # Start a quiz based on the first lecture
+            if len(self.lectureListing()) == 0:
+                # No lectures, so it's not going to be a very interesting drill
+                return '#'
             out += urllib.urlencode(dict(
                 tutUri=self.context.absolute_url() + '/quizdb-sync',
                 lecUri=self.lectureListing()[0]['url'] + '/quizdb-sync',
