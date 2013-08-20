@@ -29,7 +29,6 @@
  <!-- Behaviors -->
  <property name="behaviors">
      <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
-     <element value="plone.app.content.interfaces.INameFromTitle" />
  </property>
 
  <!-- Add permission -->

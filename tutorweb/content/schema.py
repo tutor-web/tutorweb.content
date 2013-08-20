@@ -63,6 +63,10 @@ class ILaTeXQuestion(model.Schema):
 
 class ILecture(model.Schema):
     """A lecture contains Slides and quiz questions"""
+    id = schema.TextLine(
+        title=_(u'Lecture code'),
+        description=_(u"Code for this lecture, e.g. 'lecture01'"),
+        required=True)
     title = schema.TextLine(
         title=_(u'Title'),
         description=_(u'The title of the lecture'),
@@ -82,13 +86,13 @@ class ILecture(model.Schema):
 
 class ITutorial(model.Schema):
     """A Tutorial contains lectures"""
+    id = schema.TextLine(
+        title=_(u'Tutorial code'),
+        description=_(u"Code for this tutorial, e.g. 'FISH101.1'"),
+        required=True)
     title = schema.TextLine(
         title=_(u'Title'),
         description=_(u'The title of the tutorial'),
-        required=True)
-    code = schema.TextLine(
-        title=_(u'Tutorial code'),
-        description=_(u'Numeric code for this tutorial.'),
         required=True)
     language = schema.Choice(
         title=_(u'Language'),
@@ -123,23 +127,23 @@ class ITutorial(model.Schema):
         required=False)
 
 class IDepartment(model.Schema):
+    id = schema.TextLine(
+        title=_(u'Department code'),
+        description=_(u"The short code for the department, e.g. 'FISH'"),
+        required=True)
     title = schema.TextLine(
         title=_(u'Department title'),
         description=_(u"The name of the department, e.g. 'Fishery science department'"),
         required=True)
-    code = schema.TextLine(
-        title=_(u'Department code'),
-        description=_(u"The short code for the department, e.g. 'FISH'"),
-        required=True)
 
 class ICourse(model.Schema):
+    id = schema.TextLine(
+        title=_(u'Course code'),
+        description=_(u"The short code for the course, e.g. '101'"),
+        required=True)
     title = schema.TextLine(
         title=_(u'Course title'),
         description=_(u"The name of the course"),
-        required=True)
-    code = schema.TextLine(
-        title=_(u'Course code'),
-        description=_(u"The short code for the course, e.g. '101'"),
         required=True)
     tutorials = RelationList(
         title=_(u'Course tutorials'),

@@ -96,7 +96,7 @@ class ListingViewTest(IntegrationTestCase):
 
         # Here's one we made earlier
         self.assertEquals(self.getView().courseListing(), [
-            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+            {'files': 0, 'id': 'course1', 'title': 'Unittest C1',
              'tutorials': 1, 'url': 'http://nohost/plone/dept1/course1'},
         ])
 
@@ -107,7 +107,7 @@ class ListingViewTest(IntegrationTestCase):
             title="Unittest D1 T2",
         )
         self.assertEquals(self.getView().courseListing(), [
-            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+            {'files': 0, 'id': 'course1', 'title': 'Unittest C1',
              'tutorials': 1, 'url': 'http://nohost/plone/dept1/course1'},
         ])
 
@@ -117,7 +117,7 @@ class ListingViewTest(IntegrationTestCase):
             portal['dept1']['tut2'],
         ])
         self.assertEquals(self.getView().courseListing(), [
-            {'code': None, 'files': 0, 'id': 'course1', 'title': 'Unittest C1',
+            {'files': 0, 'id': 'course1', 'title': 'Unittest C1',
              'tutorials': 2, 'url': 'http://nohost/plone/dept1/course1'},
         ])
 

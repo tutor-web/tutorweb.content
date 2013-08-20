@@ -63,7 +63,6 @@ class ListingView(BrowserView):
                 title=o.Title(),
                 language=o.language,
                 courses=contentCount['Courses'],
-                code=o.code,
                 pdf=None,  #TODO:
                 files=contentCount['File'],
                 lectures=contentCount['Lecture'],
@@ -97,7 +96,6 @@ class ListingView(BrowserView):
                 url=o.absolute_url(),
                 id=o.id,
                 title=o.Title(),
-                code=o.code,
                 tutorials=len(o.tutorials),
                 files=contentCount['File'],
             ))

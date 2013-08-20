@@ -9,7 +9,7 @@
 
 <metal:content-title fill-slot="content-title">
   <h1 class="documentFirstHeading"
-      tal:content="string:${context/title} (${context/code})">title (code)</h1>
+      tal:content="string:${context/title} (${context/id})">title (code)</h1>
 </metal:content-title>
 
 <metal:content-core fill-slot="content-core">
@@ -38,8 +38,8 @@
 
       <table class="listing">
         <thead>
-          <th>Id</th>
-          <th>Lecture name</th>
+          <th>Code</th>
+          <th>Name</th>
           <th>Slide download</th>
           <th>Num. slides</th>
           <th>Num. questions</th>
