@@ -41,7 +41,7 @@ class ListingViewTest(IntegrationTestCase):
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
-    def test_lectureMultipleListing(self):
+    def test_lectureListingMultiple(self):
         """Get counts of questions within lectures"""
         portal = self.layer['portal']
         self.path = 'dept1/tut1'
@@ -62,6 +62,28 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
              'pdf': None, 'questions': 4, 'slides': 0},
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'pdf': None, 'questions': 2, 'slides': 0},
+        ])
+
+    def test_lectureListingOrdering(self):
+        """Lectures should appear in right order, even if added after"""
+        portal = self.layer['portal']
+        self.path = 'dept1/tut1'
+        login(portal, MANAGER_ID);
+
+        # NB: This is a separate test since otherwise we trip over memoize
+        portal['dept1']['tut1'].invokeFactory(
+            type_name="tw_lecture",
+            id="lec0",
+            title="ZZUnittest D1 T1 L0",
+        )
+
+        self.assertEquals(self.getView().lectureListing(), [
+            {'id': 'lec0', 'title': 'ZZUnittest D1 T1 L0', 'url': 'http://nohost/plone/dept1/tut1/lec0',
+             'pdf': None, 'questions': 0, 'slides': 0},
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'pdf': None, 'questions': 2, 'slides': 0},
             {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
