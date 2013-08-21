@@ -26,14 +26,6 @@ class ILaTeXQuestionAnswer(model.Schema):
 
 class IQuestion(model.Schema):
     """Marker for anything question-ish"""
-    timesanswered = schema.Int(
-        title=_(u'Number of times answered'),
-        default=0,
-        required=True)
-    timescorrect = schema.Int(
-        title=_(u'Number of times correct'),
-        default=0,
-        required=True)
 
 
 class ILaTeXQuestion(model.Schema):
@@ -68,6 +60,14 @@ class ILaTeXQuestion(model.Schema):
         output_mime_type='text/html',
         allowed_mime_types=('text/html', 'text/x-tex',),
         required=False)
+    timesanswered = schema.Int(
+        title=_(u'Number of times answered'),
+        default=0,
+        required=True)
+    timescorrect = schema.Int(
+        title=_(u'Number of times correct'),
+        default=0,
+        required=True)
 
 class ILecture(model.Schema):
     """A lecture contains Slides and quiz questions"""

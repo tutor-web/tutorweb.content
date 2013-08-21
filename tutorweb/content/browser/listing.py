@@ -22,7 +22,16 @@ class ListingView(BrowserView):
             object_provides=IQuestion.__identifier__,
             sort_on="id",
         )
-        return listing
+        out = []
+        for o in (l.getObject() for l in listing):
+            out.append(dict(
+                url=o.absolute_url(),
+                id=o.id,
+                title=o.Title(),
+                timesanswered=o.timesanswered,
+                timescorrect=o.timescorrect,
+            ))
+        return out
 
     def slideListing(self):
         """Listing of all slide items"""

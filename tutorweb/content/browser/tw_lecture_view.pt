@@ -83,13 +83,13 @@
           </thead>
           <tbody>
             <tr tal:repeat="item view/questionListing">
-              <td tal:content="item/getId">q01</td>
+              <td tal:content="item/id">q01</td>
               <td>
-                <a href="#" tal:attributes="href item/getURL"
-                            tal:content="item/Title">question</a>
+                <a href="#" tal:attributes="href item/url"
+                            tal:content="item/title">question</a>
               </td>
-              <td tal:content="string:TODO:">q01</td>
-              <td tal:content="string:TODO:">q01</td>
+              <td tal:content="item/timesanswered">q01</td>
+              <td tal:content="item/timescorrect">q01</td>
             </tr>
           </tbody>
         </table>
