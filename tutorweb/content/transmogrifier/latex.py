@@ -51,37 +51,42 @@ class LatexSourceSection(object):
 
             # Tidy up and return
             del item['_defmime']
+            del item['_deffield']
             return item
-        item = dict(
+        # What we start off with when forming a new question
+        initialitem = dict(
             processLatex=True,
             _defmime='text/x-tex',
+            _deffield='text',
         )
-        defaultfield = 'text'
+        item = initialitem.copy()
         for line in (l.strip().decode('utf8') for l in file):
             if not line:
                 pass
+
             elif line == '%===':
                 # Separator, return this and move on to next item
                 yield finalise(item)
-                item = dict(
-                    processLatex=True,
-                    _defmime='text/x-tex',
-                )
-                defaultfield = 'text'
+                item = initialitem.copy()
+
             elif re.search(r'%ID\s+', line):
                 item['id'] = line.replace('%ID', '', 1).strip()
+
             elif re.search(r'%title\s+', line):
                 item['title'] = line.replace('%title', '', 1).strip()
+
             elif re.search(r'%image\s+', line):
                 #TODO: Fetch file
                 raise NotImplementedError('Should fetch file at this point')
                 item['image'] = line.replace('%image', '', 1).strip()
+
             elif line.startswith('%Explanation'):
                 # Any un %'ed lines are now part of the explanation
                 initExplanation = line.replace('%Explanation', '', 1).strip()
-                defaultfield = 'explanation'
+                item['_deffield'] = 'explanation'
                 if initExplanation:
-                    item[defaultfield] = initExplanation
+                    item[item['_deffield']] = initExplanation
+
             elif re.search(r'%format\s+', line):
                 # Format tag: Don't understand anything other than LaTeX
                 if re.search(r'%format\s+latex', line):
@@ -92,6 +97,7 @@ class LatexSourceSection(object):
                     item['_defmime'] = 'text/x-web-intelligent'
                 else:
                     raise ValueError('Unknown format %s' % line)
+
             elif re.search(r'^\w\)', line):
                 # a) -- z) choices. Use file ordering.
                 if 'choices' not in item:
@@ -100,7 +106,8 @@ class LatexSourceSection(object):
                     text=re.sub(r'^\w\)\s*', '', line),
                     randomize=True,
                 ))
-                defaultfield='choices'
+                item['_deffield']='choices'
+
             elif re.search(r'^\w\.(true|false)\)', line):
                 # a.true) choices
                 if 'choices' not in item:
@@ -110,20 +117,23 @@ class LatexSourceSection(object):
                     randomize=True,
                     correct=(re.search(r'^\w\.true\)', line) is not None),
                 ))
+
             elif re.search(r'%n\s+', line):
                 item['timesanswered'] = line.replace('%n', '', 1).strip()
+
             elif re.search(r'%r\s+', line):
                 item['timescorrect'] = line.replace('%r', '', 1).strip()
+
             else:
-                if defaultfield == 'choices':
+                if item['_deffield'] == 'choices':
                     # Append to last choice
                     item['choices'][-1]['text'] = (item['choices'][-1]['text']
                                                   + "\n" + line).strip()
                 else:
                     # Line that needs appending to
-                    if defaultfield not in item:
-                        item[defaultfield] = ""
-                    item[defaultfield] = (item[defaultfield] + "\n" + line).strip()
+                    if item['_deffield'] not in item:
+                        item[item['_deffield']] = ""
+                    item[item['_deffield']] = (item[item['_deffield']] + "\n" + line).strip()
         if item.keys():
             # Return final item too
             yield finalise(item)
