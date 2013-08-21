@@ -35,7 +35,7 @@ class LatexSourceSection(object):
                 if field in item:
                     item[field] = dict(
                         contenttype=item['_defmime'],
-                        data="\n".join(item[field]),
+                        data=item[field],
                         encoding='utf-8',
                     )
 
@@ -81,7 +81,7 @@ class LatexSourceSection(object):
                 initExplanation = line.replace('%Explanation', '', 1).strip()
                 defaultfield = 'explanation'
                 if initExplanation:
-                    item[defaultfield] = [initExplanation]
+                    item[defaultfield] = initExplanation
             elif re.search(r'%format\s+', line):
                 # Format tag: Don't understand anything other than LaTeX
                 if re.search(r'%format\s+latex', line):
@@ -122,8 +122,8 @@ class LatexSourceSection(object):
                 else:
                     # Line that needs appending to
                     if defaultfield not in item:
-                        item[defaultfield] = []
-                    item[defaultfield].append(line)
+                        item[defaultfield] = ""
+                    item[defaultfield] = (item[defaultfield] + "\n" + line).strip()
         if item.keys():
             # Return final item too
             yield finalise(item)
