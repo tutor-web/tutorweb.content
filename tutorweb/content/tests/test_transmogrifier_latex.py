@@ -39,9 +39,9 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
                     'encoding': 'utf-8',
                 },
                 'choices': [
-                    {'correct': False, 'randomize': True, 'text': '$x=20$ and $y=190$.'},
+                    {'correct': True, 'randomize': True, 'text': '$x=20$ and $y=190$.'},
                     {'correct': False, 'randomize': True, 'text': '$x = 190$ and $y = 20$.'},
-                    {'correct': True, 'randomize': True, 'text': '$x = 20$ and $y = 20$.'}
+                    {'correct': False, 'randomize': True, 'text': '$x = 20$ and $y = 20$.'}
                 ],
                 'explanation': {
                     'contenttype': 'text/x-tex',

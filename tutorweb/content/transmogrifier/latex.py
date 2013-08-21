@@ -43,7 +43,7 @@ class LatexSourceSection(object):
             if 'choices' in item:
                 for i, c in enumerate(item['choices']):
                     if 'correct' not in c:
-                        c['correct'] = (i + 1 == len(item['choices']))
+                        c['correct'] = (i == 0)
 
             # Set portal type for content
             if '_type' not in item:
