@@ -41,9 +41,9 @@ class LatexSourceSection(object):
 
             # Unless otherwise marked, last item is correct
             if 'choices' in item:
-                for i, c in enumerate(item['choices']):
-                    if 'correct' not in c:
-                        c['correct'] = (i == 0)
+                # Has to be at least one correct answer, choose first if none marked
+                if len([i for i in item['choices'] if i['correct']]) == 0:
+                    item['choices'][0]['correct'] = True
 
             # Set portal type for content
             if '_type' not in item:
@@ -105,6 +105,7 @@ class LatexSourceSection(object):
                 item['choices'].append(dict(
                     text=re.sub(r'^\w\)\s*', '', line),
                     randomize=True,
+                    correct=False,
                 ))
                 item['_deffield']='choices'
 
