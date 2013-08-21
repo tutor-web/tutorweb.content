@@ -13,6 +13,7 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, login, logout
+from plone.testing.z2 import Browser
 from zope.configuration import xmlconfig
 
 from Products.CMFCore.utils import getToolByName
@@ -44,7 +45,7 @@ class TestFixture(PloneSandboxLayer):
                 ['Member'],[]
             )
         acl_users.userFolderAddUser(
-            MANAGER_ID, 'secretBB',
+            MANAGER_ID, 'secret' + MANAGER_ID[0],
             ['Manager'],[]
         )
 
@@ -133,6 +134,17 @@ class IntegrationTestCase(TestCase):
 class FunctionalTestCase(TestCase):
     layer = TUTORWEB_CONTENT_FUNCTIONAL_TESTING
 
+    def getBrowser(self, url, user=USER_A_ID):
+        """Create a browser, optionally with auth details in headers"""
+        browser = Browser(self.layer['app'])
+        if user:
+            browser.addHeader('Authorization', 'Basic %s:%s' % (
+                user,
+                'secret' + user[0],
+            ))
+        if url:
+            browser.open(url)
+        return browser
 
 def setRelations(target, field, objs):
     """Configure a relation field"""
