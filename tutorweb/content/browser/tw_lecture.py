@@ -1,3 +1,5 @@
+import tempfile
+
 from ZPublisher.HTTPRequest import FileUpload
 
 from collective.transmogrifier.interfaces import ITransmogrifier
@@ -35,9 +37,19 @@ class LectureTeXImport(BrowserView):
         if not isinstance(upload, FileUpload):
             return ValueError("Missing upload")
 
+        if hasattr(upload, 'name'):
+            # Upload has already been buffered
+            filename = upload.name
+        else:
+            # Zope just slurped it, so we have to put it back
+            tf = tempfile.NamedTemporaryFile(suffix='.' + upload.filename)
+            tf.file.write(upload.read())
+            tf.file.flush()
+            filename = tf.name
+
         transmogrifier = ITransmogrifier(self.context)
         transmogrifier('tutorweb.content.latexquizimport', definitions=dict(
-            input_file=upload.name,
+            input_file=filename,
             folder='',  # i.e. upload to current context
         ))
         self.request.response.redirect(self.context.absolute_url())
