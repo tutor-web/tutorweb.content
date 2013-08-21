@@ -57,7 +57,7 @@ class ListingView(BrowserView):
                 title=o.Title(),
                 slides=contentCount['Slides'],
                 questions=contentCount['Question'],
-                pdf=None,  #TODO:
+                pdf=None if o.pdf is None else o.absolute_url() + '/@@download-pdf',
             ))
         return out
 
@@ -76,7 +76,7 @@ class ListingView(BrowserView):
                 title=o.Title(),
                 language=o.language,
                 courses=contentCount['Courses'],
-                pdf=None,  #TODO:
+                pdf=None if o.pdf is None else o.absolute_url() + '/@@download-pdf',
                 files=contentCount['File'],
                 lectures=contentCount['Lecture'],
                 author=o.author,

@@ -37,10 +37,15 @@
                           tal:content="item/title">tutorial</a>
             </td>
             <td tal:content="item/language">q01</td>
-            <td tal:content="item/courses">q01</td>
-            <td tal:content="item/pdf">q01</td>
-            <td tal:content="item/files">q01</td>
+            <td>
+              <a tal:attributes="href item/pdf" tal:condition="item/pdf">
+                <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
+                Download PDF
+              </a>
+            </td>
             <td tal:content="item/credits">q01</td>
+            <td tal:content="item/courses">q01</td>
+            <td tal:content="item/files">q01</td>
             <td tal:content="item/lectures">q01</td>
           </tr>
         </tbody>

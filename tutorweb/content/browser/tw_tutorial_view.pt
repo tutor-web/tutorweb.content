@@ -22,7 +22,10 @@
     <tal:t tal:condition="context/portal_membership/isAnonymousUser">
       <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
     </tal:t>
-    <li><a href="#TODO:">Download tutorial notes</a></li>
+    <li><a tal:attributes="href string:${context/absolute_url}/@@download-pdf">
+        <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
+        Download tutorial notes
+    </a></li>
   </ul>
 
   <dl class="enableFormTabbing">
@@ -32,7 +35,7 @@
 
       <tal:t tal:condition="view/canEdit">
         <ul>
-          <li><a href="#TODO:">Update all slides PDF</a></li>
+          <li><a href="#TODO:">Update tutorial PDF</a></li>
         </ul>
       </tal:t>
 
@@ -52,7 +55,7 @@
                           tal:content="item/title">slide</a>
             </td>
             <td>
-              <a tal:attributes="href string:TODO:">
+              <a tal:attributes="href item/pdf" tal:condition="item/pdf">
                 <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
                 Download PDF
               </a>

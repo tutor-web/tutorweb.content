@@ -48,6 +48,17 @@
       template="tw_department_view.pt"
       />
 
+    <browser:page name="download-pdf"
+      for="tutorweb.content.schema.ILecture"
+      permission="zope2.View"
+      class=".download.DownloadPdfView"
+      />
+    <browser:page name="download-pdf"
+      for="tutorweb.content.schema.ITutorial"
+      permission="zope2.View"
+      class=".download.DownloadPdfView"
+      />
+
   <browser:viewlet
       name="tutorweb.content.mathjax.config"
       manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
