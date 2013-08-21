@@ -18,6 +18,7 @@
     Visible to everyone, editable by the owner.
   </description>
   <permission-map name="Access contents information" acquired="False">
+   <permission-role>Authenticated</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
    <permission-role>Editor</permission-role>

@@ -54,8 +54,8 @@ class ContentTypeTest(IntegrationTestCase):
         # User A is just a member, can't see questions
         login(portal, USER_A_ID);
         with self.assertRaises(Unauthorized):
-            portal.restrictedTraverse('dept1/tut1/lec1/qn1');
+            portal.restrictedTraverse('dept1/tut1/lec1/qn1/@@view');
 
         # Manager however, can.
         login(portal, MANAGER_ID);
-        portal.restrictedTraverse('dept1/tut1/lec1/qn1');
+        portal.restrictedTraverse('dept1/tut1/lec1/qn1/@@view');
