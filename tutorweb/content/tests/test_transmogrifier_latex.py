@@ -150,6 +150,33 @@ c)  $N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.
             """$N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.""",
         ])
 
+    def test_plainText(self):
+        qns = [x for x in self.createSource("""
+%ID	question-053
+%title	Question
+%format	txt
+%r  61
+%n  133
+
+
+Helmingunartími $C^{14}$ er 5730 ár.
+
+a)  $N(2000)=20\cdot 2^{-\frac{200}{573}}$.
+b)
+$N(2000)=20\cdot (2 + e^{-\frac{200}{573}})$.
+c)  $N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.
+
+%Explanation
+Don't catch on quickly, do you?
+        """)]
+        self.assertEqual(len(qns), 1)
+        self.assertEqual(qns[0]['title'], u'Question')
+        self.assertEqual(qns[0]['id'], u'question-053')
+        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.')
+        self.assertEqual(qns[0]['text']['contenttype'], u'text/x-web-intelligent')
+        self.assertEqual(qns[0]['explanation']['data'], u"Don't catch on quickly, do you?")
+        self.assertEqual(qns[0]['explanation']['contenttype'], u'text/x-web-intelligent')
+
     def createSource(self, tex):
         if hasattr(self, 'tf'):
             self.tf.close()

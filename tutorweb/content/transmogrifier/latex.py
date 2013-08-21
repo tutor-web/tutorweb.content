@@ -34,7 +34,7 @@ class LatexSourceSection(object):
             for field in ['text', 'explanation']:
                 if field in item:
                     item[field] = dict(
-                        contenttype='text/x-tex',
+                        contenttype=item['_defmime'],
                         data="\n".join(item[field]),
                         encoding='utf-8',
                     )
@@ -48,10 +48,14 @@ class LatexSourceSection(object):
             # Set portal type for content
             if '_type' not in item:
                 item['_type'] = 'tw_latexquestion'
-                item['processLatex'] = True
 
+            # Tidy up and return
+            del item['_defmime']
             return item
-        item = {}
+        item = dict(
+            processLatex=True,
+            _defmime='text/x-tex',
+        )
         defaultfield = 'text'
         for line in (l.strip().decode('utf8') for l in file):
             if not line:
@@ -59,7 +63,10 @@ class LatexSourceSection(object):
             elif line == '%===':
                 # Separator, return this and move on to next item
                 yield finalise(item)
-                item = {}
+                item = dict(
+                    processLatex=True,
+                    _defmime='text/x-tex',
+                )
                 defaultfield = 'text'
             elif re.search(r'%ID\s+', line):
                 item['id'] = line.replace('%ID', '', 1).strip()
@@ -77,7 +84,13 @@ class LatexSourceSection(object):
                     item[defaultfield] = [initExplanation]
             elif re.search(r'%format\s+', line):
                 # Format tag: Don't understand anything other than LaTeX
-                if not re.search(r'%format\s+latex', line):
+                if re.search(r'%format\s+latex', line):
+                    # Already set up by default
+                    pass
+                elif re.search(r'%format\s+(txt|text)', line):
+                    item['processLatex'] = False
+                    item['_defmime'] = 'text/x-web-intelligent'
+                else:
                     raise ValueError('Unknown format %s' % line)
             elif re.search(r'^\w\)', line):
                 # a) -- z) choices. Use file ordering.

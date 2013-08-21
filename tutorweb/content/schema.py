@@ -58,7 +58,7 @@ class ILaTeXQuestion(model.Schema):
         description=_(u'Displayed to the student after the question is asked'),
         default_mime_type='text/x-tex',
         output_mime_type='text/html',
-        allowed_mime_types=('text/html', 'text/x-tex',),
+        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-web-intelligent'),
         required=False)
     timesanswered = schema.Int(
         title=_(u'Number of times answered'),
