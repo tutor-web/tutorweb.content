@@ -26,6 +26,14 @@ class ILaTeXQuestionAnswer(model.Schema):
 
 class IQuestion(model.Schema):
     """Marker for anything question-ish"""
+    timesanswered = schema.Int(
+        title=_(u'Number of times answered'),
+        default=0,
+        required=True)
+    timescorrect = schema.Int(
+        title=_(u'Number of times correct'),
+        default=0,
+        required=True)
 
 
 class ILaTeXQuestion(model.Schema):

@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 import unittest
 import tempfile
 
@@ -121,6 +122,32 @@ Don't catch on quickly, do you?
             {'contenttype': 'text/x-tex', 'data': """Seems obvious now, doesn't it?\nWell, duh.""", 'encoding': 'utf-8'},
             {'contenttype': 'text/x-tex', 'data': """You should have worked it out the first time.""", 'encoding': 'utf-8'},
             {'contenttype': 'text/x-tex', 'data': """Don't catch on quickly, do you?""", 'encoding': 'utf-8'},
+        ])
+
+    def test_qnsWithTabs(self):
+        qns = [x for x in self.createSource("""
+%ID	question-053
+%title	Question
+%format	latex
+%r  61
+%n  133
+
+
+Helmingunartími $C^{14}$ er 5730 ár.
+
+a)  $N(2000)=20\cdot 2^{-\frac{200}{573}}$.
+b)
+$N(2000)=20\cdot (2 + e^{-\frac{200}{573}})$.
+c)  $N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.
+        """)]
+        self.assertEqual(len(qns), 1)
+        self.assertEqual(qns[0]['title'], u'Question')
+        self.assertEqual(qns[0]['id'], u'question-053')
+        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.')
+        self.assertEqual([x['text'] for x in qns[0]['choices']], [
+            """$N(2000)=20\cdot 2^{-\frac{200}{573}}$.""",
+            """$N(2000)=20\cdot (2 + e^{-\frac{200}{573}})$.""",
+            """$N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.""",
         ])
 
     def createSource(self, tex):

@@ -61,11 +61,11 @@ class LatexSourceSection(object):
                 yield finalise(item)
                 item = {}
                 defaultfield = 'text'
-            elif line.startswith('%ID '):
+            elif re.search(r'%ID\s+', line):
                 item['id'] = line.replace('%ID', '', 1).strip()
-            elif line.startswith('%title '):
+            elif re.search(r'%title\s+', line):
                 item['title'] = line.replace('%title', '', 1).strip()
-            elif line.startswith('%image '):
+            elif re.search(r'%image\s+', line):
                 #TODO: Fetch file
                 raise NotImplementedError('Should fetch file at this point')
                 item['image'] = line.replace('%image', '', 1).strip()
@@ -75,9 +75,9 @@ class LatexSourceSection(object):
                 defaultfield = 'explanation'
                 if initExplanation:
                     item[defaultfield] = [initExplanation]
-            elif line.startswith('%format '):
+            elif re.search(r'%format\s+', line):
                 # Format tag: Don't understand anything other than LaTeX
-                if line != '%format latex':
+                if not re.search(r'%format\s+latex', line):
                     raise ValueError('Unknown format %s' % line)
             elif re.search(r'^\w\)', line):
                 # a) -- z) choices. Use file ordering.
@@ -87,6 +87,7 @@ class LatexSourceSection(object):
                     text=re.sub(r'^\w\)\s*', '', line),
                     randomize=True,
                 ))
+                defaultfield='choices'
             elif re.search(r'^\w\.(true|false)\)', line):
                 # a.true) choices
                 if 'choices' not in item:
@@ -96,11 +97,20 @@ class LatexSourceSection(object):
                     randomize=True,
                     correct=(re.search(r'^\w\.true\)', line) is not None),
                 ))
+            elif re.search(r'%n\s+', line):
+                item['timesanswered'] = line.replace('%n', '', 1).strip()
+            elif re.search(r'%r\s+', line):
+                item['timescorrect'] = line.replace('%r', '', 1).strip()
             else:
-                # Line that needs appending to
-                if defaultfield not in item:
-                    item[defaultfield] = []
-                item[defaultfield].append(line)
+                if defaultfield == 'choices':
+                    # Append to last choice
+                    item['choices'][-1]['text'] = (item['choices'][-1]['text']
+                                                  + "\n" + line).strip()
+                else:
+                    # Line that needs appending to
+                    if defaultfield not in item:
+                        item[defaultfield] = []
+                    item[defaultfield].append(line)
         if item.keys():
             # Return final item too
             yield finalise(item)
