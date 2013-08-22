@@ -1,4 +1,5 @@
 from unittest import TestCase
+import tempfile
 
 import transaction
 
@@ -155,3 +156,14 @@ def setRelations(target, field, objs):
         else RelationValue(intids.getId(objs)))
     setattr(target, field, val)
     notify(ObjectModifiedEvent(target))
+
+def testImage():
+    """Returns a NamedTemporaryFile with an image in it"""
+    imagetf = tempfile.NamedTemporaryFile(suffix='.png')
+    imagetf.write(
+        '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00'
+        '\x01\x01\x03\x00\x00\x00%\xdbV\xca\x00\x00\x00\x03PLTE\xff\xff'
+        '\xff\xa7\xc4\x1b\xc8\x00\x00\x00\nIDAT\x08\xd7c`\x00\x00\x00\x02'
+        '\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82')
+    imagetf.flush()
+    return imagetf

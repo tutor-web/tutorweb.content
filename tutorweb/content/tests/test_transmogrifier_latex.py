@@ -4,6 +4,8 @@ import tempfile
 
 from tutorweb.content.transmogrifier.latex import LatexSourceSection
 
+from .base import testImage
+
 
 class LatexSourceSectionTest(unittest.TestCase):
     maxDiff = None
@@ -225,6 +227,25 @@ e) Mauve
             dict(correct=False, text=u"Mauve"),
         ])
         self.assertTrue('finalchoices' not in qns[1])
+
+    def test_image(self):
+        imagetf = testImage()
+        qns = [x for x in self.createSource("""
+%%ID	question-053
+%%title	Question with image
+%%format	latex
+%%image file://%s
+        """ % imagetf.name)]
+        self.assertEqual(len(qns), 1)
+        self.assertEqual(qns[0]['title'], u'Question with image')
+        self.assertEqual(qns[0]['id'], u'question-053')
+        imagetf.seek(0)
+        self.assertEqual(qns[0]['image'], dict(
+            contenttype='image/png',
+            data=imagetf.read(),
+            filename=u'file://%s' % imagetf.name,
+        ))
+        imagetf.close()
 
     def createSource(self, tex):
         if hasattr(self, 'tf'):

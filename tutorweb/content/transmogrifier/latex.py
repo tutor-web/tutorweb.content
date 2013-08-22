@@ -1,3 +1,4 @@
+import urllib2
 import re
 
 from zope.interface import classProvides, implements
@@ -76,9 +77,12 @@ class LatexSourceSection(object):
                 item['title'] = line.replace('%title', '', 1).strip()
 
             elif re.search(r'%image\s+', line):
-                #TODO: Fetch file
-                raise NotImplementedError('Should fetch file at this point')
-                item['image'] = line.replace('%image', '', 1).strip()
+                item['image'] = dict(
+                    filename=line.replace('%image', '', 1).strip(),
+                )
+                response = urllib2.urlopen(item['image']['filename'])
+                item['image']['data'] = response.read()
+                item['image']['contenttype'] = response.headers['content-type']
 
             elif line.startswith('%Explanation'):
                 # Any un %'ed lines are now part of the explanation
