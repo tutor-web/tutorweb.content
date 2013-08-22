@@ -19,9 +19,6 @@ class ILaTeXQuestionAnswer(model.Schema):
     correct = schema.Bool(
         title=_(u'Correct?'),
         required=False)
-    randomize = schema.Bool(
-        title=_(u'Randomize order'),
-        required=False)
 
 
 class IQuestion(model.Schema):
@@ -46,12 +43,19 @@ class ILaTeXQuestion(model.Schema):
         required=False)
     choices = schema.List(
         title=_(u"Answers"),
-        description=_(u'''Specify the answer text, if the answer is correct
-                        and if the answer should be in a randomized order
-                        when displayed in a quiz.'''),
+        description=_(u'''Specify the answer text, and whether it is correct.
+        Answers will be displayed in a randomized order.'''),
         value_type=DictRow(title=u"tablerow", schema=ILaTeXQuestionAnswer),
         required=False)
     form.widget(choices=
+                'collective.z3cform.datagridfield.DataGridFieldFactory')
+    finalchoices = schema.List(
+        title=_(u"Fixed answers at end"),
+        description=_(u'''Specify the answer text, and whether it is correct.
+        Answers will be displayed in a fixed order at the end of the answer list.'''),
+        value_type=DictRow(title=u"tablerow", schema=ILaTeXQuestionAnswer),
+        required=False)
+    form.widget(finalchoices=
                 'collective.z3cform.datagridfield.DataGridFieldFactory')
     explanation = RichText(
         title=u"Explanation text",

@@ -14,11 +14,10 @@ class BaseQuestionStruct(BrowserView):
                 '<div>$\\mathbb{R} \\backslash \\mathbb{Q}$ (me)</div>',
                 '<div>$\\mathbb{Q} \\backslash \\mathbb{R}$</div>',
                 '<div>$\\mathbb{N} \\cap \\mathbb{Q}$ (me)</div>' ],
-            "fixed_order": [0],
-            "random_order": [1, 2],
+            "shuffle": [0, 1],
             "answer": window.btoa(JSON.stringify({
                 "explanation": "<div>\nThe symbol for the set of all irrational numbers (b)\n</div>",
-                "correct": [0, 2]
+                "correct": [3],
             }))
         }
         """
@@ -58,16 +57,15 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
                 mimetype='text/x-tex',
             ).getData()
 
-        choices = self.context.choices or []
+        all_choices = (self.context.choices or []) + (self.context.finalchoices or [])
         out = dict(
             title=self.context.title,
             text=renderRichField(self.context.text),
-            choices=[renderTeX(x['text']) for x in choices],
-            fixed_order=[i for (i, x) in enumerate(choices) if not x['randomize']],
-            random_order=[i for (i, x) in enumerate(choices) if x['randomize']],
+            choices=[renderTeX(x['text']) for x in all_choices],
+            shuffle=range(len(self.context.choices or [])),
             answer=dict(
                 explanation=renderRichField(self.context.explanation),
-                correct=[i for (i, x) in enumerate(choices) if x['correct']],
+                correct=[i for (i, x) in enumerate(all_choices) if x['correct']],
             ),
         )
         return out

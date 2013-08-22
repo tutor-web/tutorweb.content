@@ -39,9 +39,9 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
                     'encoding': 'utf-8',
                 },
                 'choices': [
-                    {'correct': True, 'randomize': True, 'text': '$x=20$ and $y=190$.'},
-                    {'correct': False, 'randomize': True, 'text': '$x = 190$ and $y = 20$.'},
-                    {'correct': False, 'randomize': True, 'text': '$x = 20$ and $y = 20$.'}
+                    {'correct': True, 'text': '$x=20$ and $y=190$.'},
+                    {'correct': False, 'text': '$x = 190$ and $y = 20$.'},
+                    {'correct': False, 'text': '$x = 20$ and $y = 20$.'}
                 ],
                 'explanation': {
                     'contenttype': 'text/x-tex',
@@ -67,10 +67,10 @@ c.false)x = 21
             'title': u'Sum',
             'processLatex': True,
             'choices': [
-                {'correct': True, 'randomize': True, 'text': u'$x=20$'},
-                {'correct': False, 'randomize': True, 'text': u'$x = 190$'},
-                {'correct': True, 'randomize': True, 'text': u'$x = 191$'},
-                {'correct': False, 'randomize': True, 'text': u'x = 21'},
+                {'correct': True, 'text': u'$x=20$'},
+                {'correct': False, 'text': u'$x = 190$'},
+                {'correct': True, 'text': u'$x = 191$'},
+                {'correct': False, 'text': u'x = 21'},
             ],
         })
 
@@ -176,6 +176,55 @@ Don't catch on quickly, do you?
         self.assertEqual(qns[0]['text']['contenttype'], u'text/x-web-intelligent')
         self.assertEqual(qns[0]['explanation']['data'], u"Don't catch on quickly, do you?")
         self.assertEqual(qns[0]['explanation']['contenttype'], u'text/x-web-intelligent')
+
+    def test_anyOfTheAbove(self):
+        """A d.true|false) .* of the above question is interpreted as non-random"""
+        qns = [x for x in self.createSource("""
+%ID	q1
+%title	Question with no right answer
+%format	latex
+
+What is the winning move?
+
+a) LEFT 5
+b) FORWARD 10
+c) Jump!
+d.true) None of the above
+
+%===
+
+%ID	q2
+%title	Question with lots of answers
+%format	latex
+
+What is my favourite colour?
+
+a) Green
+b) Orange
+c) Pink
+d) Blue
+e) Mauve
+        """)]
+        self.assertEqual(len(qns), 2)
+        # First question will have the last answer as fixed
+        self.assertEqual(qns[0]['choices'], [
+            dict(correct=False, text=u"LEFT 5"),
+            dict(correct=False, text=u"FORWARD 10"),
+            dict(correct=False, text=u"Jump!"),
+        ])
+        self.assertEqual(qns[0]['finalchoices'], [
+            dict(correct=True, text=u"None of the above"),
+        ])
+        
+        # Second question just has lots of answers
+        self.assertEqual(qns[1]['choices'], [
+            dict(correct=True, text=u"Green"),
+            dict(correct=False, text=u"Orange"),
+            dict(correct=False, text=u"Pink"),
+            dict(correct=False, text=u"Blue"),
+            dict(correct=False, text=u"Mauve"),
+        ])
+        self.assertTrue('finalchoices' not in qns[1])
 
     def createSource(self, tex):
         if hasattr(self, 'tf'):

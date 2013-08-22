@@ -42,7 +42,7 @@ class LatexSourceSection(object):
             # Unless otherwise marked, last item is correct
             if 'choices' in item:
                 # Has to be at least one correct answer, choose first if none marked
-                if len([i for i in item['choices'] if i['correct']]) == 0:
+                if len([i for i in item['choices'] + item.get('finalchoices', []) if i['correct']]) == 0:
                     item['choices'][0]['correct'] = True
 
             # Set portal type for content
@@ -98,24 +98,22 @@ class LatexSourceSection(object):
                 else:
                     raise ValueError('Unknown format %s' % line)
 
-            elif re.search(r'^\w\)', line):
-                # a) -- z) choices. Use file ordering.
-                if 'choices' not in item:
-                    item['choices'] = []
-                item['choices'].append(dict(
-                    text=re.sub(r'^\w\)\s*', '', line),
-                    randomize=True,
-                    correct=False,
-                ))
-                item['_deffield']='choices'
+            elif re.search(r'^\w\.(true|false)\)', line) or re.search(r'^\w\)', line):
+                # a) or a.true) choices
+                # Choose which field it should go in
+                if line.startswith("d.") and "of the above" in line.lower():
+                    # A "any of the above" or "none of the above" option goes at the bottom
+                    item['_deffield']='finalchoices'
+                else:
+                    item['_deffield']='choices'
 
-            elif re.search(r'^\w\.(true|false)\)', line):
-                # a.true) choices
-                if 'choices' not in item:
-                    item['choices'] = []
-                item['choices'].append(dict(
-                    text=re.sub(r'^\w\.(true|false)\)\s*', '', line),
-                    randomize=True,
+                # Add to field
+                if item['_deffield'] not in item:
+                    item[item['_deffield']] = []
+                item[item['_deffield']].append(dict(
+                    text=re.sub(r'^.*?\)\s*', '', line),
+                    #NB: if in the form a), then the following is still false.
+                    # Will mark the first answer as correct in finalise()
                     correct=(re.search(r'^\w\.true\)', line) is not None),
                 ))
 
@@ -130,6 +128,10 @@ class LatexSourceSection(object):
                     # Append to last choice
                     item['choices'][-1]['text'] = (item['choices'][-1]['text']
                                                   + "\n" + line).strip()
+                elif item['_deffield'] == 'finalchoices':
+                    # Append to last choice
+                    item['finalchoices'][-1]['text'] = (item['finalchoices'][-1]['text']
+                                                     + "\n" + line).strip()
                 else:
                     # Line that needs appending to
                     if item['_deffield'] not in item:
