@@ -49,7 +49,14 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
         def renderRichField(f):
             if f is None:
                 return ''
-            return f.output
+            if hasattr(f, 'output'):  # i.e. a RichTextField
+                return f.output
+            if hasattr(f, 'getImageSize'):  # i.e. a NamedBlobImage
+                return '<img src="data:%s;base64,%s" width="%d" height="%d" />' % ((
+                    f.contentType,
+                    f.data.encode("base64").replace("\n", ""),
+                ) + f.getImageSize())
+            'data:image/png;base64,{0}'.format(data_uri)
 
         def renderTeX(f):
             return self.portalTransforms().convertTo(
@@ -60,7 +67,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
         all_choices = (self.context.choices or []) + (self.context.finalchoices or [])
         out = dict(
             title=self.context.title,
-            text=renderRichField(self.context.text),
+            text=renderRichField(self.context.text) + renderRichField(self.context.image),
             choices=[renderTeX(x['text']) for x in all_choices],
             shuffle=range(len(self.context.choices or [])),
             answer=dict(

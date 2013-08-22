@@ -1,7 +1,8 @@
 from plone.app.textfield.value import RichTextValue
 from plone.app.testing import login
+from plone.namedfile.file import NamedBlobImage
 
-from .base import IntegrationTestCase, MANAGER_ID
+from .base import IntegrationTestCase, MANAGER_ID, testImage
 
 
 class LaTeXQuestionStructTest(IntegrationTestCase):
@@ -44,6 +45,29 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             answer=dict(
                 correct=[2],
                 explanation='<div class="parse-as-tex">Apparently you are</div>',
+            )
+        ))
+
+        # Images get data uri'ed
+        imagetf = testImage()
+        imagetf.seek(0)
+        imageContents = imagetf.read()
+        self.assertEqual(self.questionToDict(dict(
+            title="qtd image question",
+            text=self.rtv("Here is some text with an image below"),
+            image=NamedBlobImage(
+                data=imageContents,
+                contentType='image/png'
+            ),
+        )), dict(
+            title=u'qtd image question',
+            text='<div class="parse-as-tex">Here is some text with an image below</div>'
+                +'<img src="data:image/png;base64,%s" width="1" height="1" />' % imageContents.encode("base64").replace("\n", ""),
+            choices=[],
+            shuffle=[],
+            answer=dict(
+                correct=[],
+                explanation='',
             )
         ))
 
