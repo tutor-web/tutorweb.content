@@ -1,5 +1,7 @@
 import json
 
+from AccessControl.SecurityInfo import ClassSecurityInfo
+
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 
@@ -39,10 +41,22 @@ class BaseQuestionStruct(BrowserView):
 
 
 class LaTeXQuestionStruct(BaseQuestionStruct):
+    security = ClassSecurityInfo()
     def portalTransforms(self):
         if getattr(self, '_pt', None) is None:
             self._pt = getToolByName(self.context, 'portal_transforms')
         return self._pt
+
+    security.declarePrivate('updateStats')
+    def updateStats(self, timesAnswered, timesCorrect):
+        """Update question with new stats"""
+        self.context.timesAnswered = timesAnswered
+        self.context.timesCorrect = timesCorrect
+
+    security.declarePrivate('allChoices')
+    def allChoices(self):
+        """List all the possible choices"""
+        return (self.context.choices or []) + (self.context.finalchoices or [])
 
     def asDict(self):
         """Pull fields out into struct"""
@@ -64,7 +78,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
                 mimetype='text/x-tex',
             ).getData()
 
-        all_choices = (self.context.choices or []) + (self.context.finalchoices or [])
+        all_choices = self.allChoices()
         out = dict(
             title=self.context.title,
             text=renderRichField(self.context.text) + renderRichField(self.context.image),
