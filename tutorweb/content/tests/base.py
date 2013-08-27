@@ -76,11 +76,15 @@ class TestFixture(PloneSandboxLayer):
             type_name="tw_latexquestion",
             id="qn1",
             title="Unittest D1 T1 L1 Q1",
+            choices=[dict(text="orange", correct=False), dict(text="green", correct=True)],
+            finalchoices=[],
         )
         portal['dept1']['tut1']['lec1'].invokeFactory(
             type_name="tw_latexquestion",
             id="qn2",
             title="Unittest D1 T1 L1 Q2",
+            choices=[dict(text="orange", correct=False), dict(text="blue", correct=False)],
+            finalchoices=[dict(text="green", correct=True)],
         )
         portal['dept1']['tut1'].invokeFactory(
             type_name="tw_lecture",
