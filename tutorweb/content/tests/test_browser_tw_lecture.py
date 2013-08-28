@@ -64,6 +64,41 @@ c)      ouch, it was an iron bar.
         self.assertEqual(qn.image.data, imagetf.read())
         imagetf.close()
 
+    def test_leaveValuesAlone(self):
+        browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
+%ID     q88
+%title  Imported question
+%format latex
+A man walks into a bar
+a)      $T_h = a$
+b)      $T_h = b$
+c)      ouch, it was an iron bar.
+%r 22
+%n 19
+        """)
+        # Browser returned to lecture page
+        self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
+        # Question had it's answered / correct values updated
+        qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.text.raw, u'A man walks into a bar')
+        self.assertEqual(qn.timesanswered, 19)
+        self.assertEqual(qn.timescorrect, 22)
+
+        # Updating question again, not updating values
+        browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
+%ID     q88
+%title  Imported question
+%format latex
+A man walks into a lamp post
+        """)
+        # Browser returned to lecture page
+        self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
+        # Question still has answered / correct values
+        qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.text.raw, u'A man walks into a lamp post')
+        self.assertEqual(qn.timesanswered, 19)
+        self.assertEqual(qn.timescorrect, 22)
+
     def uploadTeX(self, lecUrl, tex):
         browser = self.getBrowser(lecUrl, user=MANAGER_ID)
         ctrl = browser.getControl('Update questions from TeX file')
