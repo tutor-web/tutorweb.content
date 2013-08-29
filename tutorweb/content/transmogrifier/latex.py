@@ -109,11 +109,14 @@ def readQuestions(file):
             else:
                 raise ValueError('Unknown format %s' % line)
 
-        elif re.search(r'^\w\.(true|false)\)', line) or re.search(r'^\w\)', line):
+        elif re.search(r'^[a-z]+(\.true|\.false)?\)', line):
             # a) or a.true) choices
             # Choose which field it should go in
-            if line.startswith("d.") and "of the above" in line.lower():
-                # A "any of the above" or "none of the above" option goes at the bottom
+            if re.search(r'^d.(true|false)\)', line):
+                # "d.true|d.false" is a special case, apparently
+                item['_deffield']='finalchoices'
+            elif re.search(r'^x[a-z]', line):
+                # xa) .. xz) goes at the end
                 item['_deffield']='finalchoices'
             else:
                 item['_deffield']='choices'
@@ -125,7 +128,7 @@ def readQuestions(file):
                 text=re.sub(r'^.*?\)\s*', '', line),
                 #NB: if in the form a), then the following is still false.
                 # Will mark the first answer as correct in finalise()
-                correct=(re.search(r'^\w\.true\)', line) is not None),
+                correct=(re.search(r'^[a-z]+\.true\)', line) is not None),
             ))
 
         elif re.search(r'%n\s+', line):
@@ -168,15 +171,15 @@ def objectsToTex(gen):
         if obj.text:
             out += obj.text.raw + "\n\n"
         for (i, x) in enumerate(obj.choices or []):
-            out += "%s.%s) %s\n" % (
+            out += "%s%s) %s\n" % (
                 chr(97 + i),
-                'true' if x['correct'] else 'false',
+                '.true' if x['correct'] else '',
                 x['text'].replace("\n", "")
             )
         for (i, x) in enumerate(obj.finalchoices or []):
-            out += "x%s.%s) %s\n" % (
+            out += "x%s%s) %s\n" % (
                 chr(97 + i),
-                'true' if x['correct'] else 'false',
+                '.true' if x['correct'] else '',
                 x['text'].replace("\n", "")
             )
         if obj.explanation:

@@ -180,7 +180,7 @@ Don't catch on quickly, do you?
         self.assertEqual(qns[0]['explanation']['contenttype'], u'text/x-web-intelligent')
 
     def test_anyOfTheAbove(self):
-        """A d.true|false) .* of the above question is interpreted as non-random"""
+        """A d.true|false) question is interpreted as non-random"""
         qns = [x for x in self.createSource("""
 %ID	q1
 %title	Question with no right answer

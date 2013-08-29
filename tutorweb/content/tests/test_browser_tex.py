@@ -35,12 +35,35 @@ class LaTeXQuestionTeXViewTest(IntegrationTestCase):
 %image http://nohost/plone/dept1/tut1/lec1/qtd0/@@download-image
 Here is some text with an image below
 
-a.false) woo
-b.false) yay
+a) woo
+b) yay
 xa.true) lastone
 
 %Explanation
 Apparently you are
+        """.strip())
+
+        self.assertEqual(self.questionToTeX(dict(
+            title="qtd text question",
+            text=self.rtv("Here is some text"),
+            choices=[
+                dict(text='woo', correct=False),
+                dict(text='yay', correct=True),
+            ],
+            finalchoices=[
+                dict(text='lastone', correct=False),
+                dict(text='reallylastone', correct=False),
+            ],
+        )).strip(),"""
+%ID qtd1
+%title qtd text question
+%format latex
+Here is some text
+
+a) woo
+b.true) yay
+xa) lastone
+xb) reallylastone
         """.strip())
 
     def rtv(self, string, mimeType="application/x-tex"):
