@@ -16,6 +16,29 @@
 
   <dl class="enableFormTabbing">
 
+    <dt id="fieldsetlegend-courses">Courses</dt>
+    <dd id="fieldset-courses">
+      <table class="listing">
+        <thead>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Number of tutorials</th>
+          <th>Literature</th>
+        </thead>
+        <tbody>
+          <tr tal:repeat="item view/courseListing">
+            <td tal:content="item/id">course01</td>
+            <td>
+              <a href="#" tal:attributes="href item/url"
+                          tal:content="item/title">course</a>
+            </td>
+            <td tal:content="item/tutorials"></td>
+            <td tal:content="item/files"></td>
+          </tr>
+        </tbody>
+      </table>
+    </dd>
+
     <dt id="fieldsetlegend-tutorials">Tutorials</dt>
     <dd id="fieldset-tutorials">
       <table class="listing">
@@ -47,29 +70,6 @@
             <td tal:content="item/courses">q01</td>
             <td tal:content="item/files">q01</td>
             <td tal:content="item/lectures">q01</td>
-          </tr>
-        </tbody>
-      </table>
-    </dd>
-
-    <dt id="fieldsetlegend-courses">Courses</dt>
-    <dd id="fieldset-courses">
-      <table class="listing">
-        <thead>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Number of tutorials</th>
-          <th>Literature</th>
-        </thead>
-        <tbody>
-          <tr tal:repeat="item view/courseListing">
-            <td tal:content="item/id">course01</td>
-            <td>
-              <a href="#" tal:attributes="href item/url"
-                          tal:content="item/title">course</a>
-            </td>
-            <td tal:content="item/tutorials"></td>
-            <td tal:content="item/files"></td>
           </tr>
         </tbody>
       </table>
