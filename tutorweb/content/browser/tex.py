@@ -7,6 +7,20 @@ from Products.Five.browser import BrowserView
 
 from tutorweb.content.schema import IQuestion
 
+from tutorweb.content.transmogrifier.latex import objectsToTex
+
+
+class LaTeXQuestionTeXView(BrowserView):
+    """Render question in TeX form"""
+    def __call__(self):
+        context = self.context
+        self.request.response.setHeader('Content-Type', 'application/x-tex')
+        self.request.response.setHeader(
+            'Content-disposition',
+            "attachment; filename=%s.tex" % context.id,
+        )
+        return objectsToTex([context])
+
 
 class LectureTeXView(BrowserView):
     """Render all questions from lecture in TeX form"""
@@ -21,13 +35,7 @@ class LectureTeXView(BrowserView):
             'Content-disposition',
             "attachment; filename=%s.tex" % self.context.id,
         )
-        response.write("\n")  # To finalise the headers
-        for (i, l) in enumerate(listing):
-            if i > 0:
-                response.write("\n%===\n")
-            response.write(l.getObject()
-                            .restrictedTraverse('tex')()
-                            .encode('utf8'))
+        return objectsToTex(l.getObject() for l in listing)
 
 
 class LectureTeXImport(BrowserView):

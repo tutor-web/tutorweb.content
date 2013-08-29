@@ -11,19 +11,19 @@
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ILaTeXQuestion"
-      class=".question.LaTeXQuestionTeXView"
+      class=".tex.LaTeXQuestionTeXView"
       permission="cmf.ManagePortal"
       />
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ILecture"
-      class=".tw_lecture.LectureTeXView"
+      class=".tex.LectureTeXView"
       permission="cmf.ManagePortal"
       />
 
     <browser:page name="tex-import"
       for="tutorweb.content.schema.ILecture"
-      class=".tw_lecture.LectureTeXImport"
+      class=".tex.LectureTeXImport"
       permission="cmf.ManagePortal"
       />
 

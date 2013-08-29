@@ -151,3 +151,35 @@ def readQuestions(file):
     if item.get('id', None):
         # Return final item too
         yield finalise(item)
+
+
+def objectsToTex(gen):
+    """Convert a generator of plone objects into a string of TeX"""
+    out = ""
+    for obj in gen:
+        if out:
+            out += "\n%===\n"
+
+        out += "%%ID %s\n" % obj.id
+        out += "%%title %s\n" % obj.title
+        out += "%format latex\n"
+        if obj.image is not None:
+            out += "%%image %s\n" % (obj.absolute_url() + '/@@download-image')
+        if obj.text:
+            out += obj.text.raw + "\n\n"
+        for (i, x) in enumerate(obj.choices or []):
+            out += "%s.%s) %s\n" % (
+                chr(97 + i),
+                'true' if x['correct'] else 'false',
+                x['text'].replace("\n", "")
+            )
+        for (i, x) in enumerate(obj.finalchoices or []):
+            out += "x%s.%s) %s\n" % (
+                chr(97 + i),
+                'true' if x['correct'] else 'false',
+                x['text'].replace("\n", "")
+            )
+        if obj.explanation:
+            out += "\n%Explanation\n"
+            out += obj.explanation.raw + "\n"
+    return out

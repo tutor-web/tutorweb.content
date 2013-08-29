@@ -90,23 +90,3 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
             ),
         )
         return out
-
-
-class LaTeXQuestionTeXView(BrowserView):
-    """Render question in TeX form"""
-    def __call__(self):
-        context = self.context
-        self.request.response.setHeader('Content-Type', 'application/x-tex')
-        self.request.response.setHeader('Content-disposition', "attachment; filename=%s.tex" % context.id)
-        out = "%%ID %s\n" % context.id
-        out += "%%title %s\n" % context.title
-        out += "%format latex\n"
-        #TODO: %image imagesource
-        if context.text:
-            out += context.text.raw + "\n\n"
-        for (i, x) in enumerate(context.choices):
-            out += "%s.%s) %s\n" % (chr(97 + i), 'true' if x['correct'] else 'false', x['text'].replace("\n", ""))
-        if context.explanation:
-            out += "\n%Explanation\n"
-            out += context.explanation.raw + "\n"
-        return out

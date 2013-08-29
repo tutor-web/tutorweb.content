@@ -1,7 +1,87 @@
 import cStringIO
 
-from .base import FunctionalTestCase, MANAGER_ID, testImage
+from plone.app.textfield.value import RichTextValue
+from plone.app.testing import login
+from plone.namedfile.file import NamedBlobImage
 
+from .base import IntegrationTestCase, FunctionalTestCase, MANAGER_ID, testImage
+
+
+class LaTeXQuestionTeXViewTest(IntegrationTestCase):
+    """Convert individual question"""
+    def test_question(self):
+        imagetf = testImage()
+        imagetf.seek(0)
+        imageContents = imagetf.read()
+        self.assertEqual(self.questionToTeX(dict(
+            title="qtd image question",
+            text=self.rtv("Here is some text with an image below"),
+            image=NamedBlobImage(
+                data=imageContents,
+                contentType='image/png'
+            ),
+            choices=[
+                dict(text='woo', correct=False),
+                dict(text='yay', correct=False),
+            ],
+            finalchoices=[
+                dict(text='lastone', correct=True),
+            ],
+            explanation=self.rtv("Apparently you are"),
+        )).strip(),"""
+%ID qtd0
+%title qtd image question
+%format latex
+%image http://nohost/plone/dept1/tut1/lec1/qtd0/@@download-image
+Here is some text with an image below
+
+a.false) woo
+b.false) yay
+xa.true) lastone
+
+%Explanation
+Apparently you are
+        """.strip())
+
+    def rtv(self, string, mimeType="application/x-tex"):
+        return RichTextValue(
+            string,
+            mimeType="text/x-tex",
+            outputMimeType='text/html',
+        )
+
+    def questionToTeX(self, qnData):
+        if not hasattr(self, 'qnCounter'):
+            self.qnCounter = 0
+        else:
+            self.qnCounter += 1
+        qnId = "qtd%d" % self.qnCounter
+
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID)
+        lecture = portal['dept1']['tut1']['lec1']
+        lecture.invokeFactory(
+            type_name="tw_latexquestion",
+            id=qnId,
+            **qnData)
+        return lecture[qnId].restrictedTraverse('@@tex')()
+
+class LectureTeXViewTest(FunctionalTestCase):
+    """Convert an entire lecture in one go"""
+    def test_questions(self):
+        self.assertEqual(
+            self.getBrowser('http://nohost/plone/dept1/tut1/lec2/@@tex', user=MANAGER_ID).contents.strip(),
+            """
+%ID qn1
+%title Unittest D1 T1 L2 Q1
+%format latex
+
+%===
+%ID qn2
+%title Unittest D1 T1 L2 Q2
+%format latex
+            """.strip(),
+        )
 
 class LectureTeXImportTest(FunctionalTestCase):
     def test_shortFile(self):
