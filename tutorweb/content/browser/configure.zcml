@@ -58,6 +58,11 @@
       permission="zope2.View"
       class=".download.DownloadPdfView"
       />
+    <browser:page name="download-image"
+      for="tutorweb.content.schema.ILaTeXQuestion"
+      permission="zope2.View"
+      class=".download.DownloadImageView"
+      />
 
   <browser:viewlet
       name="tutorweb.content.mathjax.config"
