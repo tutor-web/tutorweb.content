@@ -258,5 +258,43 @@ e) Mauve
             filename=self.tf.name,
         ), None)
 
+    def test_blankQuestion(self):
+        """Separators without anything within are ignored"""
+        qns = [x for x in self.createSource("""
+%===
+%ID	q1
+%title	Question with no right answer
+%format	latex
+
+What is the winning move?
+
+a) LEFT 5
+b) FORWARD 10
+c) Jump!
+d.true) None of the above
+
+%===
+
+
+%===
+
+%ID	q2
+%title	Question with lots of answers
+%format	latex
+
+What is my favourite colour?
+
+a) Green
+b) Orange
+c) Pink
+d) Blue
+e) Mauve
+%===
+        """)]
+        self.assertEqual(len(qns), 2)
+        self.assertEqual(qns[0]['id'], 'q1')
+        self.assertEqual(qns[1]['id'], 'q2')
+
+
 if __name__ == '__main__':
     unittest.main()
