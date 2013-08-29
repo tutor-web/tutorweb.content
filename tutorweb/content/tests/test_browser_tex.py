@@ -1,4 +1,5 @@
 import cStringIO
+import urllib
 
 from plone.app.textfield.value import RichTextValue
 from plone.app.testing import login
@@ -161,7 +162,7 @@ c)      ouch, it was an iron bar.
         # The question got created
         qn = self.getObject('dept1/tut1/lec2/q92')
         self.assertEqual(qn.title, u'Question with image')
-        self.assertEqual(qn.image.filename, u'file://%s' % imagetf.name)
+        self.assertEqual(qn.image.filename, u'file%%3A%%2F%%2F%s' % urllib.quote_plus(imagetf.name))
         self.assertEqual(qn.image.contentType, 'image/png')
         imagetf.seek(0)
         self.assertEqual(qn.image.data, imagetf.read())

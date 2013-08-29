@@ -1,3 +1,4 @@
+import urllib
 import urllib2
 import re
 
@@ -84,12 +85,12 @@ def readQuestions(file):
             item['title'] = line.replace('%title', '', 1).strip()
 
         elif re.search(r'%image\s+', line):
+            response = urllib2.urlopen(line.replace('%image', '', 1).strip())
             item['image'] = dict(
-                filename=line.replace('%image', '', 1).strip(),
+                filename=urllib.quote_plus(response.geturl()),
+                data=response.read(),
+                contenttype=response.headers['content-type'],
             )
-            response = urllib2.urlopen(item['image']['filename'])
-            item['image']['data'] = response.read()
-            item['image']['contenttype'] = response.headers['content-type']
 
         elif line.startswith('%Explanation'):
             # Any un %'ed lines are now part of the explanation

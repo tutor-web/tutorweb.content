@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import unittest
+import urllib
 import tempfile
 
 from tutorweb.content.transmogrifier.latex import LatexSourceSection
@@ -243,7 +244,7 @@ e) Mauve
         self.assertEqual(qns[0]['image'], dict(
             contenttype='image/png',
             data=imagetf.read(),
-            filename=u'file://%s' % imagetf.name,
+            filename=u'file%%3A%%2F%%2F%s' % urllib.quote_plus(imagetf.name),
         ))
         imagetf.close()
 
