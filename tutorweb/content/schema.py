@@ -73,6 +73,7 @@ class ILaTeXQuestion(model.Schema):
         default=0,
         required=True)
 
+
 class ILecture(model.Schema):
     """A lecture contains Slides and quiz questions"""
     id = schema.TextLine(
@@ -83,18 +84,17 @@ class ILecture(model.Schema):
         title=_(u'Title'),
         description=_(u'The title of the lecture'),
         required=True)
-    histsel = schema.Float(
-        title=_(u'Historical Selection probability'),
-        description=_(u'''The chance that a question before this given as part
-                      of this lecture. A negative value will mean the default
-                      for this tutorial is used.'''),
-        default=-1.0,
-        min=-1.0,
-        max=1.0,
-        required=True)
-    pdf=NamedBlobFile(
+    settings = schema.List(
+        title=_(u"Lecture settings"),
+        description=_(u'e.g. historical selection'),
+        value_type=DictRow(title=u"tablerow", schema=ILectureSettings),
+        required=False)
+    form.widget(settings=
+                'collective.z3cform.datagridfield.DataGridFieldFactory')
+    pdf = NamedBlobFile(
         title=_(u'Generated lecture PDF'),
         required=False)
+
 
 class ITutorial(model.Schema):
     """A Tutorial contains lectures"""
@@ -134,9 +134,10 @@ class ITutorial(model.Schema):
         description=_(u"The main course this tutorial is part of"),
         source=ObjPathSourceBinder(Type='Course'),
         required=True)
-    pdf=NamedBlobFile(
+    pdf = NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
         required=False)
+
 
 class IDepartment(model.Schema):
     id = schema.TextLine(
@@ -147,6 +148,7 @@ class IDepartment(model.Schema):
         title=_(u'Department title'),
         description=_(u"The name of the department, e.g. 'Fishery science department'"),
         required=True)
+
 
 class ICourse(model.Schema):
     id = schema.TextLine(
