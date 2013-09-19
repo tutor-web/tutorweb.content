@@ -4,6 +4,12 @@ from Products.CMFCore.utils import getToolByName
 
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
+    def inSettings(settings, key):
+        for s in settings:
+            if s['key'] == key:
+                return True
+        return False
+
     if logger is None:
         logger = logging.getLogger('aibel.content')
     portal = getToolByName(context, 'portal_url').getPortalObject()
@@ -16,17 +22,17 @@ def updateLectureSettings(context, logger=None):
     )
 
     # Copy histsel into settings hash if the value is big enough
-    brains = portal_catalog(
-        Type=dict(
-            query=['Lecture', 'Tutorial'],
-        ),
-    )
+    brains = portal_catalog(Type=['Lecture', 'Tutorial'])
     for obj in [b.getObject() for b in brains]:
         if getattr(obj, 'histsel', -1.0) < 0:
             continue
         if not getattr(obj, 'settings', None):
-            obj.settings = {}
-        if 'hist_sel' in obj.settings:
+            obj.settings = []
+        if inSettings(obj.settings, 'hist_sel'):
             continue
-        obj.settings['hist_sel'] = obj.histsel
+
+        obj.settings.append(dict(
+            key='hist_sel',
+            value=str(obj.histsel),
+        ))
         del obj.histsel

@@ -15,11 +15,11 @@ class UpgradesTest(IntegrationTestCase):
         self.runStep(u'Upgrade 1 -> 2.0')
         self.assertEqual(
             portal['dept1']['tut1'].settings,
-            dict(hist_sel=0.8),
+            [dict(key='hist_sel', value='0.8')],
         )
         self.assertEqual(
             portal['dept1']['tut1']['lec1'].settings,
-            dict(hist_sel=0.5),
+            [dict(key='hist_sel', value='0.5')],
         )
         self.assertEqual(
             portal['dept1']['tut1']['lec2'].settings,
@@ -32,11 +32,11 @@ class UpgradesTest(IntegrationTestCase):
         self.runStep(u'Upgrade 1 -> 2.0')
         self.assertEqual(
             portal['dept1']['tut1']['lec1'].settings,
-            dict(hist_sel=0.5),
+            [dict(key='hist_sel', value='0.5')],
         )
         self.assertEqual(
             portal['dept1']['tut1']['lec2'].settings,
-            dict(hist_sel=0.3),
+            [dict(key='hist_sel', value='0.3')],
         )
 
     def runStep(self, name):
