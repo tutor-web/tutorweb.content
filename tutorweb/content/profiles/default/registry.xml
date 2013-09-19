@@ -1,0 +1,17 @@
+<registry>
+
+    <record name="tutorweb.content.lectureSettings">
+        <field type="plone.registry.field.Tuple">
+            <title>Lecture settings</title>
+            <value_type type="plone.registry.field.TextLine" />
+        </field>
+        <value>
+            <element>hist_sel</element>
+            <element>timeout_max</element>
+            <element>timeout_min</element>
+            <element>timeout_grade</element>
+            <element>timeout_std</element>
+        </value>
+    </record>
+
+</registry>

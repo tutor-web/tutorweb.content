@@ -23,6 +23,10 @@
         description="Works like a tutorweb question"
         provides=".schema.IQuestion"
         />
+    <utility
+        component=".vocabularies.LectureSettingsVocabularyFactory"
+        name="tutorweb.content.vocabularies.lectureSettings"
+        />
 
     <genericsetup:registerProfile
         name="default"

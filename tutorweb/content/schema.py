@@ -21,6 +21,16 @@ class ILaTeXQuestionAnswer(model.Schema):
         required=False)
 
 
+class ILectureSettings(model.Schema):
+    key = schema.Choice(
+        title=_(u"Setting"),
+        vocabulary='tutorweb.content.vocabularies.lectureSettings',
+        required=True)
+    value = schema.TextLine(
+        title=_(u'Value'),
+        required=True)
+
+
 class IQuestion(model.Schema):
     """Marker for anything question-ish"""
 
@@ -121,14 +131,13 @@ class ITutorial(model.Schema):
         description=_(u'Number of Credits given for the tutorial'),
         default=0,
         required=True)
-    histsel = schema.Float(
-        title=_(u'Default Historical Selection probability'),
-        description=_(u'''The default chance that a question from previous lectures
-                      is given as part of the current'''),
-        default=0.0,
-        min=0.0,
-        max=1.0,
-        required=True)
+    settings = schema.List(
+        title=_(u"Default lecture settings"),
+        description=_(u"Lecture settings used if lecture doesn't override values"),
+        value_type=DictRow(title=u"tablerow", schema=ILectureSettings),
+        required=False)
+    form.widget(settings=
+                'collective.z3cform.datagridfield.DataGridFieldFactory')
     primarycourse = RelationChoice(
         title=_(u'Primary Course'),
         description=_(u"The main course this tutorial is part of"),
