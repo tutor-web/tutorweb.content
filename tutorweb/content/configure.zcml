@@ -41,5 +41,13 @@
         description="Install MIME transformations"
         handler="tutorweb.content.setuphandlers.installTransforms"
         />
+    <genericsetup:upgradeStep
+        title="Upgrade 1 -> 2.0"
+        description="Move histsel into settings dictionary"
+        source="1"
+        destination="2000"
+        handler="tutorweb.content.upgrades.updateLectureSettings"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
