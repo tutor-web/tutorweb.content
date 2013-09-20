@@ -1,11 +1,7 @@
-from AccessControl import Unauthorized
-
-from Products.CMFCore.utils import getToolByName
-
-from plone.app.testing import setRoles, login
+from plone.app.testing import login
 
 from .base import IntegrationTestCase, setRelations
-from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
+from .base import MANAGER_ID, USER_A_ID
 
 
 class ListingViewTest(IntegrationTestCase):
@@ -16,12 +12,12 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1/lec1'
 
         # User A is just a member, can't see questions
-        login(portal, USER_A_ID);
+        login(portal, USER_A_ID)
         self.assertEquals([q['url'] for q in self.getView().questionListing()], [
         ])
 
         # Manager however, can.
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         self.assertEquals([q['url'] for q in self.getView().questionListing()], [
             'http://nohost/plone/dept1/tut1/lec1/qn1',
             'http://nohost/plone/dept1/tut1/lec1/qn2',
@@ -31,13 +27,15 @@ class ListingViewTest(IntegrationTestCase):
         """Get counts of questions within lectures"""
         portal = self.layer['portal']
         self.path = 'dept1/tut1'
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
 
         # Each has 2 questions out of the box
         self.assertEquals(self.getView().lectureListing(), [
-            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
+             'url': 'http://nohost/plone/dept1/tut1/lec1',
              'pdf': None, 'questions': 2, 'slides': 0},
-            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
+             'url': 'http://nohost/plone/dept1/tut1/lec2',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -45,7 +43,7 @@ class ListingViewTest(IntegrationTestCase):
         """Get counts of questions within lectures"""
         portal = self.layer['portal']
         self.path = 'dept1/tut1'
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
 
         # Add some more lectures, we see them in the view too
         # NB: This is a separate test since otherwise we trip over memoize
@@ -60,9 +58,11 @@ class ListingViewTest(IntegrationTestCase):
             title="Unittest D1 T1 L1 Q4",
         )
         self.assertEquals(self.getView().lectureListing(), [
-            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
+             'url': 'http://nohost/plone/dept1/tut1/lec1',
              'pdf': None, 'questions': 4, 'slides': 0},
-            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
+             'url': 'http://nohost/plone/dept1/tut1/lec2',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -70,7 +70,7 @@ class ListingViewTest(IntegrationTestCase):
         """Lectures should appear in right order, even if added after"""
         portal = self.layer['portal']
         self.path = 'dept1/tut1'
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
 
         # NB: This is a separate test since otherwise we trip over memoize
         portal['dept1']['tut1'].invokeFactory(
@@ -80,11 +80,14 @@ class ListingViewTest(IntegrationTestCase):
         )
 
         self.assertEquals(self.getView().lectureListing(), [
-            {'id': 'lec0', 'title': 'ZZUnittest D1 T1 L0', 'url': 'http://nohost/plone/dept1/tut1/lec0',
+            {'id': 'lec0', 'title': 'ZZUnittest D1 T1 L0',
+             'url': 'http://nohost/plone/dept1/tut1/lec0',
              'pdf': None, 'questions': 0, 'slides': 0},
-            {'id': 'lec1', 'title': 'Unittest D1 T1 L1', 'url': 'http://nohost/plone/dept1/tut1/lec1',
+            {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
+             'url': 'http://nohost/plone/dept1/tut1/lec1',
              'pdf': None, 'questions': 2, 'slides': 0},
-            {'id': 'lec2', 'title': 'Unittest D1 T1 L2', 'url': 'http://nohost/plone/dept1/tut1/lec2',
+            {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
+             'url': 'http://nohost/plone/dept1/tut1/lec2',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -94,7 +97,7 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1'
 
         # Create some files first
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         portal['dept1']['tut1'].invokeFactory(
             type_name="File",
             id="filea.pdf",
@@ -106,14 +109,16 @@ class ListingViewTest(IntegrationTestCase):
             title="File B",
         )
         self.assertEquals(self.getView().fileListing(), [
-            {'title': 'File A', 'url': 'http://nohost/plone/dept1/tut1/filea.pdf'},
-            {'title': 'File B', 'url': 'http://nohost/plone/dept1/tut1/fileb.pdf'},
+            {'title': 'File A',
+             'url': 'http://nohost/plone/dept1/tut1/filea.pdf'},
+            {'title': 'File B',
+             'url': 'http://nohost/plone/dept1/tut1/fileb.pdf'},
         ])
 
     def test_courseListing(self):
         """Can get listings for any courses within current node"""
         portal = self.layer['portal']
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         self.path = 'dept1'
 
         # Here's one we made earlier
@@ -146,7 +151,7 @@ class ListingViewTest(IntegrationTestCase):
     def test_relatedCourses(self):
         """Tutorials should know what courses they are related to"""
         portal = self.layer['portal']
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         self.path = 'dept1/tut1'
 
         self.assertEquals(self.getView().relatedCourses(), [
@@ -172,18 +177,23 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1/lec2'
         self.assertEquals(
             self.getView().quizUrl(),
-            """http://nohost/plone/++resource++tutorweb.quiz/load.html?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync""",
+            "http://nohost/plone/++resource++tutorweb.quiz/load.html" + 
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
+            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync",
         )
         # For the tutorial above it formulates a link to the first lecture
         self.path = 'dept1/tut1'
         self.assertEquals(
             self.getView().quizUrl(),
-            """http://nohost/plone/++resource++tutorweb.quiz/load.html?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync""",
+            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync" +
+            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync",
         )
 
-        # Create a new tutorial with no lectures, not going to be very interesting
+        # Create a new tutorial with no lectures, not going to be very
+        # interesting
         portal = self.layer['portal']
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         portal['dept1'].invokeFactory(
             type_name="tw_tutorial",
             id="tut2",
@@ -208,11 +218,11 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1/lec1'
 
         # User A is just a member, can't edit
-        login(portal, USER_A_ID);
+        login(portal, USER_A_ID)
         self.assertFalse(self.getView().canEdit())
 
         # Manager however, can.
-        login(portal, MANAGER_ID);
+        login(portal, MANAGER_ID)
         self.assertTrue(self.getView().canEdit())
 
     def getView(self):
