@@ -55,6 +55,12 @@
       template="tw_class_view.pt"
       />
 
+    <browser:page name="enrol"
+      for="tutorweb.content.schema.IClass"
+      permission="zope2.View"
+      class=".class.EnrolView"
+      />
+
     <browser:page name="download-pdf"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"
