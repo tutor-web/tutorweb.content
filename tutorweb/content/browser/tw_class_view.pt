@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="collective.qna">
+<body>
+
+<metal:content-core fill-slot="content-core">
+
+  <div tal:define="lecture python:context.lectures[-1].to_object if context.lectures else None"
+       tal:condition="lecture">
+    <h3>Current Lecture: <span tal:content="lecture/Title">title</span></h3>
+    <ul>
+      <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
+        <li><a tal:attributes="href python:view.quizUrl(lecture)">
+          Take a drill on this lecture</a></li>
+      </tal:t>
+      <tal:t tal:condition="context/portal_membership/isAnonymousUser">
+        <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
+      </tal:t>
+      <li><a tal:attributes="href string:${lecture/absolute_url}/@@download-pdf">
+          <img src="pdf.png" tal:attributes="src string:${lecture/absolute_url}/pdf.png">
+          Download all lecture slides
+      </a></li>
+    </ul>
+  </div>
+
+  <div tal:condition="python:context.lectures and len(context.lectures) > 1">
+    <h3>Previous lectures</h3>
+    <ul>
+      <li tal:repeat="lecture python:r.to_object for r in context.lectures[-2::-1]">
+        <a tal:attributes="href lecture/absolute_url" tal:content="lecture/Title">link</a>
+      </li>
+    </ul>
+  </div>
+  
+  <ul>
+  </ul>
+
+</metal:content-core>
+
+</body>
+</html>

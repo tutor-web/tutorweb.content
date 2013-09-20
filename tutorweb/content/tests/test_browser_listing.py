@@ -192,6 +192,16 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut2'
         self.assertEquals(self.getView().quizUrl(), '#')
 
+        # Can specify which object we want the quiz URL for
+        # NB: tut2 isn't used as tutorial, is irrelevant
+        self.path = 'dept1/tut2'
+        self.assertEquals(
+            self.getView().quizUrl(portal['dept1']['tut1']['lec2']),
+            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
+            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync"
+        )
+
     def test_canEdit(self):
         """Make sure regular users can't edit"""
         portal = self.layer['portal']

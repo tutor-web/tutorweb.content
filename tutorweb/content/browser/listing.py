@@ -141,26 +141,28 @@ class ListingView(BrowserView):
                 out[l.Type()] += 1
         return out
 
-    def quizUrl(self):
-        """Return URL to the quiz for this lecture"""
+    def quizUrl(self, obj=None):
+        """Return URL to the quiz for specified object, or context"""
         portal_state = getMultiAdapter(
             (self.context, self.request),
             name=u'plone_portal_state',
         )
+        if obj is None:
+            obj = self.context
         out = portal_state.portal_url()
         out += "/++resource++tutorweb.quiz/load.html?"
-        if self.context.portal_type == 'tw_lecture':
+        if obj.portal_type == 'tw_lecture':
             out += urllib.urlencode(dict(
-                tutUri=self.context.aq_parent.absolute_url() + '/quizdb-sync',
-                lecUri=self.context.absolute_url() + '/quizdb-sync',
+                tutUri=obj.aq_parent.absolute_url() + '/quizdb-sync',
+                lecUri=obj.absolute_url() + '/quizdb-sync',
             ))
-        elif self.context.portal_type == 'tw_tutorial':
+        elif obj.portal_type == 'tw_tutorial':
             # Start a quiz based on the first lecture
             if len(self.lectureListing()) == 0:
                 # No lectures, so it's not going to be a very interesting drill
                 return '#'
             out += urllib.urlencode(dict(
-                tutUri=self.context.absolute_url() + '/quizdb-sync',
+                tutUri=obj.absolute_url() + '/quizdb-sync',
                 lecUri=self.lectureListing()[0]['url'] + '/quizdb-sync',
             ))
         else:

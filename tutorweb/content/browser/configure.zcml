@@ -48,6 +48,13 @@
       template="tw_department_view.pt"
       />
 
+    <browser:page name="view"
+      for="tutorweb.content.schema.IClass"
+      permission="zope2.View"
+      class=".listing.ListingView"
+      template="tw_class_view.pt"
+      />
+
     <browser:page name="download-pdf"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"
