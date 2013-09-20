@@ -1,7 +1,9 @@
-from plone.app.testing import login
+from zope.annotation.interfaces import IAnnotations
+
+from plone.app.testing import login, logout
 
 from .base import IntegrationTestCase, setRelations
-from .base import MANAGER_ID, USER_A_ID
+from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
 
 
 class ListingViewTest(IntegrationTestCase):
@@ -211,6 +213,42 @@ class ListingViewTest(IntegrationTestCase):
             "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
             "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync"
         )
+
+    def test_partOfClass(self):
+        """Is the user part of a class?"""
+        def isInClass(user):
+            # Clear out plone.memoize cache
+            anno = IAnnotations(self.layer['request'])
+            if 'plone.memoize' in anno:
+                del anno['plone.memoize']
+            # Login as appropriate user
+            if user:
+                login(portal, user)
+            else:
+                logout()
+            self.path='classa'
+            return self.getView().partOfClass()
+        portal = self.layer['portal']
+
+        # Nobody is part of empty class
+        login(portal, MANAGER_ID)
+        portal.invokeFactory(
+            type_name="tw_class",
+            id="classa",
+            title="Unittest ClassA",
+        )
+        self.assertFalse(isInClass(USER_A_ID))
+        self.assertFalse(isInClass(USER_B_ID))
+        self.assertFalse(isInClass(USER_C_ID))
+        self.assertFalse(isInClass(None))
+
+        # Add users A and C
+        login(portal, MANAGER_ID)
+        portal['classa'].students = [USER_A_ID, USER_C_ID]
+        self.assertTrue(isInClass(USER_A_ID))
+        self.assertFalse(isInClass(USER_B_ID))
+        self.assertTrue(isInClass(USER_C_ID))
+        self.assertFalse(isInClass(None))
 
     def test_canEdit(self):
         """Make sure regular users can't edit"""

@@ -9,6 +9,12 @@
 
 <metal:content-core fill-slot="content-core">
 
+<div tal:condition="not:view/partOfClass">
+  <h3>You are not part of this class</h3>
+  <a tal:attributes="href string:${context/absolute_url}/@@enrol">Enrol in class</a>
+</div>
+
+<div tal:condition="view/partOfClass">
   <div tal:define="lecture python:context.lectures[-1].to_object if context.lectures else None"
        tal:condition="lecture">
     <h3>Current Lecture: <span tal:content="lecture/Title">title</span></h3>
@@ -35,9 +41,7 @@
       </li>
     </ul>
   </div>
-  
-  <ul>
-  </ul>
+</div>
 
 </metal:content-core>
 

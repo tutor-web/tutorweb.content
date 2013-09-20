@@ -9,6 +9,7 @@ from zope.app.intid.interfaces import IIntIds
 from plone.memoize import view
 
 from Products.CMFCore import permissions
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 
 from tutorweb.content.schema import IQuestion, ICourse
@@ -168,6 +169,17 @@ class ListingView(BrowserView):
         else:
             raise NotImplemented
         return out
+
+    @view.memoize
+    def partOfClass(self):
+        """Is the user part of the current class object?"""
+        if not getattr(self.context, 'students', None):
+            return False
+        mt = getToolByName(self.context, 'portal_membership')
+        if mt.isAnonymousUser():
+            return False
+        mb = mt.getAuthenticatedMember()
+        return mb.getUserName() in self.context.students
 
     def canEdit(self):
         """Return true iff user can edit context"""
