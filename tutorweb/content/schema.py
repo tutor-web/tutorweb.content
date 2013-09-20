@@ -176,3 +176,30 @@ class ICourse(model.Schema):
             source=ObjPathSourceBinder(Type='Tutorial'),
         ),
         required=False)
+
+
+class IClass(model.Schema):
+    id = schema.TextLine(
+        title=_(u'Class code'),
+        description=_(u"The short code for the class, e.g. '101'"),
+        required=True)
+    title = schema.TextLine(
+        title=_(u'Class title'),
+        description=_(u"The name of the class"),
+        required=True)
+    students = schema.List(
+        title=_(u'Students in class'),
+        description=_(u"All students within the class"),
+        default=[],
+        value_type=schema.Choice(
+            vocabulary='plone.app.vocabularies.Users',
+        ),
+        required=False)
+    lectures = RelationList(
+        title=_(u'Lectures for class'),
+        description=_(u"Lectures"),
+        default=[],
+        value_type=RelationChoice(
+            source=ObjPathSourceBinder(Type='Lecture'),
+        ),
+        required=False)

@@ -36,11 +36,19 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
     <genericsetup:importStep
-        name="default"
+        name="install_mime"
         title="Tutorweb content"
         description="Install MIME transformations"
         handler="tutorweb.content.setuphandlers.installTransforms"
         />
+    <genericsetup:importStep
+        name="create_schools_classes"
+        title="Tutorweb content"
+        description="Create schools &amp; classes folder"
+        handler="tutorweb.content.setuphandlers.createSchoolsClassesFolder"
+        >
+        <depends name="typeinfo" />
+    </genericsetup:importStep>
     <genericsetup:upgradeStep
         title="Upgrade 1 -> 2.0"
         description="Move histsel into settings dictionary"
@@ -48,6 +56,22 @@
         destination="2000"
         handler="tutorweb.content.upgrades.updateLectureSettings"
         sortkey="1"
+        profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 1 -> 2.0"
+        description="Add tw_class type"
+        source="1"
+        destination="2000"
+        handler="tutorweb.content.upgrades.reimportTypes"
+        sortkey="2"
+        profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 1 -> 2.0"
+        description="Create schools &amp; classes folder"
+        source="1"
+        destination="2000"
+        handler="tutorweb.content.setuphandlers.createSchoolsClassesFolder"
+        sortkey="3"
         profile="tutorweb.content:default"/>
 
 </configure>

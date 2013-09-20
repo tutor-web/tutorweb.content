@@ -59,3 +59,22 @@ class ContentTypeTest(IntegrationTestCase):
         # Manager however, can.
         login(portal, MANAGER_ID);
         portal.restrictedTraverse('dept1/tut1/lec1/qn1/@@view');
+
+    def test_schoolsClasses(self):
+        """Schools and classes folder should be already created"""
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID)
+
+        self.assertTrue('schools-and-classes' in portal)
+        sac = portal['schools-and-classes']
+
+        # Can't add a lecture
+        with self.assertRaisesRegexp(ValueError, 'tw_lecture'):
+            sac.invokeFactory(type_name="tw_lecture", id="lec")
+
+        # Can add a class
+        sac.invokeFactory(
+            type_name="tw_class",
+            id="class1",
+            title="My nice class",
+        )

@@ -2,6 +2,18 @@ import logging
 
 from Products.CMFCore.utils import getToolByName
 
+
+def reimportTypes(context, logger=None):
+    """"Re-run the types step, to add new types"""
+    if logger is None:
+        logger = logging.getLogger('tutorweb.content')
+
+    context.runImportStepFromProfile(
+        'profile-tutorweb.content:default',
+        'typeinfo',
+    )
+
+
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
     def inSettings(settings, key):
@@ -11,7 +23,7 @@ def updateLectureSettings(context, logger=None):
         return False
 
     if logger is None:
-        logger = logging.getLogger('aibel.content')
+        logger = logging.getLogger('tutorweb.content')
     portal = getToolByName(context, 'portal_url').getPortalObject()
     portal_catalog = portal.portal_catalog
 
