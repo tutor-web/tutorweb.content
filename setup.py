@@ -33,7 +33,7 @@ setup(
         'plone.app.contenttypes',
         'plone.app.dexterity',
         'plone.app.relationfield',
-        'plone.app.registry'.
+        'plone.app.registry',
         'plone.app.textfield',
         'plone.app.vocabularies',
         'plone.intelligenttext',
