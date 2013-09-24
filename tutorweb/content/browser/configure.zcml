@@ -60,6 +60,12 @@
       permission="zope2.View"
       class=".class.EnrolView"
       />
+    <browser:page name="bulk-add-student"
+      for="tutorweb.content.schema.IClass"
+      permission="cmf.ModifyPortalContent"
+      class=".class.BulkAddStudentView"
+      template="tw_class_bulk_add_student.pt"
+      />
 
     <browser:page name="download-pdf"
       for="tutorweb.content.schema.ILecture"

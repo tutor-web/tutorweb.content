@@ -50,6 +50,16 @@
     url_expr="string:${object_url}" visible="True">
   <permission value="View"/>
  </action>
+ <action title="Student results" action_id="student-results"
+    category="object" condition_expr=""
+    url_expr="string:${object_url}/student-results" visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+ <action title="Bulk add students" action_id="bulk-add-student"
+    category="object" condition_expr=""
+    url_expr="string:${object_url}/bulk-add-student" visible="True">
+  <permission value="Modify portal content"/>
+ </action>
  <action title="Edit" action_id="edit" category="object" condition_expr=""
     url_expr="string:${object_url}/edit" visible="True">
   <permission value="Modify portal content"/>

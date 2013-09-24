@@ -35,3 +35,102 @@ class EnrolViewTest(IntegrationTestCase):
         logout()
         with self.assertRaises(Unauthorized):
             c.restrictedTraverse('enrol')()
+
+
+class BulkAddStudentViewTest(IntegrationTestCase):
+    def setUp(self):
+        """Create class"""
+        portal = self.layer['portal']
+        login(portal, MANAGER_ID)
+        portal.invokeFactory(
+            type_name="tw_class",
+            id="classa",
+            title="Unittest ClassA",
+        )
+        portal['classa'].students = []
+
+    def test_uploadLog(self):
+        view = self.getView()
+        # Empty log at start
+        self.assertEquals(
+            view.uploadLog(),
+            "",
+        )
+
+        # First line
+        self.assertEquals(
+            view.uploadLog("One line... a, a, aaaa."),
+            "One line... a, a, aaaa.\n",
+        )
+
+        # Second line gets separator
+        self.assertEquals(
+            view.uploadLog("Two line... a, a, aaaa."),
+            "One line... a, a, aaaa.\nTwo line... a, a, aaaa.\n",
+        )
+
+        # Return the same when no line is supplied
+        self.assertEquals(
+            view.uploadLog(),
+            "One line... a, a, aaaa.\nTwo line... a, a, aaaa.\n",
+        )
+
+    def test_getAllMemberEmails(self):
+        view = self.getView()
+        self.assertEquals(view.getAllMemberEmails(), {
+            '': 'test_user_1_',
+            'arnold@example.com': 'Arnold',
+            'betty@example.com': 'Betty',
+            'caroline@example.com': 'Caroline',
+        })
+
+    def test_addUsersToClass(self):
+        def doAddUsers(emails):
+            """Call view, handing in email list"""
+            self.layer['request'].form['userlist'] = emails
+            view = self.getView()
+            view()
+            return view.uploadLog()
+        c = self.layer['portal']['classa']
+
+        log = doAddUsers(USER_A_ID + """@example.com
+badgercamelferret
+moo@example.com
+        """)
+        self.assertTrue("Creating new user moo@example.com" in log)
+        self.assertTrue('"badgercamelferret" not a valid email address, skipping' in log)
+        self.assertTrue("Adding moo@example.com (moo@example.com) to course" in log)
+        self.assertEquals(c.students, [
+            "Arnold",
+            "moo@example.com",
+        ])
+        self.assertEquals(self.getView().getAllMemberEmails(), {
+            '': 'test_user_1_',
+            'arnold@example.com': 'Arnold',
+            'betty@example.com': 'Betty',
+            'caroline@example.com': 'Caroline',
+            'moo@example.com': 'moo@example.com',
+        })
+
+        log = doAddUsers("""
+moo@example.com
+oink@example.com
+        """)
+        self.assertEquals(c.students, [
+            "Arnold",
+            "moo@example.com",
+            "oink@example.com",
+        ])
+        self.assertEquals(self.getView().getAllMemberEmails(), {
+            '': 'test_user_1_',
+            'arnold@example.com': 'Arnold',
+            'betty@example.com': 'Betty',
+            'caroline@example.com': 'Caroline',
+            'moo@example.com': 'moo@example.com',
+            'oink@example.com': 'oink@example.com',
+        })
+
+    def getView(self):
+        """Get an instance of the view for testing"""
+        c = self.layer['portal']['classa']
+        return c.restrictedTraverse('bulk-add-student')

@@ -6,6 +6,7 @@ import transaction
 from zope.app.intid.interfaces import IIntIds
 from zope.component import getUtility
 from zope.event import notify
+from zope.component import getSiteManager
 from zope.lifecycleevent import ObjectModifiedEvent
 from z3c.relationfield.relation import RelationValue
 
@@ -18,6 +19,8 @@ from plone.testing.z2 import Browser
 from zope.configuration import xmlconfig
 
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.tests.utils import MockMailHost
+from Products.MailHost.interfaces import IMailHost
 
 USER_A_ID = "Arnold"
 USER_B_ID = "Betty"
@@ -40,15 +43,27 @@ class TestFixture(PloneSandboxLayer):
 
         # Creates some users
         acl_users = getToolByName(portal, 'acl_users')
+        mtool = getToolByName(portal, 'portal_membership')
         for id in [USER_A_ID, USER_B_ID, USER_C_ID]:
             acl_users.userFolderAddUser(
                 id, 'secret'+id[0],
                 ['Member'],[]
             )
+            mtool.getMemberById(id).setMemberProperties(dict(
+                email=id + '@example.com',
+            ))
         acl_users.userFolderAddUser(
             MANAGER_ID, 'secret' + MANAGER_ID[0],
             ['Manager'],[]
         )
+
+        # Set-up fake mailer
+        portal.MailHost = mailhost = MockMailHost('MailHost')
+        sm = getSiteManager(context=portal)
+        sm.unregisterUtility(provided=IMailHost)
+        sm.registerUtility(mailhost, provided=IMailHost)
+        portal.email_from_address = 'tutorweb-ut@example.com'
+        transaction.commit()
 
         # Create some content
         login(portal, MANAGER_ID)

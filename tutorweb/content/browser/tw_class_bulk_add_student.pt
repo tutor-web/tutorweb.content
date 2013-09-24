@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="tutorweb.content">
+<body>
+
+<metal:content-core fill-slot="content-core">
+
+<form method="POST" name="bulkaddstudent">
+  <label for="bulkaddstudent-userlist">User email addresses, one per line</label>
+  <textarea name="userlist" id="bulkaddstudent-userlist" style="height: 10em;"></textarea>
+  <input type="submit" name="submit" value="Upload" />
+</form>
+
+<div tal:condition="view/uploadLog">
+  <h3>Results of upload</h3>
+  <pre tal:content="view/uploadLog"></pre>
+</div>
+
+</metal:content-core>
+
+</body>
+</html>
