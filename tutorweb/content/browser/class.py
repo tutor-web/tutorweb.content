@@ -34,12 +34,17 @@ class BulkAddStudentView(BrowserView):
     def getAllMemberEmails(self):
         """Make lookup of member email addresses to ids"""
         mtool = getToolByName(self.context, 'portal_membership')
-        #TODO: What about duplicates?
-        return dict(
-            (m.getProperty('email').lower(), m.id)
-            for m
-            in mtool.listMembers()
-        )
+        out = {}
+        for m in mtool.listMembers():
+            email = m.getProperty('email').lower()
+            if email in out:
+                self.uploadLog("WARNING: %s used by both %s and %s, assuming latter" % (
+                    email,
+                    out[email],
+                    m.id,
+                ))
+            out[email] = m.id
+        return out
 
     def addUsersToClass(self, emails):
         """Given list of email addresses, add users."""
