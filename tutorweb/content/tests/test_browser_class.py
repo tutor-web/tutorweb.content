@@ -2,6 +2,8 @@ from AccessControl import Unauthorized
 
 from plone.app.testing import login, logout
 
+from Products.CMFCore.utils import getToolByName
+
 from .base import IntegrationTestCase
 from .base import MANAGER_ID, USER_A_ID, USER_B_ID
 
@@ -92,6 +94,7 @@ class BulkAddStudentViewTest(IntegrationTestCase):
             view()
             return view.uploadLog()
         c = self.layer['portal']['classa']
+        rtool = getToolByName(self.layer['portal'], 'portal_registration')
 
         log = doAddUsers(USER_A_ID + """@example.com
 badgercamelferret
@@ -129,6 +132,20 @@ oink@example.com
             'moo@example.com': 'moo@example.com',
             'oink@example.com': 'oink@example.com',
         })
+
+        # Create a user that already uses the email address as ID
+        rtool.addMember('dave@example.com', rtool.generatePassword(), properties=dict(
+            email='dave_01@example.com',
+            username='dave@example.com',
+            fullname='dave@example.com',
+        ))
+        log = doAddUsers("dave@example.com")
+        self.assertEquals(c.students, [
+            "Arnold",
+            "moo@example.com",
+            "oink@example.com",
+            'dave@example.com',
+        ])
 
     def getView(self):
         """Get an instance of the view for testing"""
