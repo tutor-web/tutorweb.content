@@ -19,13 +19,9 @@
        tal:condition="lecture">
     <h3>Current Lecture: <span tal:content="lecture/Title">title</span></h3>
     <ul>
-      <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
-        <li><a tal:attributes="href python:view.quizUrl(lecture)">
+      <li><a tal:attributes="href python:view.quizUrl(lecture)">
           Take a drill on this lecture</a></li>
-      </tal:t>
-      <tal:t tal:condition="context/portal_membership/isAnonymousUser">
-        <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
-      </tal:t>
+      <li><a tal:attributes="href string:${lecture/absolute_url}">Go to the lecture page</a></li>
       <li><a tal:attributes="href string:${lecture/absolute_url}/@@download-pdf">
           <img src="pdf.png" tal:attributes="src string:${lecture/absolute_url}/pdf.png">
           Download all lecture slides
