@@ -99,11 +99,15 @@ class LectureTeXViewTest(FunctionalTestCase):
 %ID qn1
 %title Unittest D1 T1 L2 Q1
 %format latex
+a) pink
+b.true) purple
 
 %===
 %ID qn2
 %title Unittest D1 T1 L2 Q2
 %format latex
+a) pink
+b.true) purple
             """.strip(),
         )
 
