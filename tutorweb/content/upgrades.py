@@ -47,4 +47,7 @@ def updateLectureSettings(context, logger=None):
             key='hist_sel',
             value=str(obj.histsel),
         ))
-        del obj.histsel
+        try:
+            del obj.histsel
+        except AttributeError:
+            pass
