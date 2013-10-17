@@ -11,6 +11,7 @@
             <element>timeout_min</element>
             <element>timeout_grade</element>
             <element>timeout_std</element>
+            <element>question_cap</element>
         </value>
     </record>
 
