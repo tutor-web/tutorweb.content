@@ -48,10 +48,10 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
         return self._pt
 
     security.declarePrivate('updateStats')
-    def updateStats(self, timesAnswered, timesCorrect):
+    def updateStats(self, timesanswered, timescorrect):
         """Update question with new stats"""
-        self.context.timesAnswered = timesAnswered
-        self.context.timesCorrect = timesCorrect
+        self.context.timesanswered = timesanswered
+        self.context.timescorrect = timescorrect
 
     security.declarePrivate('allChoices')
     def allChoices(self):
