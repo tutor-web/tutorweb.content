@@ -16,6 +16,7 @@
     <include package="transmogrify.dexterity" />
 
     <include package=".browser" file="configure.zcml" />
+    <include package=".events" file="configure.zcml" />
     <include package=".transmogrifier" file="configure.zcml" />
 
     <plone:behavior

@@ -42,6 +42,7 @@ setup(
         'collective.transmogrifier',
         'plone.app.transmogrifier',
         'transmogrify.dexterity',
+        'zope.app.component',
     ],
     extras_require={
         'test': [

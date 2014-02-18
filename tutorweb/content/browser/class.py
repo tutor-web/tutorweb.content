@@ -75,7 +75,6 @@ class BulkAddStudentView(BrowserView):
                 rtool.addMember(id, rtool.generatePassword(), properties=dict(
                     email=email,
                     username=id,
-                    fullname=id,
                 ))
                 rtool.registeredNotify(id)
 
