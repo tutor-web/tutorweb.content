@@ -27,6 +27,7 @@
  <!-- Behaviors -->
  <property name="behaviors">
      <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
+     <element value="plone.app.dexterity.behaviors.nextprevious.INextPreviousEnabled"/>
  </property>
 
  <!-- Add permission -->

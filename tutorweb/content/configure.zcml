@@ -73,5 +73,13 @@
         handler="tutorweb.content.setuphandlers.createSchoolsClassesFolder"
         sortkey="3"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 2.0 -> 3.0"
+        description="Add INextPrevious"
+        source="2000"
+        destination="3000"
+        handler="tutorweb.content.upgrades.reimportTypes"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
