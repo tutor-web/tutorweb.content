@@ -39,13 +39,17 @@
         </ul>
       </tal:t>
 
-      <table class="listing">
+      <table class="listing"
+             tal:define="listing view/lectureListing;
+                         subitems python:sum(item['slides'] + item['questions'] for item in listing)">
         <thead>
           <th>Code</th>
           <th>Name</th>
           <th>Slide download</th>
-          <th>Num. slides</th>
-          <th>Num. questions</th>
+          <tal:t tal:condition="python:subitems > 0">
+            <th>Num. slides</th>
+            <th>Num. questions</th>
+          </tal:t>
         </thead>
         <tbody>
           <tr tal:repeat="item view/lectureListing">
@@ -60,8 +64,10 @@
                 Download PDF
               </a>
             </td>
-            <td tal:content="item/slides"></td>
-            <td tal:content="item/questions"></td>
+            <tal:t tal:condition="python:subitems > 0">
+              <td tal:content="item/slides"></td>
+              <td tal:content="item/questions"></td>
+            </tal:t>
           </tr>
         </tbody>
       </table>
