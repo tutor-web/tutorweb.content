@@ -14,6 +14,17 @@ def reimportTypes(context, logger=None):
     )
 
 
+def reimportRegistry(context, logger=None):
+    """"Re-run the plone.app.registry step to update registry keys"""
+    if logger is None:
+        logger = logging.getLogger('tutorweb.content')
+
+    context.runImportStepFromProfile(
+        'profile-tutorweb.content:default',
+        'plone.app.registry',
+    )
+
+
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
     def inSettings(settings, key):

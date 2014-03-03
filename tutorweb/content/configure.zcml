@@ -82,5 +82,13 @@
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 2.0 -> 3.0"
+        description="Add grade_s:min et al to registry"
+        source="2000"
+        destination="3000"
+        handler="tutorweb.content.upgrades.reimportRegistry"
+        sortkey="2"
+        profile="tutorweb.content:default"/>
 
 </configure>

@@ -12,6 +12,10 @@
             <element>timeout_grade</element>
             <element>timeout_std</element>
             <element>question_cap</element>
+            <element>grade_alpha:min</element>
+            <element>grade_alpha:max</element>
+            <element>grade_s:min</element>
+            <element>grade_s:max</element>
         </value>
     </record>
 
