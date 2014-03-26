@@ -29,7 +29,7 @@ class LaTeXQuestionTeXViewTest(IntegrationTestCase):
                 dict(text='lastone', correct=True),
             ],
             explanation=self.rtv("Apparently you are"),
-            timesanswered=180,
+            timesanswered=980,
             timescorrect=640,
         )).strip(),"""
 %ID qtd0
@@ -44,6 +44,8 @@ xa.true) lastone
 
 %Explanation
 Apparently you are
+%r 640
+%n 980
         """.strip())
 
         self.assertEqual(self.questionToTeX(dict(

@@ -186,4 +186,8 @@ def objectsToTex(gen):
         if obj.explanation:
             out += "\n%Explanation\n"
             out += obj.explanation.raw + "\n"
+        if obj.timescorrect:
+            out += "%%r %d\n" % obj.timescorrect
+        if obj.timesanswered:
+            out += "%%n %d\n" % obj.timesanswered
     return out
