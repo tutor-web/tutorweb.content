@@ -29,6 +29,8 @@ class LaTeXQuestionTeXViewTest(IntegrationTestCase):
                 dict(text='lastone', correct=True),
             ],
             explanation=self.rtv("Apparently you are"),
+            timesanswered=180,
+            timescorrect=640,
         )).strip(),"""
 %ID qtd0
 %title qtd image question
@@ -203,9 +205,28 @@ A man walks into a lamp post
         self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
         # Question still has answered / correct values
         qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.title, u'Imported question')
         self.assertEqual(qn.text.raw, u'A man walks into a lamp post')
         self.assertEqual(qn.timesanswered, 19)
         self.assertEqual(qn.timescorrect, 22)
+
+        # Updating question again, updating %r %n
+        # NB: MySQL will overwrite these values once a student uploads answers
+        browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
+%ID     q88
+%format latex
+A man walks into a tree
+%r 990
+%n 999
+        """)
+        # Browser returned to lecture page
+        self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
+        # Question still has answered / correct values
+        qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.title, u'Imported question')
+        self.assertEqual(qn.text.raw, u'A man walks into a tree')
+        self.assertEqual(qn.timesanswered, 999)
+        self.assertEqual(qn.timescorrect, 990)
 
     def uploadTeX(self, lecUrl, tex):
         browser = self.getBrowser(lecUrl, user=MANAGER_ID)
