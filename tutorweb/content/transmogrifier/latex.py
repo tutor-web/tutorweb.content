@@ -133,9 +133,9 @@ def readQuestions(file):
             ))
 
         elif re.search(r'%n\s+', line):
-            item['timesanswered'] = line.replace('%n', '', 1).strip()
+            item['timesanswered'] = int(line.replace('%n', '', 1).strip())
         elif re.search(r'%r\s+', line):
-            item['timescorrect'] = line.replace('%r', '', 1).strip()
+            item['timescorrect'] = int(line.replace('%r', '', 1).strip())
 
         else:
             if item['_deffield'] == 'choices':

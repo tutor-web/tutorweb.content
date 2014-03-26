@@ -3,7 +3,7 @@ import unittest
 import urllib
 import tempfile
 
-from tutorweb.content.transmogrifier.latex import LatexSourceSection
+from tutorweb.content.transmogrifier.latex import LatexSourceSection, objectsToTex
 
 from .base import testImage
 
@@ -152,6 +152,8 @@ c)  $N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.
             """$N(2000)=20\cdot (2 + e^{-\frac{200}{573}})$.""",
             """$N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.""",
         ])
+        self.assertEqual(qns[0]['timescorrect'], 61)
+        self.assertEqual(qns[0]['timesanswered'], 133)
 
     def test_plainText(self):
         qns = [x for x in self.createSource("""
@@ -248,17 +250,6 @@ e) Mauve
         ))
         imagetf.close()
 
-    def createSource(self, tex):
-        if hasattr(self, 'tf'):
-            self.tf.close()
-        self.tf = tempfile.NamedTemporaryFile()
-        self.tf.write(tex)
-        self.tf.flush()
-        return LatexSourceSection({}, "latexsource", dict(
-            blueprint="camel",
-            filename=self.tf.name,
-        ), None)
-
     def test_blankQuestion(self):
         """Separators without anything within are ignored"""
         qns = [x for x in self.createSource("""
@@ -295,6 +286,66 @@ e) Mauve
         self.assertEqual(len(qns), 2)
         self.assertEqual(qns[0]['id'], 'q1')
         self.assertEqual(qns[1]['id'], 'q2')
+
+    def test_loopback(self):
+        """Feed a question back into objectsToTex, should get same answer"""
+        def addExtras(orig):
+            out = orig.copy()
+            out['_type'] = "tw_latexquestion"
+            out['processLatex'] = True
+            return out
+
+        qnHash = dict(
+            id=u'q101',
+            title=u'What is the minning move?',
+            text=dict(data=u"Maybe you should bust a move?", contenttype='text/x-tex', encoding='utf-8'),
+            explanation=dict(data=u"Shouldn't have played", contenttype='text/x-tex', encoding='utf-8'),
+            choices=[
+                dict(text='woo', correct=True),
+                dict(text='aww', correct=False),
+            ],
+            timesanswered=44,
+            timescorrect=4,
+        )
+        self.assertEqual(
+            addExtras(qnHash),
+            [x for x in self.createSource(objectsToTex([FakeQn(qnHash)]))][0],
+        )
+
+    def createSource(self, tex):
+        if hasattr(self, 'tf'):
+            self.tf.close()
+        self.tf = tempfile.NamedTemporaryFile()
+        self.tf.write(tex)
+        self.tf.flush()
+        return LatexSourceSection({}, "latexsource", dict(
+            blueprint="camel",
+            filename=self.tf.name,
+        ), None)
+
+
+class FakeQn:
+    id = None
+    title = None
+    text = None
+    explanation = None
+    image = None
+    choices = []
+    finalchoices = []
+    timesanswered = 0
+    timescorrect = 0
+
+    def __init__(self, qnHash):
+        self.__dict__.update(qnHash)
+        if qnHash['text']:
+            self.text = FakeRichText(qnHash['text']['data'])
+        if qnHash['explanation']:
+            self.explanation = FakeRichText(qnHash['explanation']['data'])
+
+
+class FakeRichText:
+    def __init__(self, raw):
+        self.raw = raw
 
 
 if __name__ == '__main__':
