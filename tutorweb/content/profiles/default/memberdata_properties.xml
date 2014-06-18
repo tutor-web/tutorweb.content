@@ -1,0 +1,3 @@
+<object name="portal_memberdata" meta_type="PlonePAS MemberData Tool">
+  <property name="accept" type="boolean">False</property>
+</object>

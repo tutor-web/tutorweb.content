@@ -51,6 +51,7 @@ class TestFixture(PloneSandboxLayer):
             )
             mtool.getMemberById(id).setMemberProperties(dict(
                 email=id + '@example.com',
+                accept=True,
             ))
         acl_users.userFolderAddUser(
             MANAGER_ID, 'secret' + MANAGER_ID[0],

@@ -25,6 +25,21 @@ def reimportRegistry(context, logger=None):
     )
 
 
+def reimportMemberdata(context, logger=None):
+    """"Re-run the steps related to member data"""
+    if logger is None:
+        logger = logging.getLogger('tutorweb.content')
+
+    context.runImportStepFromProfile(
+        'profile-tutorweb.content:default',
+        'memberdata-properties',
+    )
+    context.runImportStepFromProfile(
+        'profile-tutorweb.content:default',
+        'propertiestool',
+    )
+
+
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
     def inSettings(settings, key):
