@@ -141,7 +141,8 @@ class ITutorial(model.Schema):
     primarycourse = RelationChoice(
         title=_(u'Primary Course'),
         description=_(u"The main course this tutorial is part of"),
-        source=ObjPathSourceBinder(Type='Course'),
+        source=ObjPathSourceBinder(Type='Course', navigation_tree_query = dict(
+            Type=['department', 'Course'])),
         required=True)
     pdf = NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
@@ -173,7 +174,8 @@ class ICourse(model.Schema):
         description=_(u"All tutorials this course contains"),
         default=[],
         value_type=RelationChoice(
-            source=ObjPathSourceBinder(Type='Tutorial'),
+            source=ObjPathSourceBinder(Type='Tutorial', navigation_tree_query = dict(
+                Type=['department', 'Tutorial'])),
         ),
         required=False)
 
