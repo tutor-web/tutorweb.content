@@ -11,8 +11,8 @@ def loggedInHandler(event):
         # when doing unit testing / calling scripts from command line
         return False
 
-    # If user has a fullname, carry on
-    if user.getProperty('fullname'):
+    # If user has a fullname and has accepted terms, carry on
+    if user.getProperty('fullname') and user.getProperty('accept', False):
         return False
 
     # Otherwise, redirect to personal information
