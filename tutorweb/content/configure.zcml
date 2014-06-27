@@ -29,6 +29,32 @@
         name="tutorweb.content.vocabularies.lectureSettings"
         />
 
+    <adapter
+        factory=".userdataschema.UserDataPanelExtender"
+        provides="plone.z3cform.fieldsets.interfaces.IFormExtender" />
+
+    <adapter
+        factory=".userdataschema.RegistrationPanelExtender"
+        provides="plone.z3cform.fieldsets.interfaces.IFormExtender" />
+
+    <adapter
+        factory=".userdataschema.AddUserFormExtender"
+        provides="plone.z3cform.fieldsets.interfaces.IFormExtender" />
+
+    <adapter
+        provides=".userdataschema.IEnhancedUserDataSchema"
+        for="plone.app.layout.navigation.interfaces.INavigationRoot"
+        factory=".userdataschema.EnhancedUserDataSchemaAdapter"
+        />
+
+    <adapter
+        factory=".userdataschema.MustAcceptUserDataPanel"
+        />
+
+    <adapter
+        factory=".userdataschema.MustAcceptRegistrationForm"
+        />
+
     <genericsetup:registerProfile
         name="default"
         title="Tutorweb content"
