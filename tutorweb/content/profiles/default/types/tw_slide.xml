@@ -1,33 +1,30 @@
 <?xml version="1.0"?>
-<object name="tutorweb.content.tw_lecture" meta_type="Dexterity FTI"
+<object name="tutorweb.content.tw_slide" meta_type="Dexterity FTI"
    i18n:domain="tutorweb.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="">Lecture</property>
- <property name="description" i18n:translate="">Lecture containing slides and quiz questions</property>
- <property name="content_icon">folder_icon.png</property>
+ <property name="title" i18n:translate="">Slide</property>
+ <property name="description" i18n:translate="">Slide for presenting</property>
+ <property name="content_icon">document_icon.png</property>
  <property name="allow_discussion">False</property>
 
  <!-- Type heirarchy -->
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-     <element value="tw_slide"/>
-     <element value="tw_latexquestion"/>
  </property>
 
  <!-- Class used for content items -->
  <property name="klass">plone.dexterity.content.Container</property>
 
  <!-- Schema interface -->
- <property name="schema">tutorweb.content.schema.ILecture</property>
+ <property name="schema">tutorweb.content.schema.ISlide</property>
  <property name="model_file"></property>
  <property name="model_source"></property>
 
  <!-- Behaviors -->
  <property name="behaviors">
      <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
-     <element value="plone.app.dexterity.behaviors.nextprevious.INextPreviousEnabled"/>
  </property>
 
  <!-- Add permission -->

@@ -1,5 +1,6 @@
-from zope import schema
+from zope import schema, interface
 from z3c.relationfield.schema import RelationList, RelationChoice
+from z3c.form.object import registerFactoryAdapter
 
 from plone.app.textfield import RichText
 from plone.autoform import directives as form
@@ -141,7 +142,7 @@ class ITutorial(model.Schema):
     primarycourse = RelationChoice(
         title=_(u'Primary Course'),
         description=_(u"The main course this tutorial is part of"),
-        source=ObjPathSourceBinder(Type='Course', navigation_tree_query = dict(
+        source=ObjPathSourceBinder(Type='Course', navigation_tree_query=dict(
             Type=['department', 'Course'])),
         required=True)
     pdf = NamedBlobFile(
@@ -174,7 +175,7 @@ class ICourse(model.Schema):
         description=_(u"All tutorials this course contains"),
         default=[],
         value_type=RelationChoice(
-            source=ObjPathSourceBinder(Type='Tutorial', navigation_tree_query = dict(
+            source=ObjPathSourceBinder(Type='Tutorial', navigation_tree_query=dict(
                 Type=['department', 'Tutorial'])),
         ),
         required=False)
@@ -204,4 +205,59 @@ class IClass(model.Schema):
         value_type=RelationChoice(
             source=ObjPathSourceBinder(Type='Lecture'),
         ),
+        required=False)
+
+
+class ISlideSection(model.Schema):
+    title = schema.TextLine(
+        title=_(u'Section Title'),
+        description=_(u"A title for this section, e.g. 'Explanation', 'Examples', 'Alternative', 'Handout'. Leave blank for main items"),
+        default=u"",
+        required=False)
+    text = RichText(
+        title=u"Text",
+        default_mime_type='text/x-tex',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-rst',),
+        #TODO: text/x-R
+        default=u"",
+        required=False)
+    image_code = RichText(
+        title=u"Code to generate image",
+        default_mime_type='text/x-tex',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-rst',),
+        #TODO: text/x-gnuplot, image/x-xfig, text/x-R
+        #TODO: url (and allow images in lectures, to link to)
+        default=u"",
+        required=False)
+    image_caption = schema.TextLine(
+        title=_(u'Image caption'),
+        description=_(u"Caption to go underneath images"),
+        default=u"",
+        required=False)
+
+
+@interface.implementer(ISlideSection)
+class SlideSection(object):
+    title = schema.fieldproperty.FieldProperty(ISlideSection['title'])
+    text = schema.fieldproperty.FieldProperty(ISlideSection['text'])
+    image_code = schema.fieldproperty.FieldProperty(ISlideSection['image_code'])
+    image_caption = schema.fieldproperty.FieldProperty(ISlideSection['image_caption'])
+registerFactoryAdapter(ISlideSection, SlideSection)
+
+
+class ISlide(model.Schema):
+    id = schema.TextLine(
+        title=_(u'Slide Id'),
+        description=_(u"Change ID to become more readable. Slides appear in alphabetical order based on this value."),
+        required=True)
+    title = schema.TextLine(
+        title=_(u'Slide title'),
+        description=_(u"The main title of the slide"),
+        required=False)
+    sections = schema.List(
+        title=_(u'Slide sections'),
+        value_type=schema.Object(schema=ISlideSection),
+        default=[],
         required=False)
