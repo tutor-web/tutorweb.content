@@ -119,6 +119,32 @@ class ListingViewTest(IntegrationTestCase):
              'url': 'http://nohost/plone/dept1/tut1/fileb.pdf/view'},
         ])
 
+    def test_slideListing(self):
+        """Can get listings for any slides within current node"""
+        portal = self.layer['portal']
+        self.path = 'dept1/tut1/lec1'
+
+        # Create some files first
+        login(portal, MANAGER_ID)
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_slide",
+            id="sl01",
+            title="Slide B1",
+        )
+        portal['dept1']['tut1']['lec1'].invokeFactory(
+            type_name="tw_slide",
+            id="sl02",
+            title="Slide A2",
+        )
+        self.assertEquals(self.getView().slideListing(), [
+            {'title': 'Slide B1',
+             'id': 'sl01',
+             'url': 'http://nohost/plone/dept1/tut1/lec1/sl01'},
+            {'title': 'Slide A2',
+             'id': 'sl02',
+             'url': 'http://nohost/plone/dept1/tut1/lec1/sl02'},
+        ])
+
     def test_courseListing(self):
         """Can get listings for any courses within current node"""
         portal = self.layer['portal']

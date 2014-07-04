@@ -41,11 +41,11 @@ class ListingView(BrowserView):
             sort_on="id",
         )
         out = []
-        for o in (l.getObject() for l in listing):
+        for l in listing:
             out.append(dict(
-                url=o.absolute_url(),
-                id=o.id,
-                title=o.Title(),
+                url=l.getURL(),
+                id=l.id,
+                title=l.Title(),
             ))
         return out
 
