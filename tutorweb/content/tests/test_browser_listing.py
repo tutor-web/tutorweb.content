@@ -112,9 +112,11 @@ class ListingViewTest(IntegrationTestCase):
         )
         self.assertEquals(self.getView().fileListing(), [
             {'title': 'File A',
-             'url': 'http://nohost/plone/dept1/tut1/filea.pdf'},
+             'id': 'filea.pdf',
+             'url': 'http://nohost/plone/dept1/tut1/filea.pdf/view'},
             {'title': 'File B',
-             'url': 'http://nohost/plone/dept1/tut1/fileb.pdf'},
+             'id': 'fileb.pdf',
+             'url': 'http://nohost/plone/dept1/tut1/fileb.pdf/view'},
         ])
 
     def test_courseListing(self):

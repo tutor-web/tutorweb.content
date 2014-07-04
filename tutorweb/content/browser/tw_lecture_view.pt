@@ -91,6 +91,26 @@
       </dd>
     </tal:t>
 
+    <dt id="fieldsetlegend-files">Data files</dt>
+    <dd id="fieldset-files">
+
+      <table class="listing">
+        <thead>
+          <th>Filename</th>
+          <th>Title</th>
+        </thead>
+        <tbody>
+          <tr tal:repeat="item view/fileListing">
+            <td tal:content="item/id">fl01</td>
+            <td>
+              <a href="#" tal:attributes="href item/url"
+                          tal:content="item/title">slide</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </dd>
+
   </dl>
 
 </metal:content-core>

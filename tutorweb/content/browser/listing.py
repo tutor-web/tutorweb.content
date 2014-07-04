@@ -95,13 +95,14 @@ class ListingView(BrowserView):
     def fileListing(self):
         """Listing of all file items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
-            Type="File",
+            Type=["File", "Image"],
             sort_on="id",
         )
         out = []
         for l in listing:
             out.append(dict(
-                url=l.getURL(),
+                url=l.getURL() + '/view',  # TODO: Eugh
+                id=l.id,
                 title=l.Title(),
             ))
         return out
