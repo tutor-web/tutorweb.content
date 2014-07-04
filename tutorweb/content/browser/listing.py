@@ -37,10 +37,17 @@ class ListingView(BrowserView):
     def slideListing(self):
         """Listing of all slide items"""
         listing = self.context.restrictedTraverse('@@folderListing')(
-            portal_type="Slide",
+            Type="Slide",
             sort_on="id",
         )
-        return listing
+        out = []
+        for o in (l.getObject() for l in listing):
+            out.append(dict(
+                url=o.absolute_url(),
+                id=o.id,
+                title=o.Title(),
+            ))
+        return out
 
     @view.memoize
     def lectureListing(self):

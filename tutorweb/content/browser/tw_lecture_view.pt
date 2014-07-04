@@ -38,22 +38,14 @@
         <thead>
           <th>Code</th>
           <th>Name</th>
-          <th>Examples</th>
-          <th>Alternative</th>
-          <th>Details</th>
-          <th>Handout</th>
         </thead>
         <tbody>
           <tr tal:repeat="item view/slideListing">
-            <td tal:content="item/getId">sl01</td>
+            <td tal:content="item/id">sl01</td>
             <td>
-              <a href="#" tal:attributes="href item/getURL"
-                          tal:content="item/Title">slide</a>
+              <a href="#" tal:attributes="href item/url"
+                          tal:content="item/title">slide</a>
             </td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
-            <td tal:content="string:TODO:"></td>
           </tr>
         </tbody>
       </table>
