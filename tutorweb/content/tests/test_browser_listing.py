@@ -207,7 +207,7 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1/lec2'
         self.assertEquals(
             self.getView().quizUrl(),
-            "http://nohost/plone/++resource++tutorweb.quiz/load.html" + 
+            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
             "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
             "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync",
         )
@@ -254,7 +254,7 @@ class ListingViewTest(IntegrationTestCase):
                 login(portal, user)
             else:
                 logout()
-            self.path='classa'
+            self.path = 'classa'
             return self.getView().partOfClass()
         portal = self.layer['portal']
 
