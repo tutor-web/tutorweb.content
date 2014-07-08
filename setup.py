@@ -43,6 +43,8 @@ setup(
         'plone.app.transmogrifier',
         'transmogrify.dexterity',
         'zope.app.component',
+        'collective.easyslider',   #make this part of the theme package
+
     ],
     extras_require={
         'test': [
