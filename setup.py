@@ -41,8 +41,10 @@ setup(
         'collective.z3cform.datagridfield',
         'collective.transmogrifier',
         'plone.app.transmogrifier',
-        'transmogrify.dexterity',
+        'transmogrify.dexterity',  
         'zope.app.component',
+        'collective.easyslider',   #make this part of the theme package
+
     ],
     extras_require={
         'test': [
