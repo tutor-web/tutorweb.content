@@ -14,7 +14,7 @@
 
 <metal:content-core fill-slot="content-core">
 
-  <ul>
+  <ul class="tw-actions">
     <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
       <li><a tal:attributes="href view/quizUrl">
         Take a drill on this tutorial</a></li>
