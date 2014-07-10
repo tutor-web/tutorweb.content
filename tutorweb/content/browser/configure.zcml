@@ -67,6 +67,13 @@
       template="tw_class_bulk_add_student.pt"
       />
 
+    <browser:page name="formatted"
+      for="tutorweb.content.schema.ISlide"
+      permission="zope2.View"
+      class=".slide.FormattedView"
+      template="tw_slide_formatted.pt"
+      />
+
     <browser:page name="download-pdf"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"
