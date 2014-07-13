@@ -218,7 +218,7 @@ class ISlideSection(model.Schema):
         title=u"Text",
         default_mime_type='text/x-tex',
         output_mime_type='text/html',
-        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-rst',),
+        allowed_mime_types=('text/plain', 'text/html', 'text/x-tex', 'text/restructured', 'text/structured',),
         #TODO: text/x-R
         default=u"",
         required=False)
@@ -226,12 +226,10 @@ class ISlideSection(model.Schema):
         title=u"Code to generate image",
         default_mime_type='text/x-tex',
         output_mime_type='text/html',
-        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-rst',),
-        #TODO: text/x-gnuplot, image/x-xfig, text/x-R
-        #TODO: url (and allow images in lectures, to link to)
+        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-rst', 'text/x-url', 'text/R', 'text/x-gnuplot', 'image/x-xfig'),
         default=u"",
         required=False)
-    image_caption = schema.TextLine(
+    image_caption = schema.Text(
         title=_(u'Image caption'),
         description=_(u"Caption to go underneath images"),
         default=u"",

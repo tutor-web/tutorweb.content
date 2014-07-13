@@ -26,7 +26,11 @@
       class=".tex.LectureTeXImport"
       permission="cmf.ManagePortal"
       />
-
+    <browser:page name="slide-copy"
+      for="tutorweb.content.schema.ILecture"
+      class=".lecture.LectureSlideImportView"
+      permission="cmf.ManagePortal"
+      />
     <browser:page name="view"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"

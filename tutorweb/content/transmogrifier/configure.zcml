@@ -9,11 +9,28 @@
         name="tutorweb.content.transmogrifier.latex.source"
         />
 
+    <utility
+        component=".collectivejsonifysource.CollectiveJsonifySource"
+        name="tutorweb.content.transmogrifier.collectivejsonifysource"
+        />
+
+    <utility
+        component=".translateoldtutorweb.TranslateOldTutorWeb"
+        name="tutorweb.content.transmogrifier.translateoldtutorweb"
+        />
+
     <transmogrifier:registerConfig
         name="tutorweb.content.latexquizimport"
         title="Quiz LaTeX import"
         description="Import quiz items from a LaTeX file"
         configuration="latexquizimport.cfg"
+        />
+
+    <transmogrifier:registerConfig
+        name="tutorweb.content.transmogrifier.oldtutorwebslideimport"
+        title="Old Tutorweb Slide Import"
+        description="Import slides from old Tutorweb via. collective.jsonify"
+        configuration="oldtutorwebslideimport.cfg"
         />
 
 </configure>
