@@ -1,11 +1,16 @@
 from plone.app.textfield.value import RichTextValue
 from plone.app.testing import login
 from plone.namedfile.file import NamedBlobImage
+from Products.CMFCore.utils import getToolByName
 
 from .base import IntegrationTestCase, MANAGER_ID, testImage
 
 
 class LaTeXQuestionStructTest(IntegrationTestCase):
+    def doTransform(self, content):
+        pt = getToolByName(self.layer['portal'], 'portal_transforms')
+        return pt.convertTo('text/html', content, mimetype='text/x-tex').getData()
+
     def test_asDict(self):
         # Test ~empty question to make sure we don't fall over
         self.assertEqual(self.questionToDict(dict(
@@ -35,16 +40,12 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             explanation=self.rtv("Apparently you are"),
         )), dict(
             title=u'qtd empty question',
-            text='<div class="parse-as-tex">Are you exicted?</div>',
-            choices=[
-                '<div class="parse-as-tex">woo</div>',
-                '<div class="parse-as-tex">yay</div>',
-                '<div class="parse-as-tex">lastone</div>',
-            ],
+            text=self.doTransform('Are you exicted?'),
+            choices=[self.doTransform(x) for x in ['woo', 'yay', 'lastone']],
             shuffle=[0, 1],
             answer=dict(
                 correct=[2],
-                explanation='<div class="parse-as-tex">Apparently you are</div>',
+                explanation=self.doTransform('Apparently you are'),
             )
         ))
 
@@ -61,7 +62,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             ),
         )), dict(
             title=u'qtd image question',
-            text='<div class="parse-as-tex">Here is some text with an image below</div>'
+            text=self.doTransform('Here is some text with an image below')
                 +'<img src="data:image/png;base64,%s" width="1" height="1" />' % imageContents.encode("base64").replace("\n", ""),
             choices=[],
             shuffle=[],
