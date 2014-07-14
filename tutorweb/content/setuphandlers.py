@@ -1,9 +1,18 @@
 import logging
+import pkgutil
 
 from plone.app.dexterity.behaviors import constrains
 from Products.CMFPlone.interfaces.constrains import IConstrainTypes
 
 from Products.CMFCore.utils import getToolByName
+
+
+def availableTransforms():
+    try:
+        import tutorweb.content.transforms
+        return [x[1] for x in pkgutil.iter_modules(tutorweb.content.transforms.__path__)]
+    except ImportError:
+        return []
 
 
 def installTransforms(context, logger=None):
@@ -13,13 +22,14 @@ def installTransforms(context, logger=None):
         return
 
     transforms = getToolByName(context, 'portal_transforms')
-    try:
-        transforms.unregisterTransform('tex_to_html')
-        logger.info('Unregistered tex_to_html')
-    except AttributeError:
-        pass  # Not there yet, doesn't matter
-    transforms.manage_addTransform('tex_to_html', 'tutorweb.content.transforms.tex_to_html')
-    logger.info('Registered tex_to_html')
+    for tform in availableTransforms():
+        try:
+            transforms.unregisterTransform(tform)
+            logger.info('Unregistered %s' % tform)
+        except AttributeError:
+            pass  # Not there yet, doesn't matter
+        transforms.manage_addTransform(tform, 'tutorweb.content.transforms.%s' % tform)
+        logger.info('Registered %s' % tform)
 
 
 def uninstallTransforms(context, logger=None):
@@ -29,11 +39,12 @@ def uninstallTransforms(context, logger=None):
         return
 
     transforms = getToolByName(context, 'portal_transforms')
-    try:
-        transforms.unregisterTransform('tex_to_html')
-        logger.info('Unregistered tex_to_html')
-    except AttributeError:
-        logger.info('Could not unregister tex_to_html!')
+    for tform in availableTransforms():
+        try:
+            transforms.unregisterTransform(tform)
+            logger.info('Unregistered %s' % tform)
+        except AttributeError:
+            logger.info('Could not unregister %s!' % tform)
 
 
 def createSchoolsClassesFolder(context, logger=None):
