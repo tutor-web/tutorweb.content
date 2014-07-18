@@ -6,11 +6,15 @@ from Products.CMFPlone.interfaces.constrains import IConstrainTypes
 
 from Products.CMFCore.utils import getToolByName
 
+from .transforms.mimetypes import registerMimeTypes
+
 
 def availableTransforms():
     try:
         import tutorweb.content.transforms
-        return [x[1] for x in pkgutil.iter_modules(tutorweb.content.transforms.__path__)]
+        return [x[1] for x
+                     in pkgutil.iter_modules(tutorweb.content.transforms.__path__)
+                     if x[1] != 'mimetypes']
     except ImportError:
         return []
 
@@ -18,16 +22,21 @@ def availableTransforms():
 def installTransforms(context, logger=None):
     if logger is None:
         logger = logging.getLogger('tutorweb.content')
-    if context.readDataFile('tutorweb.content.marker.txt') is None:
-        return
+    if hasattr(context, 'readDataFile'):
+        # Make sure we're actually installing tutorweb.content
+        if context.readDataFile('tutorweb.content.marker.txt') is None:
+            return
+    else:
+        # Upgrade step, so fine
+        pass
+
+    registerMimeTypes(context, logger)
 
     transforms = getToolByName(context, 'portal_transforms')
     for tform in availableTransforms():
-        try:
+        if tform in transforms:
             transforms.unregisterTransform(tform)
             logger.info('Unregistered %s' % tform)
-        except AttributeError:
-            pass  # Not there yet, doesn't matter
         transforms.manage_addTransform(tform, 'tutorweb.content.transforms.%s' % tform)
         logger.info('Registered %s' % tform)
 

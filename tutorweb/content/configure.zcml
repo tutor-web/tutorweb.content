@@ -132,5 +132,13 @@
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 5.0 -> 6.0"
+        description="Add extra transform steps"
+        source="5000"
+        destination="6000"
+        handler="tutorweb.content.setuphandlers.installTransforms"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
