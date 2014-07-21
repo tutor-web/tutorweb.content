@@ -1,4 +1,5 @@
 import cgi
+import os
 import os.path
 import subprocess
 import tempfile
@@ -56,8 +57,12 @@ class ScriptToHtml(object):
             raise RuntimeError("No SVG generated:-\n" + err)
         if not os.path.exists(tmpSvg):
             return '<pre class="script output">%s</pre>' % cgi.escape(str(out))
+
+        # Read SVG and remove it before returning
         with open(tmpSvg, 'r') as f:
-            return f.read()
+            out = f.read()
+        os.remove(tmpSvg)
+        return out
 
     def convert(self, orig, data, **kwargs):
         # NB: This potentially hugely expensive, but portal_transforms has a
