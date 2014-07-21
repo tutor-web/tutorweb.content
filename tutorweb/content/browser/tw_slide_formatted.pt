@@ -9,12 +9,14 @@
             <div tal:replace="structure sect/image_code/output"></div>
             <figcaption tal:content="sect/image_caption">Caption</figcaption>
           </figure>
-          <div tal:replace="structure sect/text/output"></div>
+          <div tal:condition="sect/text"
+               tal:replace="structure sect/text/output"></div>
         </section>
 
         <details tal:condition="sect/title">
           <summary tal:content="sect/title">Section title</summary>
-          <div tal:replace="structure sect/text/output"></div>
+          <div tal:condition="sect/text"
+               tal:replace="structure sect/text/output"></div>
         </details>
 
       </tal:t>
