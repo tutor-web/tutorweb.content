@@ -5,7 +5,7 @@ from Products.CMFCore.utils import getToolByName
 from .base import IntegrationTestCase
 
 import tutorweb.content.transforms.script_to_html
-from tutorweb.content.transforms.script_to_html import R_BINARY
+from tutorweb.content.transforms.script_to_html import R_BINARY, TIMEOUT
 
 
 class ContentTypeTest(IntegrationTestCase):
@@ -33,6 +33,17 @@ class ContentTypeTest(IntegrationTestCase):
         plot(0:100, (0:100)^2, 'l')
         """)
         self.assertTrue('<svg' in xml)
+
+        # Will timeout and not generate plot
+        tutorweb.content.transforms.script_to_html.TIMEOUT = '1s'
+        xml = self.doTransform("""
+        Sys.sleep(5)
+        plot(0:100, (0:100)^2, 'l')
+        """)
+        # NB: Timeout isn't an error...yet.
+        self.assertTrue(xml.startswith('<pre class="script output">'))
+        self.assertTrue('Sys.sleep(5)' in xml)
+        tutorweb.content.transforms.script_to_html.TIMEOUT = TIMEOUT
 
         # Can use a different MIME type
         xml = self.doTransform("""
