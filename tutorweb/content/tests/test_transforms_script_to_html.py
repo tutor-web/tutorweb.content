@@ -8,15 +8,6 @@ import tutorweb.content.transforms.script_to_html
 from tutorweb.content.transforms.script_to_html import R_BINARY
 
 
-def expMathML(exp):
-    return """
-<math xmlns="http://www.w3.org/1998/Math/MathML">
-<mrow>
-<msup><mrow><mi>c</mi></mrow><mrow><mn>%s</mn></mrow>
-</msup>
-</mrow></math>""" % exp
-
-
 class ContentTypeTest(IntegrationTestCase):
 
     def test_transformRMissingBinary(self):
