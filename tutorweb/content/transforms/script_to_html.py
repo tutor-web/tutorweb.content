@@ -9,6 +9,7 @@ from zope.interface import implements
 from Products.PortalTransforms.interfaces import ITransform
 
 R_BINARY = "/usr/bin/R"
+FIG_BINARY = "/usr/bin/fig2dev"
 TIMEOUT = "3m"
 TIMEOUT_BINARY = "/usr/bin/timeout"
 
