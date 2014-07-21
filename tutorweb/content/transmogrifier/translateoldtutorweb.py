@@ -95,16 +95,3 @@ class TranslateOldTutorWeb(object):
                     text_field=item[sectName],
                 ))
             yield newSlide
-
-
-from collective.transmogrifier.interfaces import ITransmogrifier
-
-# from tutorweb.content.transmogrifier.translateoldtutorweb import runPipeline ; runPipeline(app['tutor-web'])
-def runPipeline(context,
-                url='http://www.tutor-web.net:8089/tutor-web/fish/fish5106stockrec',
-                folder='/fish/fish101.1/lecture01/'): # NB: No tutor-web, since that is our context
-    transmogrifier = ITransmogrifier(context)
-    transmogrifier(
-        'tutorweb.content.transmogrifier.oldtutorwebslideimport',
-        definitions=dict(url=url, folder=folder),
-    )
