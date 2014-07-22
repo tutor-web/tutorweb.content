@@ -1,6 +1,7 @@
 import cgi
 import os
 import os.path
+import re
 import subprocess
 import tempfile
 
@@ -59,10 +60,17 @@ class ScriptToHtml(object):
         if not os.path.exists(tmpSvg):
             return '<pre class="script output">%s</pre>' % cgi.escape(str(out))
 
-        # Read SVG and remove it before returning
+        # Read SVG into string
         with open(tmpSvg, 'r') as f:
             out = f.read()
         os.remove(tmpSvg)
+
+        # Glyph IDs should be unique
+        out = re.sub(
+            r'(glyph\d+-\d+)',
+            re.sub(r'\W', '', tmpSvg) + r'-\1',
+            out,
+        )
         return out
 
     def convert(self, orig, data, **kwargs):
@@ -80,6 +88,7 @@ class ScriptToHtml(object):
             data.setData('<pre class="script error">%s</pre>' % (
                 cgi.escape(str(e)),
             ))
+        data.setData(data.getData() + '<pre class="code-block"><code>%s</code></pre>' % cgi.escape(orig))
         return data
 
 
