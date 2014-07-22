@@ -34,6 +34,11 @@ class TexToHtml(object):
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
+        # "encoding" is both the encoding of orig, and the expected encoding of
+        # the data in data.
+        if kwargs['encoding'] not in ['utf-8', 'utf_8', 'U8', 'UTF', 'utf8']:
+            raise ValueError('Only support unicode, not %s' % kwargs['encoding'])
+
         if os.path.isfile(TTM_BINARY):
             p = subprocess.Popen(
                 [
@@ -47,16 +52,16 @@ class TexToHtml(object):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            (out, err) = p.communicate(input=orig.encode('utf-8'))
+            (out, err) = p.communicate(input=orig)
             if '****' in err:
                 # Probably an error, show it.
-                data.setData(u'<pre class="ttm-output error">%s</pre>\n<div class="ttm-output">%s</div>' % (
-                    cgi.escape(err.strip().decode('utf-8')),
-                    out.strip().decode('utf-8'),
+                data.setData('<pre class="ttm-output error">%s</pre>\n<div class="ttm-output">%s</div>' % (
+                    cgi.escape(err.strip()),
+                    out.strip(),
                 ))
             else:
                 data.setData('<div class="ttm-output">%s</div>' % (
-                    out.strip().decode('utf-8'),
+                    out.strip(),
                 ))
         else:
             data.setData('<div class="parse-as-tex">' +

@@ -62,7 +62,7 @@ class ScriptToHtml(object):
 
         # Read SVG into string
         with open(tmpSvg, 'r') as f:
-            out = f.read().decode('utf-8')
+            out = f.read()
         os.remove(tmpSvg)
 
         # Remove XML declaration

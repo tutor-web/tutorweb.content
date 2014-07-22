@@ -74,9 +74,11 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
 
         def renderTeX(f):
             return self.portalTransforms().convertTo(
-                'text/html', f,
+                'text/html',
+                f.encode('utf-8'),
                 mimetype='text/x-tex',
-            ).getData()
+                encoding='utf-8',
+            ).getData().decode('utf-8')
 
         all_choices = self.allChoices()
         out = dict(

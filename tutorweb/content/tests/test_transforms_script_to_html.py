@@ -53,6 +53,11 @@ class ContentTypeTest(IntegrationTestCase):
 
     def doTransform(self, content, inputMime='text/r'):
         pt = getToolByName(self.layer['portal'], 'portal_transforms')
-        str = pt.convertTo('text/html', content, mimetype=inputMime).getData()
+        str = pt.convertTo(
+            'text/html',
+            content.encode('utf-8'),
+            mimetype=inputMime,
+            encoding='utf-8',
+        ).getData().decode('utf-8')
         doc = etree.fromstring('<div>%s</div>' % str)
         return str

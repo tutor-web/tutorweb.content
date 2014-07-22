@@ -86,4 +86,9 @@ Number of lines processed approximately 0</pre>
 
     def doTransform(self, content):
         pt = getToolByName(self.layer['portal'], 'portal_transforms')
-        return pt.convertTo('text/html', content, mimetype='text/x-tex').getData()
+        return pt.convertTo(
+            'text/html',
+            content.encode('utf-8'),
+            mimetype='text/x-tex',
+            encoding='utf-8',
+        ).getData().decode('utf-8')

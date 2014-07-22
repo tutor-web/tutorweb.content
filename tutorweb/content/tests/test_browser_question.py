@@ -9,7 +9,12 @@ from .base import IntegrationTestCase, MANAGER_ID, testImage
 class LaTeXQuestionStructTest(IntegrationTestCase):
     def doTransform(self, content):
         pt = getToolByName(self.layer['portal'], 'portal_transforms')
-        return pt.convertTo('text/html', content, mimetype='text/x-tex').getData()
+        return pt.convertTo(
+            'text/html',
+            content.encode('utf-8'),
+            mimetype='text/x-tex',
+            encoding='utf-8',
+        ).getData().decode('utf-8')
 
     def test_asDict(self):
         # Test ~empty question to make sure we don't fall over
