@@ -62,8 +62,11 @@ class ScriptToHtml(object):
 
         # Read SVG into string
         with open(tmpSvg, 'r') as f:
-            out = f.read()
+            out = f.read().decode('utf-8')
         os.remove(tmpSvg)
+
+        # Remove XML declaration
+        out = re.sub(r'<\?xml.*?\?>', '', out)
 
         # Glyph IDs should be unique
         out = re.sub(

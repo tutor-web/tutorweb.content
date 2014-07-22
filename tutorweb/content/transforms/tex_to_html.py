@@ -47,15 +47,17 @@ class TexToHtml(object):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            (out, err) = p.communicate(input=orig)
+            (out, err) = p.communicate(input=orig.encode('utf-8'))
             if '****' in err:
                 # Probably an error, show it.
-                data.setData('<pre class="ttm-output error">%s</pre>\n<div class="ttm-output">%s</div>' % (
-                    cgi.escape(err.strip()),
-                    out.strip(),
+                data.setData(u'<pre class="ttm-output error">%s</pre>\n<div class="ttm-output">%s</div>' % (
+                    cgi.escape(err.strip().decode('utf-8')),
+                    out.strip().decode('utf-8'),
                 ))
             else:
-                data.setData('<div class="ttm-output">%s</div>' % out.strip())
+                data.setData('<div class="ttm-output">%s</div>' % (
+                    out.strip().decode('utf-8'),
+                ))
         else:
             data.setData('<div class="parse-as-tex">' +
                          convertWebIntelligentPlainTextToHtml(orig) +

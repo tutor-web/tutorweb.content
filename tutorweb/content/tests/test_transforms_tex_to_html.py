@@ -51,7 +51,7 @@ class ContentTypeTest(IntegrationTestCase):
             """<div class="ttm-output">camel %s</div>""" % expMathML(2),
         )
 
-        # But as we use intelligent text, line breaks are also converted
+        #TODO: What does TtM do with line breaks?
         self.assertEquals(
             self.doTransform("camel $c^2$\ndromedary $c^1$"),
             """<div class="ttm-output">camel %s\ndromedary %s</div>""" % (
@@ -60,7 +60,22 @@ class ContentTypeTest(IntegrationTestCase):
             ),
         )
 
+        # Can use unicode
+        self.assertEquals(
+            self.doTransform(u'Mengi n\xe1tt\xfarlegu talnanna'),
+            u"""<div class="ttm-output">Mengi n\xe1tt\xfarlegu talnanna</div>""",
+        )
+
         # We notice errors
+        self.assertEquals(
+            self.doTransform(u"\\begin{oatemise}n\xe1tt\xfarlegu"),
+            u"""<pre class="ttm-output error">HTML unicode style 1
+**** Unknown or ignored environment: \\begin{oatemise} Line 1
+Number of lines processed approximately 0</pre>
+<div class="ttm-output">n\xe1tt\xfarlegu</div>""",
+        )
+
+        # We notice errors and unicode
         self.assertEquals(
             self.doTransform("\\begin{oatemise}And some other stuff"),
             """<pre class="ttm-output error">HTML unicode style 1
