@@ -70,7 +70,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
                     f.contentType,
                     f.data.encode("base64").replace("\n", ""),
                 ) + f.getImageSize())
-            'data:image/png;base64,{0}'.format(data_uri)
+            raise ValueError("Cannot interpret %s" % f)
 
         def renderTeX(f):
             return self.portalTransforms().convertTo(
