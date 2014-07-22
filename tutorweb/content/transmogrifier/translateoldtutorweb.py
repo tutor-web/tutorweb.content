@@ -42,6 +42,7 @@ class TranslateOldTutorWeb(object):
                 elif image_type == 'image':
                     sect['image_code'] = rtv(image_filename, 'text/x-url')
                 elif image_type == 'r':
+                    # TODO: Rewrite read.table() calls to have HTTP
                     sect['image_code'] = rtv(image_code, 'text/R')
                 elif image_type == 'gnuplot':
                     sect['image_code'] = rtv(image_code, 'text/x-gnuplot')
