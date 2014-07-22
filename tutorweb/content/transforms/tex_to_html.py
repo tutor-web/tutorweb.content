@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cgi
 import os.path
 import subprocess
@@ -9,6 +10,13 @@ from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtm
 from Products.PortalTransforms.interfaces import ITransform
 
 TTM_BINARY = '/usr/bin/ttm'
+LATEX_PREAMBLE = u"""\\documentclass{article}
+\\newcommand{\\mathbb}[1]{\mathbf{#1}}
+\\begin{document}
+""".encode("utf-8")
+LATEX_POSTAMBLE = u"""
+\\end{document}
+""".encode("utf-8")
 
 
 class TexToHtml(object):
@@ -52,7 +60,7 @@ class TexToHtml(object):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            (out, err) = p.communicate(input=orig)
+            (out, err) = p.communicate(input=(LATEX_PREAMBLE + orig + LATEX_POSTAMBLE))
             if '****' in err:
                 # Probably an error, show it.
                 data.setData('<pre class="ttm-output error">%s</pre>\n<div class="ttm-output">%s</div>' % (

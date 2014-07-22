@@ -45,11 +45,15 @@ class ContentTypeTest(IntegrationTestCase):
     def test_transformTeXTtM(self):
         """tex_to_html should have been registered and should transform content
         """
-        # Basically we just get a div around content
+        # We get a MathML version
         self.assertEquals(
             self.doTransform("camel $c^2$"),
             """<div class="ttm-output">camel %s</div>""" % expMathML(2),
         )
+
+        # We understand fractions
+        out = self.doTransform("camel $\\frac{1}{2}$")
+        self.assertTrue('<mfrac>' in out)
 
         #TODO: What does TtM do with line breaks?
         self.assertEquals(
@@ -66,12 +70,20 @@ class ContentTypeTest(IntegrationTestCase):
             u"""<div class="ttm-output">Mengi n\xe1tt\xfarlegu talnanna</div>""",
         )
 
+        # \mathbb does something useful
+        out = self.doTransform(u'Mengi $\mathbb{R} \mathbb{Z} \mathbb{N}$')
+        # TODO: This is rubbish, but it'll do for now
+        self.assertTrue('<mi fontweight="bold">R</mi>' in out)
+        self.assertTrue('<mi fontweight="bold">Z</mi>' in out)
+        self.assertTrue('<mi fontweight="bold">N</mi>' in out)
+
         # We notice errors
         self.assertEquals(
             self.doTransform(u"\\begin{oatemise}n\xe1tt\xfarlegu"),
             u"""<pre class="ttm-output error">HTML unicode style 1
-**** Unknown or ignored environment: \\begin{oatemise} Line 1
-Number of lines processed approximately 0</pre>
+Latex base filename blank. Auxiliary files will not be found.
+**** Unknown or ignored environment: \\begin{oatemise} Line 4
+Number of lines processed approximately 5</pre>
 <div class="ttm-output">n\xe1tt\xfarlegu</div>""",
         )
 
@@ -79,8 +91,9 @@ Number of lines processed approximately 0</pre>
         self.assertEquals(
             self.doTransform("\\begin{oatemise}And some other stuff"),
             """<pre class="ttm-output error">HTML unicode style 1
-**** Unknown or ignored environment: \\begin{oatemise} Line 1
-Number of lines processed approximately 0</pre>
+Latex base filename blank. Auxiliary files will not be found.
+**** Unknown or ignored environment: \\begin{oatemise} Line 4
+Number of lines processed approximately 5</pre>
 <div class="ttm-output">And some other stuff</div>""",
         )
 
