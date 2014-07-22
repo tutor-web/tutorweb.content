@@ -1,24 +1,21 @@
-<html>
-  <body>
-    <h2 tal:content="context/title">Slide title</h2>
-    <div class="slide-content">
-      <tal:t tal:repeat="sect context/sections">
+<section class="slide-content">
+  <h2 tal:content="context/title">Slide title</h2>
+  <tal:t tal:repeat="sect context/sections">
 
-        <section tal:condition="not:sect/title">
-          <figure tal:condition="sect/image_code">
-            <div tal:replace="structure sect/image_code/output"></div>
-            <figcaption tal:content="sect/image_caption">Caption</figcaption>
-          </figure>
-          <div tal:condition="sect/text"
-               tal:replace="structure sect/text/output"></div>
-        </section>
+    <section tal:condition="not:sect/title">
+      <figure tal:condition="sect/image_code">
+        <div tal:replace="structure sect/image_code/output"></div>
+        <figcaption tal:content="sect/image_caption">Caption</figcaption>
+      </figure>
+      <div tal:condition="sect/text"
+           tal:replace="structure sect/text/output"></div>
+    </section>
 
-        <details tal:condition="sect/title">
-          <summary tal:content="sect/title">Section title</summary>
-          <div tal:condition="sect/text"
-               tal:replace="structure sect/text/output"></div>
-        </details>
+    <details tal:condition="sect/title">
+      <summary tal:content="sect/title">Section title</summary>
+      <div tal:condition="sect/text"
+           tal:replace="structure sect/text/output"></div>
+    </details>
 
-      </tal:t>
-  </body>
-</html>
+  </tal:t>
+</section>

@@ -31,6 +31,11 @@
       class=".lecture.LectureSlideImportView"
       permission="cmf.ManagePortal"
       />
+    <browser:page name="slide-html"
+      for="tutorweb.content.schema.ILecture"
+      permission="cmf.ManagePortal"
+      template="tw_lecture_slide_html.pt"
+      />
     <browser:page name="view"
       for="tutorweb.content.schema.ILecture"
       permission="zope2.View"
@@ -71,11 +76,11 @@
       template="tw_class_bulk_add_student.pt"
       />
 
-    <browser:page name="formatted"
+    <browser:page name="slide-html"
       for="tutorweb.content.schema.ISlide"
       permission="zope2.View"
-      class=".slide.FormattedView"
-      template="tw_slide_formatted.pt"
+      class=".slide.SlideHtmlView"
+      template="tw_slide_slide_html.pt"
       />
 
     <browser:page name="download-pdf"
