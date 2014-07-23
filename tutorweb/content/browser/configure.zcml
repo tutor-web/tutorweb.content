@@ -33,7 +33,7 @@
       />
     <browser:page name="slide-html"
       for="tutorweb.content.schema.ILecture"
-      permission="cmf.ManagePortal"
+      permission="zope2.View"
       template="tw_lecture_slide_html.pt"
       />
     <browser:page name="view"
