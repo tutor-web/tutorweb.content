@@ -1,4 +1,4 @@
-<section class="slide-content">
+<section class="slide-content" tal:attributes="id context/id">
   <h2 tal:content="context/title">Slide title</h2>
   <tal:t tal:repeat="sect context/sections">
 
