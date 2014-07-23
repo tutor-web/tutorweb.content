@@ -13,6 +13,11 @@
 
     <details tal:condition="sect/title">
       <summary tal:content="sect/title">Section title</summary>
+
+      <figure tal:condition="sect/image_code">
+        <div tal:replace="structure sect/image_code/output"></div>
+        <figcaption tal:content="sect/image_caption">Caption</figcaption>
+      </figure>
       <div tal:condition="sect/text"
            tal:replace="structure sect/text/output"></div>
     </details>
