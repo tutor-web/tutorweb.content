@@ -50,7 +50,7 @@ class ScriptToHtml(object):
             stderr=subprocess.PIPE,
         )
         (out, err) = p.communicate(
-            input='svg("%s", width= 4, height=4)\n\n%s' % (
+            input='svg("%s", width= 4, height=4, onefile = TRUE, bg = "transparent")\n\n%s' % (
                 tmpSvg,
                 script,
             ),
