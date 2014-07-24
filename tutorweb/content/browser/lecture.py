@@ -5,9 +5,15 @@ from collective.transmogrifier.interfaces import ITransmogrifier
 
 class LectureSlideImportView(BrowserView):
     def __call__(self):
-        url = 'http://www.tutor-web.net:8089/tutor-web/fish/fish5106stockrec'
+        if 'src' not in self.request.form:
+            raise ValueError("Must provide src")
         transmogrifier = ITransmogrifier(self.context)
         transmogrifier(
             'tutorweb.content.transmogrifier.oldtutorwebslideimport',
-            definitions=dict(url=url, folder=''),
+            definitions=dict(
+                url=self.request.form['src'],
+                folder='',
+                desturl=self.context.absolute_url(),
+            ),
         )
+        return "success"
