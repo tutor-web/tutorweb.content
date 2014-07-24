@@ -40,7 +40,7 @@ class TranslateOldTutorWeb(object):
                 if image_type == 'none':
                     sect['image_code'] = None
                 elif image_type == 'image':
-                    sect['image_code'] = rtv(image_url, 'text/x-url')
+                    sect['image_code'] = rtv(image_url, 'text/x-uri')
                 elif image_type == 'r':
                     # TODO: Rewrite read.table() calls to have HTTP
                     sect['image_code'] = rtv(image_code, 'text/R')

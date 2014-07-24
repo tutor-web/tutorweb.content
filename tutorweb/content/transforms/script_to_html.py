@@ -21,7 +21,7 @@ class ScriptToHtml(object):
     """
     implements(ITransform)
     __name__ = "script_to_html"
-    inputs = ('text/r', 'text/x-gnuplot', 'image/x-xfig',)
+    inputs = ('text/r', 'text/x-uri', 'text/x-gnuplot', 'image/x-xfig',)
     output = "text/html"
 
     def __init__(self, name=None):
@@ -76,6 +76,12 @@ class ScriptToHtml(object):
         )
         return out
 
+    def _urlConvert(self, script):
+        # Fetch a URL, turn it into an <img>, not quite a script but meh
+        return '<img src="%s" />' % script
+        # img = urllib2.Request(script).urlopen(req).read().encode("base64").replace("\n", "")
+        # return '<img src="data:image/png;base64,%s" />' % img
+
     def convert(self, orig, data, **kwargs):
         # NB: This potentially hugely expensive, but portal_transforms has a
         # cache keyed on the content that lasts an hour.
@@ -83,10 +89,12 @@ class ScriptToHtml(object):
             if orig.strip() == "":
                 # Don't bother translating empty strings
                 data.setData("")
-            if kwargs['mimetype'] in ('text/r', 'text/R',):
+            elif kwargs['mimetype'] in ('text/r', 'text/R',):
                 data.setData(self._rConvert(orig))
+            elif kwargs['mimetype'] in ('text/x-uri'):
+                data.setData(self._urlConvert(orig))
             else:
-                raise ValueError("Unknown MIME type %s" % kwargs['mimetype'])
+                raise ValueError("Unknown script MIME type %s" % kwargs['mimetype'])
         except Exception as e:
             data.setData('<pre class="script error">%s</pre>' % (
                 cgi.escape(str(e)),
