@@ -219,7 +219,6 @@ class ISlideSection(model.Schema):
         default_mime_type='text/x-tex',
         output_mime_type='text/html',
         allowed_mime_types=('text/plain', 'text/html', 'text/x-tex', 'text/restructured', 'text/structured',),
-        #TODO: text/x-R
         default=u"",
         required=False)
     image_code = RichText(
