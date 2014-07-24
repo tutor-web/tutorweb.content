@@ -1,11 +1,10 @@
+import base64
+
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 
-from collective.transmogrifier.utils import openFileReference
 from collective.transmogrifier.utils import defaultMatcher
-
-from tutorweb.content.schema import SlideSection
 
 
 class TranslateOldTutorWeb(object):
@@ -19,15 +18,16 @@ class TranslateOldTutorWeb(object):
         self.previous = previous
         self.transmogrifier = transmogrifier
         self.key = defaultMatcher(options, 'key', name)
+        self.destUrl = options.get('desturl', '')
 
     def __iter__(self):
-        def newSection(item, title=u'', text_field=None, image_field=None, image_filename=None):
+        def newSection(item, title=u'', text_field=None, image_field=None, image_url=None):
             def rtv(text, mime):
                 if mime == 'text/latex':
                     mime = 'text/x-tex'
                 return dict(data=text, contenttype=mime)
 
-            sect = {"_class" : "tutorweb.content.schema.SlideSection"}
+            sect = {"_class": "tutorweb.content.schema.SlideSection"}
             sect['title'] = title
             sect['text'] = rtv(
                 item.get(text_field, ''),
@@ -40,7 +40,7 @@ class TranslateOldTutorWeb(object):
                 if image_type == 'none':
                     sect['image_code'] = None
                 elif image_type == 'image':
-                    sect['image_code'] = rtv(image_filename, 'text/x-url')
+                    sect['image_code'] = rtv(image_url, 'text/x-url')
                 elif image_type == 'r':
                     # TODO: Rewrite read.table() calls to have HTTP
                     sect['image_code'] = rtv(image_code, 'text/R')
@@ -70,29 +70,38 @@ class TranslateOldTutorWeb(object):
                 if dataField not in item:
                     continue
                 newSlide['_images'][imageField] = dict(
-                    data=item[dataField]['data'],
-                    content_type=item[dataField]['content_type'],
-                    filename=(item[dataField]['filename'] or item['id'] + '_' + imageField),
+                    _type='Image',
+                    id=(item[dataField]['filename'] or item['id'] + '_' + imageField),
+                    title=(item[dataField]['filename'] or item['id'] + '_' + imageField),
+                    image=dict(
+                        contenttype=item[dataField]['content_type'],
+                        data=base64.b64decode(item[dataField]['data']),
+                    ),
+                    _url=(self.destUrl + '/' + (item[dataField]['filename'] or item['id'] + '_' + imageField)),
                 )
-                # TODO: yield at this point, write them out as their own object
+                # Create the image as a file in it's own right
+                yield newSlide['_images'][imageField]
 
-            newSlide['sections'].append(newSection(item,
+            newSlide['sections'].append(newSection(
+                item,
                 title=u'',
                 text_field=u'SlideText',
                 image_field='SlideImage',
-                image_filename=newSlide['_images'].get('SlideImage', dict(filename=''))['filename'],
+                image_url=newSlide['_images'].get('SlideImage', dict(_url=''))['_url'],
             ))
-            newSlide['sections'].append(newSection(item,
-                title=u'Explanation',
-                text_field=u'Explanation',
-                image_field='ExplanationImage',
-                image_filename=newSlide['_images'].get('ExplanationImage', dict(filename=''))['filename'],
-            ))
-            for sectName in ['Details', 'Examples', 'Alternative', 'Handout', 'SlideReference']:
-                if not item.get(sectName, None):
-                    continue
-                newSlide['sections'].append(newSection(item,
-                    title='Slide Reference' if sectName == 'SlideReference' else sectName,
-                    text_field=item[sectName],
+            if item.get(u'Explanation', "") or item.get(u'ExplanationText', ""):
+                newSlide['sections'].append(newSection(
+                    item,
+                    title=u'Explanation',
+                    text_field=u'Explanation',
+                    image_field='ExplanationImage',
+                    image_url=newSlide['_images'].get('ExplanationImage', dict(_url=''))['_url'],
                 ))
+            for sectName in ['Details', 'Examples', 'Alternative', 'Handout', 'SlideReference']:
+                if item.get(sectName, "").strip():
+                    newSlide['sections'].append(newSection(
+                        item,
+                        title='Slide Reference' if sectName == 'SlideReference' else sectName,
+                        text_field=sectName,
+                    ))
             yield newSlide
