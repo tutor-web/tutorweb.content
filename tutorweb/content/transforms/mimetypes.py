@@ -1,30 +1,29 @@
 from Products.CMFCore.utils import getToolByName
 from Products.MimetypesRegistry.MimeTypeItem import MimeTypeItem
 
-# TODO: Disabled whilst it comes from Products.TutorWeb
-#class LaTeX(MimeTypeItem):
-#    __name__   = "LaTeX"
-#    mimetypes  = ('text/latex', 'text/x-tex',)
-#    extensions = ('tex',)
-#    binary     = 0
+class LaTeX(MimeTypeItem):
+    __name__   = "LaTeX document"
+    mimetypes  = ('text/x-tex',)
+    extensions = ('tex',)
+    binary     = 0
 
 
 class R(MimeTypeItem):
-    __name__   = "R"
+    __name__   = "R script"
     mimetypes  = ('text/r', 'text/R',)
     extensions = ('r',)
     binary     = 0
 
 
 class GnuPlot(MimeTypeItem):
-    __name__   = "GNU Plot"
+    __name__   = "Gnuplot drawing",
     mimetypes  = ('text/x-gnuplot',)
     extensions = ('gpi', 'plt', 'gp',)
     binary     = 0
 
 
 class XFig(MimeTypeItem):
-    __name__   = "Xfig"
+    __name__   = "Xfig drawing"
     mimetypes  = ('image/x-xfig',)
     extensions = ('fig',)
     binary     = 0
