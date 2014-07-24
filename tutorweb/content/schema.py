@@ -1,6 +1,7 @@
 from zope import schema, interface
 from z3c.relationfield.schema import RelationList, RelationChoice
 from z3c.form.object import registerFactoryAdapter
+from z3c.form.interfaces import IAddForm
 
 from plone.app.textfield import RichText
 from plone.autoform import directives as form
@@ -87,10 +88,12 @@ class ILaTeXQuestion(model.Schema):
 
 class ILecture(model.Schema):
     """A lecture contains Slides and quiz questions"""
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Lecture code'),
         description=_(u"Code for this lecture, e.g. 'lecture01'"),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Title'),
         description=_(u'The title of the lecture'),
@@ -109,10 +112,12 @@ class ILecture(model.Schema):
 
 class ITutorial(model.Schema):
     """A Tutorial contains lectures"""
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Tutorial code'),
         description=_(u"Code for this tutorial, e.g. 'FISH101.1'"),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Title'),
         description=_(u'The title of the tutorial'),
@@ -151,10 +156,12 @@ class ITutorial(model.Schema):
 
 
 class IDepartment(model.Schema):
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Department code'),
         description=_(u"The short code for the department, e.g. 'FISH'"),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Department title'),
         description=_(u"The name of the department, e.g. 'Fishery science department'"),
@@ -162,10 +169,12 @@ class IDepartment(model.Schema):
 
 
 class ICourse(model.Schema):
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Course code'),
         description=_(u"The short code for the course, e.g. '101'"),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Course title'),
         description=_(u"The name of the course"),
@@ -182,10 +191,12 @@ class ICourse(model.Schema):
 
 
 class IClass(model.Schema):
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Class code'),
         description=_(u"The short code for the class, e.g. '101'"),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Class title'),
         description=_(u"The name of the class"),
@@ -245,10 +256,12 @@ registerFactoryAdapter(ISlideSection, SlideSection)
 
 
 class ISlide(model.Schema):
-    id = schema.TextLine(
+    id = schema.ASCIILine(
         title=_(u'Slide Id'),
         description=_(u"Change ID to become more readable. Slides appear in alphabetical order based on this value."),
         required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
     title = schema.TextLine(
         title=_(u'Slide title'),
         description=_(u"The main title of the slide"),
