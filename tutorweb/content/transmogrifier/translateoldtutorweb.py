@@ -56,6 +56,23 @@ class TranslateOldTutorWeb(object):
             return sect
 
         for item in self.previous:
+            # Might also get an extraDataFile
+            if item['_type'] == 'ExtraDataFile':
+                yield dict(
+                    _type='File',
+                    id=item['id'],
+                    title=item['title'],
+                    file=dict(
+                        filename=item['_datafield_file']['filename'],
+                        contenttype=item['_datafield_file']['content_type'],
+                        data=base64.b64decode(item['_datafield_file']['data']),
+                    ),
+                )
+                continue
+
+            # Otherwise, should be dealing with slides
+            if item['_type'] != 'Slide':
+                raise ValueError("Unknown type %s" % item['_type'])
             newSlide = dict(
                 _type='tw_slide',
                 id=str(item[u'id']),
@@ -74,6 +91,7 @@ class TranslateOldTutorWeb(object):
                     id=(item[dataField]['filename'] or item['id'] + '_' + imageField),
                     title=(item[dataField]['filename'] or item['id'] + '_' + imageField),
                     image=dict(
+                        filename=(item[dataField]['filename'] or item['id'] + '_' + imageField),
                         contenttype=item[dataField]['content_type'],
                         data=base64.b64decode(item[dataField]['data']),
                     ),

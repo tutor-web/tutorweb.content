@@ -28,7 +28,10 @@ class CollectiveJsonifySource(object):
             raise ValueError("URL parameter is required")
         self.query = dict(path=self.url.path)
         if 'type' in options:
-            self.query['Type'] = options.get('type')
+            self.query['Type'] = dict(
+                query=options.get('type').split(','),
+                operator="or",
+            )
 
     def __iter__(self):
         for path in self.catalog_query(self.query):
