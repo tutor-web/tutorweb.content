@@ -51,6 +51,28 @@ class ContentTypeTest(IntegrationTestCase):
         """, inputMime='text/R')
         self.assertTrue('<svg' in xml)
 
+    def test_transformGnu(self):
+        # Working script produces SVG, without XML declaration
+        xml = self.doTransform("""
+        set key inside left top vertical Right noreverse enhanced autotitles box linetype -1 linewidth 1.000
+        set samples 50, 50
+        plot [-10:10] sin(x),atan(x),cos(atan(x))
+        """, inputMime="text/x-gnuplot")
+        self.assertEqual(xml[0:4], '<svg')
+
+    def test_transformFig(self):
+        # Working script produces SVG, without XML declaration
+        xml = self.doTransform("""#FIG 3.1
+Portrait
+Center
+Metric
+1200 2
+2 1 0 2 -1 7 0 0 -1 0.000 0 0 -1 1 0 2
+        0 0 2.00 120.00 240.00
+         3150 4725 6525 4725
+""", inputMime="image/x-xfig")
+        self.assertEqual(xml[0:4], '<svg')
+
     def doTransform(self, content, inputMime='text/r'):
         pt = getToolByName(self.layer['portal'], 'portal_transforms')
         str = pt.convertTo(
