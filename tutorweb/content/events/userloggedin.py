@@ -12,7 +12,8 @@ def loggedInHandler(event):
         return False
 
     # If user has a fullname and has accepted terms, carry on
-    if user.getProperty('fullname') and user.getProperty('accept', False):
+    mb = portal.portal_membership.getAuthenticatedMember()
+    if mb.getProperty('fullname') and mb.getProperty('accept', False):
         return False
 
     # Otherwise, redirect to personal information
