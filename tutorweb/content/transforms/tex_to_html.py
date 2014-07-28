@@ -54,7 +54,7 @@ class TexToHtml(object):
                     '-a',   # Try to convert picture elements
                     '-e3',  # inline epsfbox w/no icon
                     '-r',   # Don't output a pre/postamble
-                    '-u',   # Unicode please
+                    '-u2',   # Unicode please
                 ],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,

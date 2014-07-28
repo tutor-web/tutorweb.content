@@ -82,7 +82,7 @@ class ContentTypeTest(IntegrationTestCase):
         # We notice errors
         self.assertEquals(
             self.doTransform(u"\\begin{oatemise}n\xe1tt\xfarlegu"),
-            u"""<pre class="ttm-output error">HTML unicode style 1
+            u"""<pre class="ttm-output error">HTML unicode style 2
 Latex base filename blank. Auxiliary files will not be found.
 **** Unknown or ignored environment: \\begin{oatemise} Line 4
 Number of lines processed approximately 5</pre>
@@ -92,7 +92,7 @@ Number of lines processed approximately 5</pre>
         # We notice errors and unicode
         self.assertEquals(
             self.doTransform("\\begin{oatemise}And some other stuff"),
-            """<pre class="ttm-output error">HTML unicode style 1
+            """<pre class="ttm-output error">HTML unicode style 2
 Latex base filename blank. Auxiliary files will not be found.
 **** Unknown or ignored environment: \\begin{oatemise} Line 4
 Number of lines processed approximately 5</pre>
@@ -101,9 +101,10 @@ Number of lines processed approximately 5</pre>
 
     def doTransform(self, content):
         pt = getToolByName(self.layer['portal'], 'portal_transforms')
-        return pt.convertTo(
+        raw = pt.convertTo(
             'text/html',
             content.encode('utf-8'),
             mimetype='text/x-tex',
             encoding='utf-8',
-        ).getData().decode('utf-8')
+        ).getData()
+        return raw.decode('utf-8')
