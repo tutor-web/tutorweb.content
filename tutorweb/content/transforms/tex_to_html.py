@@ -11,7 +11,7 @@ from Products.PortalTransforms.interfaces import ITransform
 
 TTM_BINARY = os.path.join(os.environ['INSTANCE_HOME'], '..', 'ttm/ttm') if os.environ.get('INSTANCE_HOME', False) else '/usr/bin/ttm'
 LATEX_PREAMBLE = u"""\\documentclass{article}
-\\newcommand{\\mathbb}[1]{\mathbf{#1}}
+\\newcommand{\\mathbb}[1]{\\special{html:<mo>&#1opf;</mo>}}
 \\begin{document}
 """.encode("utf-8")
 LATEX_POSTAMBLE = u"""

@@ -73,11 +73,8 @@ class ContentTypeTest(IntegrationTestCase):
         )
 
         # \mathbb does something useful
-        out = self.doTransform(u'Mengi $\mathbb{R} \mathbb{Z} \mathbb{N}$')
-        # TODO: This is rubbish, but it'll do for now
-        self.assertTrue('<mi fontweight="bold">R</mi>' in out)
-        self.assertTrue('<mi fontweight="bold">Z</mi>' in out)
-        self.assertTrue('<mi fontweight="bold">N</mi>' in out)
+        out = self.doTransform(u'Mengi $\mathbb{R} \mathbb{Z}$')
+        self.assertTrue('<mo>&Ropf;</mo><mo>&Zopf;</mo>' in out)
 
         # We notice errors
         self.assertEquals(
