@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 import unittest
 
@@ -9,7 +10,8 @@ from .base import IntegrationTestCase
 from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
 
 import tutorweb.content.transforms.tex_to_html
-from tutorweb.content.transforms.tex_to_html import TTM_BINARY
+TTM_BINARY = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..', 'parts', 'ttm', 'ttm')
+tutorweb.content.transforms.tex_to_html.TTM_BINARY = TTM_BINARY
 
 
 def expMathML(exp):
