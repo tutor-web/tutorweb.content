@@ -21,6 +21,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
         self.assertEqual(self.questionToDict(dict(
             title="qtd empty question",
         )), dict(
+            _type='multichoice',
             title=u'qtd empty question',
             text=u'',
             choices=[],
@@ -44,6 +45,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             ],
             explanation=self.rtv("Apparently you are"),
         )), dict(
+            _type='multichoice',
             title=u'qtd empty question',
             text=self.doTransform('Are you exicted?'),
             choices=[self.doTransform(x) for x in ['woo', 'yay', 'lastone']],
@@ -66,6 +68,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
                 contentType='image/png'
             ),
         )), dict(
+            _type='multichoice',
             title=u'qtd image question',
             text=self.doTransform('Here is some text with an image below')
                 +'<img src="data:image/png;base64,%s" width="1" height="1" />' % imageContents.encode("base64").replace("\n", ""),
