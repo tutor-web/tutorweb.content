@@ -140,13 +140,18 @@ class ListingView(BrowserView):
 
     def contentCount(self, target):
         """Return counts of child content grouped by portal_type"""
-        listing = target.restrictedTraverse('@@folderListing')()
         out = defaultdict(int)
+
+        # Count question items
+        question_ids = [q.getId() for q in target.restrictedTraverse('@@folderListing')(
+            object_provides=IQuestion.__identifier__,
+        )]
+        out['Question'] = len(question_ids)
+        # Count anything else
+        # TODO: Can we say not object_provides?
+        listing = target.restrictedTraverse('@@folderListing')()
         for l in listing:
-            if l.PortalType() in ['tw_latexquestion']:
-                #TODO: Should really be checking for IQuestion
-                out['Question'] += 1
-            else:
+            if l.getId() not in question_ids:
                 out[l.Type()] += 1
         return out
 
