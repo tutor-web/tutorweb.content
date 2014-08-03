@@ -86,6 +86,48 @@ class ILaTeXQuestion(model.Schema):
         required=True)
 
 
+class IQuestionTemplate(model.Schema):
+    """A template for a student to fill in"""
+    id = schema.ASCIILine(
+        title=_(u'Question code'),
+        description=_(u"Code for this question, e.g. 'qn01'"),
+        required=True)
+    form.omitted('id')
+    form.no_omit(IAddForm, 'id')
+    title = schema.TextLine(
+        title=_(u'Question Title'),
+        description=_(u'The title of the question template'),
+        required=True)
+    hints = RichText(
+        title=u"Introductory hints",
+        description=_(u'Hints on what the user could write'),
+        default_mime_type='text/x-tex',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/x-tex',),
+        required=False)
+    example_text = RichText(
+        title=u"Example text",
+        description=_(u'Will be shown as a placeholder'),
+        default_mime_type='text/x-tex',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/x-tex',),
+        required=False)
+    example_choices = schema.List(
+        title=_(u"Example answers"),
+        description=_(u'Specify some example answers a student could give'),
+        value_type=DictRow(title=u"tablerow", schema=ILaTeXQuestionAnswer),
+        required=False)
+    form.widget(example_choices=
+                'collective.z3cform.datagridfield.DataGridFieldFactory')
+    example_explanation = RichText(
+        title=u"Example explanation text",
+        description=_(u'Will be shown as a placeholder'),
+        default_mime_type='text/x-tex',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/x-tex', 'text/x-web-intelligent'),
+        required=False)
+
+
 class ILecture(model.Schema):
     """A lecture contains Slides and quiz questions"""
     id = schema.ASCIILine(

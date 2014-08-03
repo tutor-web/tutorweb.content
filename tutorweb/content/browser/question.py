@@ -100,3 +100,20 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
             ),
         )
         return out
+
+
+class QuestionTemplateStruct(BaseQuestionStruct):
+    security = ClassSecurityInfo()
+
+    security.declarePrivate('asDict')
+    def asDict(self):
+        """Pull fields out into struct"""
+        out = dict(
+            _type='template',
+            title=self.context.title,
+            hints=self.render(self.context.hints),
+            example_text=self.context.example_text.raw,
+            example_choices=[x['text'] for x in self.context.example_choices],
+            example_explanation=self.context.example_explanation.raw,
+        )
+        return out

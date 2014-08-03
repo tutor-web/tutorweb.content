@@ -29,8 +29,8 @@ class ListingView(BrowserView):
                 url=o.absolute_url(),
                 id=o.id,
                 title=o.Title(),
-                timesanswered=o.timesanswered,
-                timescorrect=o.timescorrect,
+                timesanswered=getattr(o, 'timesanswered', 'N/A'),
+                timescorrect=getattr(o, 'timescorrect', 'N/A'),
             ))
         return out
 
