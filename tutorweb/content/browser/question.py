@@ -113,7 +113,7 @@ class QuestionTemplateStruct(BaseQuestionStruct):
             title=self.context.title,
             hints=self.render(self.context.hints),
             example_text=getattr(self.context.example_text, 'raw', ''),
-            example_choices=[x['text'] for x in self.context.example_choices],
-            example_explanation=self.context.example_explanation.raw,
+            example_choices=[x['text'] for x in self.context.example_choices or []],
+            example_explanation=getattr(self.context.example_explanation, 'raw', ''),
         )
         return out
