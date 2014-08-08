@@ -148,5 +148,13 @@
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 6.0 -> 7.0"
+        description="Add type_template:min et al to registry"
+        source="6000"
+        destination="7000"
+        handler="tutorweb.content.upgrades.reimportRegistry"
+        sortkey="2"
+        profile="tutorweb.content:default"/>
 
 </configure>
