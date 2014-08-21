@@ -10,6 +10,8 @@ from plone.app.users.browser.userdatapanel import UserDataPanel
 from plone.supermodel import model
 from plone.z3cform.fieldsets import extensible
 
+from Products.statusmessages.interfaces import IStatusMessage
+
 from tutorweb.content import _
 
 
@@ -70,6 +72,8 @@ class FormExtender(extensible.FormExtender):
         self.form.fields['fullname'].field.required = True
         self.form.buttons = self.form.buttons.omit('cancel')
 
+        messages = IStatusMessage(self.request)
+        messages.add(u"Make sure you accept the terms and conditions below", type=u"info")
 
 class UserDataPanelExtender(FormExtender):
     adapts(Interface, IDefaultBrowserLayer, UserDataPanel)
