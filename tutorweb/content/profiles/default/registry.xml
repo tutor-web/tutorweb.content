@@ -16,6 +16,10 @@
             <element>grade_alpha:max</element>
             <element>grade_s:min</element>
             <element>grade_s:max</element>
+            <element>grade_nmin</element>
+            <element>grade_nmax</element>
+            <element>grade_nmax:min</element>
+            <element>grade_nmax:max</element>
             <element>prob_template:min</element>
             <element>prob_template:max</element>
             <element>prob_template_eval:min</element>

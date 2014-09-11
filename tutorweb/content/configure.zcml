@@ -156,5 +156,13 @@
         handler="tutorweb.content.upgrades.reimportRegistry"
         sortkey="2"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 7.0 -> 8.0"
+        description="Add grade_nmax et al to registry"
+        source="7000"
+        destination="8000"
+        handler="tutorweb.content.upgrades.reimportRegistry"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
