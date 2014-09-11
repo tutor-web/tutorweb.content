@@ -247,9 +247,7 @@ class IClass(model.Schema):
         title=_(u'Students in class'),
         description=_(u"All students within the class"),
         default=[],
-        value_type=schema.Choice(
-            vocabulary='plone.app.vocabularies.Users',
-        ),
+        value_type=schema.TextLine(),
         required=False)
     lectures = RelationList(
         title=_(u'Lectures for class'),
