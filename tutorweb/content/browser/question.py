@@ -75,6 +75,8 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
     security.declarePrivate('updateStats')
     def updateStats(self, timesanswered, timescorrect):
         """Update question with new stats"""
+        # NB: We don't notify about the modification, so this doesn't update
+        # the modified date. Very hackish, but behaviour to preserve
         self.context.timesanswered = timesanswered
         self.context.timescorrect = timescorrect
 
