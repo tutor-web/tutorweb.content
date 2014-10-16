@@ -33,6 +33,10 @@ class EnrolViewTest(IntegrationTestCase):
         c.restrictedTraverse('enrol')()
         c.students = [USER_A_ID, USER_B_ID]
 
+        # User B can't enrol twice
+        c.restrictedTraverse('enrol')()
+        c.students = [USER_A_ID, USER_B_ID]
+
         # Anonymous users can't enrol
         logout()
         with self.assertRaises(Unauthorized):

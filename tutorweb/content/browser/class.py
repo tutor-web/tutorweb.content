@@ -12,11 +12,14 @@ class EnrolView(BrowserView):
         mt = getToolByName(self.context, 'portal_membership')
         if mt.isAnonymousUser():
             raise Unauthorized
-        mb = mt.getAuthenticatedMember()
+        id = mt.getAuthenticatedMember().getUserName()
 
         if not getattr(self.context, 'students', None):
-            self.context.students = []
-        self.context.students.append(mb.getUserName())
+            self.context.students = [id]
+            self.context.reindexObject()
+        elif id not in self.context.students:
+            self.context.students.append(id)
+            self.context.reindexObject()
 
         self.request.response.redirect(self.context.absolute_url())
 
@@ -79,11 +82,15 @@ class BulkAddStudentView(BrowserView):
                 rtool.registeredNotify(id)
 
             # Ensure user is on the list
+            if not getattr(self.context, 'students', None):
+                self.uploadLog('Adding %s (%s) to course' % (id, email))
+                self.context.students = [id]
             if id not in self.context.students:
                 self.uploadLog('Adding %s (%s) to course' % (id, email))
                 self.context.students.append(id)
             else:
                 self.uploadLog('%s (%s) already on course' % (id, email))
+        self.context.reindexObject()
 
     def __call__(self):
         if 'userlist' in self.request.form:
