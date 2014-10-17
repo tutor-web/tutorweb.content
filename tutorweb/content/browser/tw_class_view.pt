@@ -19,8 +19,15 @@
        tal:condition="lecture">
     <h3>Current Lecture: <span tal:content="lecture/Title">title</span></h3>
     <ul>
-      <li><a tal:attributes="href python:view.quizUrl(lecture)">
-          Take a drill on this lecture</a></li>
+      <tal:t tal:condition="python:request['URL'].startswith('http://mobile.')">
+        <li><b>mobile.tutor-web.net is moving</b>, instead go to
+          <a href="http://tutor-web.net">tutor-web.net</a> if you want to take a
+          drill</li>
+      </tal:t>
+      <tal:t tal:condition="python:not(request['URL'].startswith('http://mobile.'))">
+        <li><a tal:attributes="href python:view.quizUrl(lecture)">
+            Take a drill on this lecture</a></li>
+      </tal:t>
       <li><a tal:attributes="href string:${lecture/absolute_url}">Go to the lecture page</a></li>
       <li><a tal:attributes="href string:${lecture/absolute_url}/@@download-pdf">
           <img src="pdf.png" tal:attributes="src string:${lecture/absolute_url}/pdf.png">

@@ -15,12 +15,19 @@
 <metal:content-core fill-slot="content-core">
 
   <ul class="tw-actions">
-    <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
-      <li><a tal:attributes="href view/quizUrl">
-        Take a drill on this tutorial</a></li>
+    <tal:t tal:condition="python:request['URL'].startswith('http://mobile.')">
+      <li><b>mobile.tutor-web.net is moving</b>, instead go to
+        <a href="http://tutor-web.net">tutor-web.net</a> if you want to take a
+        drill</li>
     </tal:t>
-    <tal:t tal:condition="context/portal_membership/isAnonymousUser">
-      <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
+    <tal:t tal:condition="python:not(request['URL'].startswith('http://mobile.'))">
+      <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
+        <li><a tal:attributes="href view/quizUrl">
+          Take a drill on this tutorial</a></li>
+      </tal:t>
+      <tal:t tal:condition="context/portal_membership/isAnonymousUser">
+        <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
+      </tal:t>
     </tal:t>
     <li><a tal:attributes="href string:${context/absolute_url}/@@download-pdf">
         <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
