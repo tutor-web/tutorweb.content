@@ -164,5 +164,13 @@
         handler="tutorweb.content.upgrades.reimportRegistry"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 8.0 -> 9.0"
+        description="Add cap_template_qns to registry"
+        source="8000"
+        destination="9000"
+        handler="tutorweb.content.upgrades.reimportRegistry"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
