@@ -25,6 +25,7 @@ from Products.MailHost.interfaces import IMailHost
 USER_A_ID = "Arnold"
 USER_B_ID = "Betty"
 USER_C_ID = "Caroline"
+USER_D_ID = "Daryl"
 MANAGER_ID = "BigBoss"
 
 
@@ -44,7 +45,7 @@ class TestFixture(PloneSandboxLayer):
         # Creates some users
         acl_users = getToolByName(portal, 'acl_users')
         mtool = getToolByName(portal, 'portal_membership')
-        for id in [USER_A_ID, USER_B_ID, USER_C_ID]:
+        for id in [USER_A_ID, USER_B_ID, USER_C_ID, USER_D_ID]:
             acl_users.userFolderAddUser(
                 id, 'secret'+id[0],
                 ['Member'],[]

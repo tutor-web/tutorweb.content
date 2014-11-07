@@ -88,6 +88,7 @@ class BulkAddStudentViewTest(IntegrationTestCase):
             'arnold@example.com': 'Arnold',
             'betty@example.com': 'Betty',
             'caroline@example.com': 'Caroline',
+            'daryl@example.com': 'Daryl',
         })
 
     def test_addUsersToClass(self):
@@ -116,6 +117,7 @@ moo@example.com
             'arnold@example.com': 'Arnold',
             'betty@example.com': 'Betty',
             'caroline@example.com': 'Caroline',
+            'daryl@example.com': 'Daryl',
             'moo@example.com': 'moo@example.com',
         })
 
@@ -133,6 +135,7 @@ oink@example.com
             'arnold@example.com': 'Arnold',
             'betty@example.com': 'Betty',
             'caroline@example.com': 'Caroline',
+            'daryl@example.com': 'Daryl',
             'moo@example.com': 'moo@example.com',
             'oink@example.com': 'oink@example.com',
         })
