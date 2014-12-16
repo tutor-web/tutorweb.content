@@ -104,11 +104,6 @@
       </ul>
     </dd>
 
-    <dt id="fieldsetlegend-sponsors">Sponsors</dt>
-    <dd id="fieldset-Sponsors">
-      <p>TODO:</p>
-    </dd>
-
     <dt id="fieldsetlegend-files">Data files</dt>
     <dd id="fieldset-files">
 
@@ -130,6 +125,20 @@
     </dd>
 
   </dl>
+
+  <div class="sponsors" tal:condition="python:(context.sponsors is not None and len(context.sponsors) > 0) or context.sponsors_description">
+    <h3>Sponsors</h3>
+    <tal:t tal:repeat="rel context/sponsors">
+      <a href="#"
+         tal:define="s nocall:rel/to_object"
+         tal:attributes="href s/url;">
+        <img tal:define="scale s/@@images"
+             tal:replace="structure python: scale.scale('logo').tag()"
+             />
+      </a>
+    </tal:t>
+    <p tal:replace="structure context/sponsors_description/output"></p>
+  </div>
 
 </metal:content-core>
 

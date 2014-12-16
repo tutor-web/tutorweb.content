@@ -195,6 +195,23 @@ class ITutorial(model.Schema):
     pdf = NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
         required=False)
+    sponsors = RelationList(
+        title=_(u'Sponsors'),
+        description=_(u"Search / start typing the names of the sponsors of this material"),
+        default=[],
+        value_type=RelationChoice(
+            source=ObjPathSourceBinder(Type='Institution', navigation_tree_query=dict(
+                Type=['Folder', 'Institution'],
+            )),
+        ),
+        required=False)
+    sponsors_description = RichText(
+        title=_(u'Sponsors description'),
+        description=_(u"Describe the sponsors role in this project"),
+        default_mime_type='text/html',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/html', 'text/plain',),
+        required=False)
 
 
 class IDepartment(model.Schema):
@@ -310,4 +327,15 @@ class ISlide(model.Schema):
         title=_(u'Slide sections'),
         value_type=schema.Object(schema=ISlideSection),
         default=[],
+        required=False)
+
+
+class IInstitution(model.Schema):
+    url = schema.TextLine(
+        title=_(u'URL'),
+        description=_(u'The institution home-page URL, e.g. http://www.hafro.is'),
+        required=True)
+    logo = NamedBlobImage(
+        title=_(u'Logo'),
+        description=_(u'The institution logo'),
         required=False)

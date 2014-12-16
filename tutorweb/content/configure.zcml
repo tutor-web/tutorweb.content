@@ -172,5 +172,13 @@
         handler="tutorweb.content.upgrades.reimportRegistry"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 9.0 -> 10.0"
+        description="Add IInstitution"
+        source="9000"
+        destination="10000"
+        handler="tutorweb.content.upgrades.reimportTypes"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>

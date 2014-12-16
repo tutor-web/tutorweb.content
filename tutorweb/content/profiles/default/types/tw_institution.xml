@@ -1,32 +1,30 @@
 <?xml version="1.0"?>
-<object name="tutorweb.content.tw_department" meta_type="Dexterity FTI"
+<object name="tutorweb.content.tw_institution" meta_type="Dexterity FTI"
    i18n:domain="tutorweb.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="">department</property>
- <property name="description" i18n:translate="">Department containing courses and tutorials</property>
- <property name="content_icon">folder_icon.png</property>
+ <property name="title" i18n:translate="">Institution</property>
+ <property name="description" i18n:translate="">Institution (that sponsored content)</property>
+ <property name="content_icon">form_icon.png</property>
  <property name="allow_discussion">False</property>
 
  <!-- Type heirarchy -->
  <property name="global_allow">True</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-   <element value="tw_tutorial"/>
-   <element value="tw_course"/>
  </property>
 
  <!-- Class used for content items -->
  <property name="klass">plone.dexterity.content.Container</property>
 
  <!-- Schema interface -->
- <property name="schema">tutorweb.content.schema.IDepartment</property>
+ <property name="schema">tutorweb.content.schema.IInstitution</property>
  <property name="model_file"></property>
  <property name="model_source"></property>
 
  <!-- Behaviors -->
  <property name="behaviors">
-     <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
+     <element value="plone.app.dexterity.behaviors.metadata.IDublinCore"/>
  </property>
 
  <!-- Add permission -->
