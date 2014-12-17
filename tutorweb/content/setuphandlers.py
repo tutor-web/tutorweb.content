@@ -97,7 +97,6 @@ def createInstitutionsFolder(context, logger=None):
         # Upgrade step
         portal = getToolByName(context, 'portal_url').getPortalObject()
 
-    portal = getToolByName(context, 'portal_url').getPortalObject()
     if 'institutions' in portal:
         logger.info("Institutions folder already exists")
         return
