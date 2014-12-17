@@ -60,6 +60,11 @@
       template="tw_tutorial_view.pt"
       />
 
+    <browser:page name="tutorial-import"
+      for="tutorweb.content.schema.IDepartment"
+      class=".migrations.TutorialImportView"
+      permission="cmf.ManagePortal"
+      />
     <browser:page name="view"
       for="tutorweb.content.schema.IDepartment"
       permission="zope2.View"

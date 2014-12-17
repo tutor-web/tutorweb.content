@@ -1,10 +1,16 @@
+import base64
 import urlparse
 
-from collective.transmogrifier.interfaces import ITransmogrifier
-from tutorweb.content.transmogrifier.collectivejsonifysource import catalog_query, fetch_item, fetch_children
+from zope.component import getUtility
+from zope.intid.interfaces import IIntIds
+from z3c.relationfield import RelationValue
 
+from collective.transmogrifier.interfaces import ITransmogrifier
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from plone.namedfile.file import NamedBlobFile
+
+from tutorweb.content.transmogrifier.collectivejsonifysource import catalog_query, fetch_item, fetch_children
 
 
 class LectureImportView(BrowserView):
@@ -54,3 +60,59 @@ class SlideImportView(BrowserView):
             ),
         )
         return "success"
+
+
+class TutorialImportView(BrowserView):
+    """Copy a tutorial from old tutor-web to new"""
+    def __call__(self):
+        if 'src' not in self.request.form:
+            raise ValueError("Must provide a URL to a tutorial in src")
+        url = urlparse.urlparse(self.request.form['src'])
+
+        # Find out id, Title & create new tutorial
+        oldTutorial = fetch_item(url, url.path)
+        newTutorial = self.context[self.context.invokeFactory(
+            type_name="tw_tutorial",
+            id=oldTutorial['id'],
+            title=oldTutorial['title'],
+            language=oldTutorial.get('TutorialLanguage', ''),
+            author=oldTutorial.get('Author', ''),
+            credits=oldTutorial.get('Credits', 0),
+        )]
+
+        # Fetch hist_sel from qsp sub-object
+        histSel = oldTutorial.get('historical_selection_probability', None)
+        if histSel >= 0:
+            newTutorial.settings = [
+              dict(key='hist_sel', value =histSel)
+            ]
+
+        # Things we don't have a home for
+        for x in ["PdfPreamble", "PdfPostamble", "TutorialReference"]:
+            if oldTutorial.get(x, None):
+                raise ValueError("Don't have a home for %s yet" % x)
+
+        # Copy PDF
+        if oldTutorial.get("_datafield_Pdf", None):
+            file = oldTutorial["_datafield_Pdf"]
+            newTutorial.pdf = NamedBlobFile(
+                filename=file['filename'],
+                contentType=file['content_type'],
+                data=base64.b64decode(file['data']),
+            )
+
+        # Set primary course
+        if "inDepartmentCourse" in oldTutorial['_atrefs']:
+            coursePath = oldTutorial['_atrefs']["inDepartmentCourse"][0]
+            try:
+                courseObj = self.context.restrictedTraverse(str(coursePath))
+            except KeyError:
+                raise ValueError("Cannot find course %s" % coursePath)
+
+            intids = getUtility(IIntIds)
+            newTutorial.primarycourse = RelationValue(intids.getId(courseObj))
+
+        # Publish the new tutorial
+        wftool = getToolByName(self.context, 'portal_workflow')
+        wftool.doActionFor(newTutorial, 'publish')
+        newTutorial.reindexObject()
