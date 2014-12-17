@@ -37,6 +37,15 @@ class LectureImportView(BrowserView):
                   dict(key='hist_sel', value =histSel)
                 ]
 
+        # Copy PDF
+        if oldLecture.get("_datafield_Pdf", None):
+            file = oldLecture["_datafield_Pdf"]
+            newLecture.pdf = NamedBlobFile(
+                filename=file['filename'],
+                contentType=file['content_type'],
+                data=base64.b64decode(file['data']),
+            )
+
         # Publish the new lecture
         wftool = getToolByName(self.context, 'portal_workflow')
         wftool.doActionFor(newLecture, 'publish')
