@@ -34,26 +34,37 @@ class CollectiveJsonifySource(object):
             )
 
     def __iter__(self):
-        for path in self.catalog_query(self.query):
-            yield self.fetch_item(path)
+        for path in catalog_query(self.url, self.query):
+            yield fetch_item(self.url, path)
 
-    def catalog_query(self, query):
-        req = urllib2.Request(
-            self.url.scheme + '://' +
-            self.url.netloc + '/' +
-            self.url.path.split('/')[1] +
-            "/portal_catalog/get_catalog_results",
-            urllib.urlencode(dict(
-                catalog_query=base64.b64encode(str(query)),
-            )),
-        )
-        resp = urllib2.urlopen(req)
-        return sorted(json.loads(resp.read()))
 
-    def fetch_item(self, path):
-        req = urllib2.Request(
-            self.url.scheme + '://' +
-            self.url.netloc + '/' +
-            path + '/get_item')
-        resp = urllib2.urlopen(req)
-        return json.loads(resp.read())
+def catalog_query(url, query):
+    req = urllib2.Request(
+        url.scheme + '://' +
+        url.netloc + '/' +
+        url.path.split('/')[1] +
+        "/portal_catalog/get_catalog_results",
+        urllib.urlencode(dict(
+            catalog_query=base64.b64encode(str(query)),
+        )),
+    )
+    resp = urllib2.urlopen(req)
+    return sorted(json.loads(resp.read()))
+
+
+def fetch_item(url, path):
+    req = urllib2.Request(
+        url.scheme + '://' +
+        url.netloc + '/' +
+        path + '/get_item')
+    resp = urllib2.urlopen(req)
+    return json.loads(resp.read())
+
+
+def fetch_children(url, path):
+    req = urllib2.Request(
+        url.scheme + '://' +
+        url.netloc + '/' +
+        path + '/get_children')
+    resp = urllib2.urlopen(req)
+    return json.loads(resp.read())

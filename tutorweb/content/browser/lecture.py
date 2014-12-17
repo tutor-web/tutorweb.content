@@ -6,7 +6,7 @@ from collective.transmogrifier.interfaces import ITransmogrifier
 class LectureSlideImportView(BrowserView):
     def __call__(self):
         if 'src' not in self.request.form:
-            raise ValueError("Must provide src")
+            raise ValueError("Must provide a URL to a lecture in src")
         transmogrifier = ITransmogrifier(self.context)
         transmogrifier(
             'tutorweb.content.transmogrifier.oldtutorwebslideimport',

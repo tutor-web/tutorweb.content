@@ -48,6 +48,11 @@
       template="tw_lecture_view.pt"
       />
 
+    <browser:page name="lecture-import"
+      for="tutorweb.content.schema.ITutorial"
+      class=".tutorial.LectureImportView"
+      permission="cmf.ManagePortal"
+      />
     <browser:page name="view"
       for="tutorweb.content.schema.ITutorial"
       permission="zope2.View"
