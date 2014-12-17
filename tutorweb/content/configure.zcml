@@ -76,6 +76,14 @@
         >
         <depends name="typeinfo" />
     </genericsetup:importStep>
+    <genericsetup:importStep
+        name="create_institutions"
+        title="Tutorweb content"
+        description="Create institutions folder"
+        handler="tutorweb.content.setuphandlers.createInstitutionsFolder"
+        >
+        <depends name="typeinfo" />
+    </genericsetup:importStep>
     <genericsetup:upgradeStep
         title="Upgrade 1 -> 2.0"
         description="Move histsel into settings dictionary"
@@ -179,6 +187,14 @@
         destination="10000"
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
+        profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 9.0 -> 10.0"
+        description="Add Institution Folder"
+        source="9000"
+        destination="10000"
+        handler="tutorweb.content.setuphandlers.createInstitutionsFolder"
+        sortkey="2"
         profile="tutorweb.content:default"/>
 
 </configure>

@@ -82,3 +82,34 @@ def createSchoolsClassesFolder(context, logger=None):
     types.setConstrainTypesMode(constrains.ENABLED)
     types.setLocallyAllowedTypes(['Folder', 'tw_class'])
     types.setImmediatelyAddableTypes(['Folder', 'tw_class'])
+
+
+def createInstitutionsFolder(context, logger=None):
+    """Create the institutions folder"""
+    if logger is None:
+        logger = logging.getLogger('tutorweb.content')
+    if hasattr(context, 'readDataFile'):
+        # Installing profile
+        if context.readDataFile('tutorweb.content.marker.txt') is None:
+            return
+        portal = context.getSite()
+    else:
+        # Upgrade step
+        portal = getToolByName(context, 'portal_url').getPortalObject()
+
+    portal = getToolByName(context, 'portal_url').getPortalObject()
+    if 'institutions' in portal:
+        logger.info("Institutions folder already exists")
+        return
+    logger.info("Creating Institutions folder")
+    id = portal.invokeFactory(
+        type_name="Folder",
+        id="institutions",
+        title="Institutions",
+    )
+    instFolder = portal[id]
+    instFolder.exclude_from_nav = True
+    types = IConstrainTypes(instFolder, None)
+    types.setConstrainTypesMode(constrains.ENABLED)
+    types.setLocallyAllowedTypes(['tw_institution'])
+    types.setImmediatelyAddableTypes(['tw_institution'])
