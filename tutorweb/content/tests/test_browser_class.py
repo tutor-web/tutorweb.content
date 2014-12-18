@@ -55,6 +55,14 @@ class BulkAddStudentViewTest(IntegrationTestCase):
         )
         portal['classa'].students = []
 
+    def getAllMemberEmails(self):
+        """Make lookup of member email addresses to ids"""
+        mtool = getToolByName(self.layer['portal'], 'portal_membership')
+        return [(
+            m.getProperty('email'),
+            m.id,
+        ) for m in sorted(mtool.listMembers())]
+
     def test_uploadLog(self):
         view = self.getView()
         # Empty log at start
@@ -81,16 +89,6 @@ class BulkAddStudentViewTest(IntegrationTestCase):
             "One line... a, a, aaaa.\nTwo line... a, a, aaaa.\n",
         )
 
-    def test_getAllMemberEmails(self):
-        view = self.getView()
-        self.assertEquals(view.getAllMemberEmails(), {
-            '': 'test_user_1_',
-            'arnold@example.com': 'Arnold',
-            'betty@example.com': 'Betty',
-            'caroline@example.com': 'Caroline',
-            'daryl@example.com': 'Daryl',
-        })
-
     def test_addUsersToClass(self):
         def doAddUsers(emails):
             """Call view, handing in email list"""
@@ -101,7 +99,7 @@ class BulkAddStudentViewTest(IntegrationTestCase):
         c = self.layer['portal']['classa']
         rtool = getToolByName(self.layer['portal'], 'portal_registration')
 
-        log = doAddUsers(USER_A_ID + """@example.com
+        log = doAddUsers("""
 badgercamelferret
 moo@example.com
         """)
@@ -109,36 +107,36 @@ moo@example.com
         self.assertTrue('"badgercamelferret" not a valid email address, skipping' in log)
         self.assertTrue("Adding moo@example.com (moo@example.com) to course" in log)
         self.assertEquals(c.students, [
-            "Arnold",
             "moo@example.com",
         ])
-        self.assertEquals(self.getView().getAllMemberEmails(), {
-            '': 'test_user_1_',
-            'arnold@example.com': 'Arnold',
-            'betty@example.com': 'Betty',
-            'caroline@example.com': 'Caroline',
-            'daryl@example.com': 'Daryl',
-            'moo@example.com': 'moo@example.com',
-        })
+        self.assertEquals(self.getAllMemberEmails(), [
+            ('Arnold@example.com', 'Arnold'),
+            ('Betty@example.com', 'Betty'),
+            ('', 'BigBoss'),
+            ('Caroline@example.com', 'Caroline'),
+            ('Daryl@example.com', 'Daryl'),
+            ('moo@example.com', 'moo@example.com'),
+            ('', 'test_user_1_'),
+        ])
 
         log = doAddUsers("""
 moo@example.com
 oink@example.com
         """)
         self.assertEquals(c.students, [
-            "Arnold",
             "moo@example.com",
             "oink@example.com",
         ])
-        self.assertEquals(self.getView().getAllMemberEmails(), {
-            '': 'test_user_1_',
-            'arnold@example.com': 'Arnold',
-            'betty@example.com': 'Betty',
-            'caroline@example.com': 'Caroline',
-            'daryl@example.com': 'Daryl',
-            'moo@example.com': 'moo@example.com',
-            'oink@example.com': 'oink@example.com',
-        })
+        self.assertEquals(self.getAllMemberEmails(), [
+            ('Arnold@example.com', 'Arnold'),
+            ('Betty@example.com', 'Betty'),
+            ('', 'BigBoss'),
+            ('Caroline@example.com', 'Caroline'),
+            ('Daryl@example.com', 'Daryl'),
+            ('moo@example.com', 'moo@example.com'),
+            ('oink@example.com', 'oink@example.com'),
+            ('', 'test_user_1_'),
+        ])
 
         # Create a user that already uses the email address as ID
         rtool.addMember('dave@example.com', rtool.generatePassword(), properties=dict(
@@ -148,7 +146,6 @@ oink@example.com
         ))
         log = doAddUsers("dave@example.com")
         self.assertEquals(c.students, [
-            "Arnold",
             "moo@example.com",
             "oink@example.com",
             'dave@example.com',

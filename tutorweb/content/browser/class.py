@@ -34,26 +34,10 @@ class BulkAddStudentView(BrowserView):
             self._uploadLog += line + '\n'
         return self._uploadLog
 
-    def getAllMemberEmails(self):
-        """Make lookup of member email addresses to ids"""
-        mtool = getToolByName(self.context, 'portal_membership')
-        out = {}
-        for m in mtool.listMembers():
-            email = m.getProperty('email').lower()
-            if email in out:
-                self.uploadLog("WARNING: %s used by both %s and %s, assuming latter" % (
-                    email,
-                    out[email],
-                    m.id,
-                ))
-            out[email] = m.id
-        return out
-
     def addUsersToClass(self, emails):
         """Given list of email addresses, add users."""
         mtool = getToolByName(self.context, 'portal_membership')
         rtool = getToolByName(self.context, 'portal_registration')
-        membersEmails = self.getAllMemberEmails()
 
         self.uploadLog('Adding users to %s' % self.context.absolute_url())
         for email in (e.lower() for e in emails):
@@ -64,16 +48,11 @@ class BulkAddStudentView(BrowserView):
                 )
                 continue
 
-            if email in membersEmails:
-                # User with email already exists
-                id = membersEmails[email]
-            elif mtool.getMemberById(email):
-                # User with this id already exists (but has a different email
-                # address for some reason?), assume they're the same
-                id = email
-            else:
+            # We always use email as the id now
+            id = email
+
+            if not(mtool.getMemberById(id)):
                 # User doesn't exist, create them first.
-                id = email
                 self.uploadLog('Creating new user %s' % id)
                 rtool.addMember(id, rtool.generatePassword(), properties=dict(
                     email=email,
