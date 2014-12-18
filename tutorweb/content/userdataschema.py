@@ -70,6 +70,11 @@ class FormExtender(extensible.FormExtender):
         self.add(fields)
 
         self.form.fields['fullname'].field.required = True
+        if 'username' in self.form.fields:
+            self.form.fields['username'].field.title = u'Login name (official e-mail address)'
+            self.form.fields['username'].field.description = u'Enter your official email address from your institution, e.g. your @hi.is address'
+        self.form.fields['email'].field.title = u'Preferred email address'
+        self.form.fields['email'].field.description = u'The email address we should use when sending you forgotten passwords, etc'
         self.form.buttons = self.form.buttons.omit('cancel')
 
         messages = IStatusMessage(self.request)
