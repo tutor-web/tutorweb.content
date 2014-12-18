@@ -120,6 +120,10 @@ class TutorialImportView(BrowserView):
             intids = getUtility(IIntIds)
             newTutorial.primarycourse = RelationValue(intids.getId(courseObj))
 
+            # Append tutorial to the course's list
+            courseObj.tutorials = courseObj.tutorials + [RelationValue(intids.getId(newTutorial))]
+            courseObj.reindexObject()
+
         # Publish the new tutorial
         wftool = getToolByName(self.context, 'portal_workflow')
         wftool.doActionFor(newTutorial, 'publish')
