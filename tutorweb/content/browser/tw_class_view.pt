@@ -11,7 +11,7 @@
 
 <div tal:condition="not:view/partOfClass">
   <h3>You are not part of this class</h3>
-  <a tal:attributes="href string:${context/absolute_url}/@@enrol">Enrol in class</a>
+  <p>Please contact the tutor if you want to join.</p>
 </div>
 
 <div tal:condition="view/partOfClass">

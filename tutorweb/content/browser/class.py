@@ -7,23 +7,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 
 
-class EnrolView(BrowserView):
-    def __call__(self):
-        mt = getToolByName(self.context, 'portal_membership')
-        if mt.isAnonymousUser():
-            raise Unauthorized
-        id = mt.getAuthenticatedMember().getUserName()
-
-        if not getattr(self.context, 'students', None):
-            self.context.students = [id]
-            self.context.reindexObject()
-        elif id not in self.context.students:
-            self.context.students.append(id)
-            self.context.reindexObject()
-
-        self.request.response.redirect(self.context.absolute_url())
-
-
 class BulkAddStudentView(BrowserView):
     def uploadLog(self, line=None):
         """Return upload log, optionally adding lines first"""

@@ -79,11 +79,6 @@
       template="tw_class_view.pt"
       />
 
-    <browser:page name="enrol"
-      for="tutorweb.content.schema.IClass"
-      permission="zope2.View"
-      class=".class.EnrolView"
-      />
     <browser:page name="bulk-add-student"
       for="tutorweb.content.schema.IClass"
       permission="cmf.ModifyPortalContent"
