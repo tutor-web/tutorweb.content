@@ -25,7 +25,8 @@ class LectureImportView(BrowserView):
         newLecture = self.context[self.context.invokeFactory(
             type_name="tw_lecture",
             id=oldLecture['id'],
-            title=oldLecture['title']
+            title=oldLecture['title'],
+            pdf_reference=oldLecture['LectureReference'],
         )]
 
         # Fetch hist_sel from qsp sub-object
@@ -87,6 +88,9 @@ class TutorialImportView(BrowserView):
             language=oldTutorial.get('TutorialLanguage', ''),
             author=oldTutorial.get('Author', ''),
             credits=oldTutorial.get('Credits', 0),
+            pdf_preamble=oldTutorial.get('PdfPreamble', None),
+            pdf_postamble=oldTutorial.get('PdfPostamble', None),
+            pdf_reference=oldTutorial.get('PdfReference', None),
         )]
 
         # Fetch hist_sel from qsp sub-object
@@ -95,11 +99,6 @@ class TutorialImportView(BrowserView):
             newTutorial.settings = [
               dict(key='hist_sel', value =histSel)
             ]
-
-        # Things we don't have a home for
-        for x in ["PdfPreamble", "PdfPostamble", "TutorialReference"]:
-            if oldTutorial.get(x, None):
-                raise ValueError("Don't have a home for %s yet" % x)
 
         # Copy PDF
         if oldTutorial.get("_datafield_Pdf", None):

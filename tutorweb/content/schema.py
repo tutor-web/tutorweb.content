@@ -150,6 +150,9 @@ class ILecture(model.Schema):
     pdf = NamedBlobFile(
         title=_(u'Generated lecture PDF'),
         required=False)
+    pdf_reference = schema.Text(
+        title=_(u'LaTeX Reference for PDF file'),
+        required=False)
 
 
 class ITutorial(model.Schema):
@@ -194,6 +197,15 @@ class ITutorial(model.Schema):
         required=True)
     pdf = NamedBlobFile(
         title=_(u'Generated tutorial PDF'),
+        required=False)
+    pdf_preamble = schema.Text(
+        title=_(u'LaTeX Preamble for PDF file'),
+        required=False)
+    pdf_postamble = schema.Text(
+        title=_(u'LaTeX Postamble for PDF file'),
+        required=False)
+    pdf_reference = schema.Text(
+        title=_(u'LaTeX Reference for PDF file'),
         required=False)
     sponsors = RelationList(
         title=_(u'Sponsors'),
