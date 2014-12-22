@@ -16,19 +16,19 @@
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ILaTeXQuestion"
-      class=".tex.LaTeXQuestionTeXView"
+      class=".tex_questions.LaTeXQuestionTeXView"
       permission="cmf.ManagePortal"
       />
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ILecture"
-      class=".tex.LectureTeXView"
+      class=".tex_questions.LectureTeXView"
       permission="cmf.ManagePortal"
       />
 
     <browser:page name="tex-import"
       for="tutorweb.content.schema.ILecture"
-      class=".tex.LectureTeXImport"
+      class=".tex_questions.LectureTeXImport"
       permission="cmf.ManagePortal"
       />
     <browser:page name="slide-copy"
