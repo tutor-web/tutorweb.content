@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from AccessControl import Unauthorized
 
 from plone.app.testing import login, logout
@@ -92,7 +94,7 @@ oink@example.com
             "moo@example.com",
             "oink@example.com",
         ])
-        self.assertEquals(self.getAllMemberEmails(), [
+        self.assertEquals(sorted(self.getAllMemberEmails(), key=itemgetter(1, 0)), [
             ('Arnold@example.com', 'Arnold'),
             ('Betty@example.com', 'Betty'),
             ('', 'BigBoss'),
