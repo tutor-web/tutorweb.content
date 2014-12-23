@@ -48,6 +48,11 @@
       template="tw_lecture_view.pt"
       />
 
+    <browser:page name="tex"
+      for="tutorweb.content.schema.ITutorial"
+      class=".tutorial.TutorialTeXView"
+      permission="cmf.ManagePortal"
+      />
     <browser:page name="lecture-import"
       for="tutorweb.content.schema.ITutorial"
       class=".migrations.LectureImportView"
