@@ -196,5 +196,13 @@
         handler="tutorweb.content.setuphandlers.createInstitutionsFolder"
         sortkey="2"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 10.0 -> 11.0"
+        description="Add extra transform steps"
+        source="10000"
+        destination="11000"
+        handler="tutorweb.content.setuphandlers.installTransforms"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
