@@ -9,6 +9,7 @@ class TutorialUpdatePDFView(BrowserView):
     def __call__(self):
         try:
             tg = TexGenerator(self.context)
+            self.request.response.setHeader("Content-type", "text/plain")
             self.request.response.write(tg.createPDF())
             self.request.response.write("\n\nFinished\n")
             lastOut = tg.outputFiles()[-1]
@@ -22,5 +23,18 @@ class TutorialUpdatePDFView(BrowserView):
                 self.request.response.write("Tutorial PDF updated with %s\n" % lastOut)
             else:
                 self.request.response.write("Tutorial PDF *NOT* updated\n")
+        finally:
+            tg.close()
+
+
+class TutorialTeXView(BrowserView):
+    """Show tex for tutorial"""
+
+    def __call__(self):
+        try:
+            tg = TexGenerator(self.context)
+            self.request.response.setHeader("Content-type", "text/x-tex")
+            with open(tg.outputFiles()[0], 'r') as f:
+                self.request.response.write(f.read())
         finally:
             tg.close()
