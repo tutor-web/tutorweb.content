@@ -40,8 +40,8 @@ class ContentTypeTest(IntegrationTestCase):
         Sys.sleep(5)
         plot(0:100, (0:100)^2, 'l')
         """)
-        # NB: Timeout isn't an error...yet.
-        self.assertTrue(xml.startswith('<pre class="script output">'))
+        self.assertTrue(xml.startswith('<pre class="script error">'))
+        self.assertTrue('too long' in xml)
         self.assertTrue('Sys.sleep(5)' in xml)
         tutorweb.content.transforms.script_to_html.TIMEOUT = TIMEOUT
 
