@@ -143,7 +143,7 @@ class TexGenerator(object):
         return RichTextValue(
             raw=obj.raw,
             mimeType=obj.mimeType,
-            outputMimeType=newMimeType,
+            outputMimeType='text/x-uri' if newMimeType == 'text/x-url' else newMimeType,
             encoding=obj.encoding,
         ).output
 
@@ -152,7 +152,7 @@ class TexGenerator(object):
         data = tf.convert(
             script.raw,
             datastream("scriptToImage"),
-            mimetype=script.mimeType)
+            mimetype='text/x-uri' if script.mimeType == 'text/x-url' else script.mimeType)
         return data.getData()
 
     def convertImage(self, img):

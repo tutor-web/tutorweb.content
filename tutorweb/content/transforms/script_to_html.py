@@ -19,7 +19,7 @@ TIMEOUT_BINARY = "/usr/bin/timeout"
 
 class ScriptToMarkup(object):
     implements(ITransform)
-    inputs = ('text/r', 'text/x-uri', 'text/x-url', 'text/x-gnuplot', 'image/x-xfig',)
+    inputs = ('text/r', 'text/x-uri', 'text/x-gnuplot', 'image/x-xfig',)
 
     def __init__(self, name=None):
         if name:
@@ -169,7 +169,7 @@ set terminal svg \
                 data.setData("")
             elif kwargs['mimetype'] in ('text/r', 'text/R',):
                 data.setData(self._rConvert(orig))
-            elif kwargs['mimetype'] in ('text/x-uri', 'text/x-url'):
+            elif kwargs['mimetype'] in ('text/x-uri'):
                 data.setData(self._urlConvert(orig))
             elif kwargs['mimetype'] in ('image/x-xfig'):
                 data.setData(self._figConvert(orig))
