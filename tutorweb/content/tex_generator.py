@@ -1,9 +1,23 @@
+import binascii
+import mimetypes
+import os
 import os.path
+import re
 import shutil
+import subprocess
+import sys
 import tempfile
 
+
+from Products.PortalTransforms.data import datastream
 from Products.CMFCore.utils import getToolByName
 from plone.app.textfield.value import RichTextValue
+
+from .transforms.script_to_html import ScriptToTeX
+
+TIMEOUT = "3m"
+TIMEOUT_BINARY = "/usr/bin/timeout"
+PDFLATEX_BINARY = "/usr/bin/pdflatex"
 
 
 class TexGenerator(object):
@@ -38,6 +52,64 @@ class TexGenerator(object):
 
         self.texFile.close()
 
+    def createPDF(self):
+        """Convert output into PDF"""
+        for b in [TIMEOUT_BINARY, PDFLATEX_BINARY]:
+            if not os.path.isfile(b):
+                raise ValueError("Binary %s not available" % b)
+
+        self.explodeTeX()
+        try:
+            oldwd = os.getcwd()
+            os.chdir(self.dir)
+            p = subprocess.Popen(
+                [
+                    TIMEOUT_BINARY, TIMEOUT,
+                    PDFLATEX_BINARY, '-interaction=nonstopmode',
+                    'exploded.tex',
+                ],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            (processOut, processErr) = p.communicate("")
+            exitCode = p.wait()
+        finally:
+            os.chdir(oldwd)
+
+        if os.path.exists(os.path.join(self.dir, 'exploded.pdf')):
+            self.newFile('exploded.pdf')
+        return processOut
+
+    def explodeTeX(self):
+        """Turn single TeX output into lots of files"""
+        def mimeToExt(mime):
+            if mime == 'application/postscript':
+                return '.eps'
+            else:
+                return mimetypes.guess_extension(mime)
+
+        def replaceDataBlock(m):
+            if not(hasattr(self, '_imgcount')):
+                self._imgcount = 0
+            outFile = self.newFile('img%d%s' % (
+                self._imgcount,
+                mimeToExt(m.group(1)),
+            ))
+            self._imgcount += 1
+
+            with open(outFile, 'w') as f:
+                f.write(binascii.a2b_base64(m.group(2)))
+            return '\\includegraphics{%s}' % os.path.basename(os.path.splitext(outFile)[0])
+
+        with open(self.outputFiles()[0], 'r') as inputTeX:
+            with open(self.newFile('exploded.tex'), 'w') as outputTeX:
+                outputTeX.write(re.sub(
+                    r'\\includegraphicsdata\{data:([^:}]+):base64,([^:}]+)\}',
+                    replaceDataBlock,
+                    inputTeX.read(),
+                ))
+
     def newFile(self, name):
         """Create a new file, noting it's name in outputFiles"""
         if not hasattr(self, '_files'):
@@ -68,23 +140,28 @@ class TexGenerator(object):
 
     def rtConvert(self, obj, newMimeType):
         """Create new RichTextValue with outputMimeType we want"""
-        #TODO: Handle images too
         return RichTextValue(
             raw=obj.raw,
-            mimeType=l.mimeType,
+            mimeType=obj.mimeType,
             outputMimeType=newMimeType,
-            encoding=l.encoding,
+            encoding=obj.encoding,
         ).output
 
-    def writeImage(self, img):
-        if not getattr(self, '_imgcounter'):
-            self._imgcounter = 0
-        else:
-            self._imgcounter = self._imgcounter + 1
+    def scriptToImage(self, script):
+        tf = ScriptToTeX()
+        data = tf.convert(
+            script.raw,
+            datastream("scriptToImage"),
+            mimetype=script.mimeType)
+        return data.getData()
 
-        with open(self.newFile('img%d.eps' % self._imgcounter), 'w') as f:
-            f.write(self.rtConvert(l, 'image/x-eps'))
-        return '\\includegraphics{img%d}' % self._imgcounter
+    def convertImage(self, img):
+        """Convert an image into an included data-URI"""
+        return '\\includegraphicsdata{%s}' % ":".join([
+            'data',
+            img.contentType,
+            "base64,%s" % img.data.encode("base64").replace("\n", ""),
+        ])
 
     ############### TeX File header / footer
 
@@ -173,7 +250,7 @@ class TexGenerator(object):
                     '\\begin{tabular}{p{6cm}l}',
                     institution.title,
                     institution.url,
-                    '& \\resizebox{3cm}{!}{' + self.writeImage(institution.logo) + '}',
+                    '& \\resizebox{3cm}{!}{' + self.convertImage(institution.logo) + '}',
                     '\\end{tabular}',
                 ])
             self.writeTeX([tutorial.sponsors_description])
@@ -224,7 +301,7 @@ class TexGenerator(object):
             '\\begin{tabular}{ll}',
             '\\begin{minipage}{%s\\textwidth}' % ('0.75' if section.text else '1.0'),
             '\\resizebox{7cm}{!}{',
-            self.writeImage(self.image_code),
+            self.scriptToImage(section.image_code),
             '}',
         ])
         if section.image_caption:
