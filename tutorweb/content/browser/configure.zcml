@@ -48,10 +48,10 @@
       template="tw_lecture_view.pt"
       />
 
-    <browser:page name="tex"
+    <browser:page name="update-pdf"
       for="tutorweb.content.schema.ITutorial"
-      class=".tutorial.TutorialTeXView"
-      permission="cmf.ManagePortal"
+      class=".tutorial.TutorialUpdatePDFView"
+      permission="cmf.ModifyPortalContent"
       />
     <browser:page name="lecture-import"
       for="tutorweb.content.schema.ITutorial"

@@ -42,7 +42,7 @@
 
       <tal:t tal:condition="view/canEdit">
         <ul>
-          <li><a href="#TODO:">Update tutorial PDF</a></li>
+          <li><a href="@@update-pdf" tal:attributes="href string:${context/absolute_url}/@@update-pdf">Update tutorial PDF</a></li>
         </ul>
       </tal:t>
 
