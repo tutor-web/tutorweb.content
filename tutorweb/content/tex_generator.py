@@ -64,7 +64,7 @@ class TexGenerator(object):
 
     def close(self):
         """Get rid of temporary directory"""
-        shutil.rmtree(dir)
+        shutil.rmtree(self.dir)
 
     def rtConvert(self, obj, newMimeType):
         """Create new RichTextValue with outputMimeType we want"""
