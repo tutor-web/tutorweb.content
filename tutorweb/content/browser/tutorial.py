@@ -7,8 +7,8 @@ class TutorialUpdatePDFView(BrowserView):
     """Convert tutorials into PDF, update local copy"""
 
     def __call__(self):
+        tg = TexGenerator(self.context)
         try:
-            tg = TexGenerator(self.context)
             self.request.response.setHeader("Content-type", "text/plain")
             self.request.response.write(tg.createPDF())
             self.request.response.write("\n\nFinished\n")
@@ -31,8 +31,8 @@ class TutorialTeXView(BrowserView):
     """Show tex for tutorial"""
 
     def __call__(self):
+        tg = TexGenerator(self.context)
         try:
-            tg = TexGenerator(self.context)
             self.request.response.setHeader("Content-type", "text/x-tex")
             with open(tg.outputFiles()[0], 'r') as f:
                 self.request.response.write(f.read())
