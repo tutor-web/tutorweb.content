@@ -140,13 +140,13 @@ set terminal svg \
             if self.output == "text/html":
                 content = '<img src="%s" />' % content
             elif self.output == "text/x-tex":
-                content = "\\includegraphicsdata{%s}" % content
+                content = "\\rotatebox{-90}{\\includegraphicsdata{%s}}" % content
 
         elif content.strip().endswith("%EOF") and "%!PS-Adobe" in content:
             if self.output == "text/html":
                 raise NotImplmented
             elif self.output == "text/x-tex":
-                content = "\\includegraphicsdata{%s}" % ":".join([
+                content = "\\rotatebox{-90}{\\includegraphicsdata{%s}}" % ":".join([
                     "data",
                     "application/postscript",
                     "base64,%s" % content.encode("base64").replace("\n", ""),
