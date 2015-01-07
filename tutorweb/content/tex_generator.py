@@ -228,6 +228,7 @@ class TexGenerator(object):
 
     def texTutorialHeader(self, tutorial):
         self.writeTeX([
+            '%% Tutorial ' + tutorial.absolute_url(),
             '\\title{%s\n%s\n}' % (tutorial.id, tutorial.Title()),
             '\\author{{%s}}' % (tutorial.author or 'No author set yet'),
             '\\maketitle',
@@ -268,6 +269,7 @@ class TexGenerator(object):
 
     def texLectureHeader(self, lecture):
         self.writeTeX([
+            '%% Lecture ' + lecture.absolute_url(),
             '\\section{' + lecture.Title() + '}'
         ])
 
@@ -283,6 +285,7 @@ class TexGenerator(object):
 
     def texSlideHeader(self, slide):
         self.writeTeX([
+            '%% Slide ' + slide.absolute_url(),
             '\\subsection{' + slide.title + '}',
         ])
 
