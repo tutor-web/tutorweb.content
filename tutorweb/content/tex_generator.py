@@ -1,6 +1,5 @@
 import binascii
 import mimetypes
-import os
 import os.path
 import re
 import shutil
@@ -17,7 +16,7 @@ from .transforms.script_to_html import ScriptToTeX
 
 TIMEOUT = "3m"
 TIMEOUT_BINARY = "/usr/bin/timeout"
-PDFLATEX_BINARY = "/usr/bin/pdflatex"
+RUBBER_BINARY = "/usr/bin/rubber"
 
 
 class TexGenerator(object):
@@ -54,32 +53,30 @@ class TexGenerator(object):
 
     def createPDF(self):
         """Convert output into PDF"""
-        for b in [TIMEOUT_BINARY, PDFLATEX_BINARY]:
+        for b in [TIMEOUT_BINARY, RUBBER_BINARY]:
             if not os.path.isfile(b):
                 raise ValueError("Binary %s not available" % b)
 
         self.explodeTeX()
-        try:
-            oldwd = os.getcwd()
-            os.chdir(self.dir)
-            p = subprocess.Popen(
-                [
-                    TIMEOUT_BINARY, TIMEOUT,
-                    PDFLATEX_BINARY, '-interaction=nonstopmode',
-                    'exploded.tex',
-                ],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            (processOut, processErr) = p.communicate("")
-            exitCode = p.wait()
-        finally:
-            os.chdir(oldwd)
+
+        p = subprocess.Popen(
+            [
+                TIMEOUT_BINARY, TIMEOUT,
+                RUBBER_BINARY, '--inplace', '--pdf', '-Wall', '--maxerr=100', '--force',
+                os.path.join(self.dir, 'exploded.tex'),
+            ],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        (processOut, processErr) = p.communicate("")
+        exitCode = p.wait()
+        if exitCode != 0:
+            return processOut + processErr + "\nCompilation of document failed!"
 
         if os.path.exists(os.path.join(self.dir, 'exploded.pdf')):
             self.newFile('exploded.pdf')
-        return processOut
+        return processOut + processErr
 
     def explodeTeX(self):
         """Turn single TeX output into lots of files"""
