@@ -116,7 +116,9 @@ class TexGenerator(object):
 
     def writeTeX(self, lines):
         for l in lines:
-            if hasattr(l, 'raw_encoded'):
+            if l is None:
+                pass
+            elif hasattr(l, 'raw_encoded'):
                 self.texFile.writelines([
                     self.rtConvert(l, 'text/x-tex'),
                     '\n',
