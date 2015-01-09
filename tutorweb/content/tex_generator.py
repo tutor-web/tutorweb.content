@@ -179,6 +179,7 @@ class TexGenerator(object):
                 '\\usepackage{longtable}',
                 '\\usepackage{framed}',
                 '\\usepackage{enumerate}',
+                '\\usepackage{epstopdf}',
             ])
         self.writeTeX([
             '\\newcommand{\\captionfonts}{\\tiny}',
