@@ -63,7 +63,7 @@ class ListingView(BrowserView):
                 url=o.absolute_url(),
                 id=o.id,
                 title=o.Title(),
-                slides=contentCount['Slides'],
+                slides=contentCount['Slide'],
                 questions=contentCount['Question'],
                 pdf=None if o.pdf is None else o.absolute_url() + '/@@download-pdf',
             ))
