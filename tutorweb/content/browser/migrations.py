@@ -7,6 +7,7 @@ from z3c.relationfield import RelationValue
 
 from collective.transmogrifier.interfaces import ITransmogrifier
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.Five.browser import BrowserView
 from plone.namedfile.file import NamedBlobFile
 
@@ -22,12 +23,17 @@ class LectureImportView(BrowserView):
 
         # Find out id, Title & create new lecture
         oldLecture = fetch_item(url, url.path)
-        newLecture = self.context[self.context.invokeFactory(
-            type_name="tw_lecture",
-            id=oldLecture['id'],
-            title=oldLecture['title'],
-            pdf_reference=oldLecture['LectureReference'],
-        )]
+        if oldLecture['id'] in self.context:
+            newLecture = self.context[oldLecture['id']]
+            newLecture.title = oldLecture['title']
+            newLecture.pdf_reference = oldLecture['LectureReference']
+        else:
+            newLecture = self.context[self.context.invokeFactory(
+                type_name="tw_lecture",
+                id=oldLecture['id'],
+                title=oldLecture['title'],
+                pdf_reference=oldLecture['LectureReference'],
+            )]
 
         # Fetch hist_sel from qsp sub-object
         qsp = [x for x in fetch_children(url, url.path) if 'questionselectionparameters' in x]
@@ -49,7 +55,11 @@ class LectureImportView(BrowserView):
 
         # Publish the new lecture
         wftool = getToolByName(self.context, 'portal_workflow')
-        wftool.doActionFor(newLecture, 'publish')
+        try:
+            wftool.doActionFor(newLecture, 'publish')
+        except WorkflowException:
+            # Probably already published
+            pass
         newLecture.reindexObject()
 
         # Trigger slide import into our newly created lecture
