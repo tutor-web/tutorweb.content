@@ -11,7 +11,7 @@ class TutorialUpdatePDFView(BrowserView):
         try:
             self.request.response.setHeader("Content-type", "text/plain")
             self.request.response.write(tg.createPDF())
-            self.request.response.write("\n\nFinished\n")
+            self.request.response.write("\n\nFinished. Files written: %s\n" % ",".join(tg.outputFiles()))
             lastOut = tg.outputFiles()[-1]
             if lastOut.endswith('.pdf'):
                 with open(lastOut, 'r') as f:
@@ -24,7 +24,10 @@ class TutorialUpdatePDFView(BrowserView):
             else:
                 self.request.response.write("Tutorial PDF *NOT* updated\n")
         finally:
-            tg.close()
+            if self.request.form.get('keep', False):
+                self.request.response.write("Output saved in %s" % tg.dir)
+            else:
+                tg.close()
 
 
 class TutorialTeXView(BrowserView):
