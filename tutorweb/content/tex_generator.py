@@ -19,18 +19,88 @@ TIMEOUT_BINARY = "/usr/bin/timeout"
 RUBBER_BINARY = "/usr/bin/rubber"
 
 
+class TexWriter(object):
+    def __init__(self):
+        self.dir = tempfile.mkdtemp()
+
+    def createPDF(self, tex):
+        """Convert output into PDF"""
+        for b in [TIMEOUT_BINARY, RUBBER_BINARY]:
+            if not os.path.isfile(b):
+                raise ValueError("Binary %s not available" % b)
+
+        self.explodeTeX(tex)
+
+        p = subprocess.Popen(
+            [
+                TIMEOUT_BINARY, TIMEOUT,
+                RUBBER_BINARY, '--inplace', '--pdf', '-Wall', '--maxerr=100', '--force',
+                os.path.join(self.dir, 'exploded.tex'),
+            ],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        (processOut, processErr) = p.communicate("")
+        exitCode = p.wait()
+        if exitCode != 0:
+            return processOut + processErr + "\nCompilation of document failed!"
+
+        self._outputFile = os.path.join(self.dir, 'exploded.pdf')
+        return processOut + processErr
+
+    def outputPdf(self):
+        if not getattr(self, '_outputFile', ''):
+            return None
+        if not os.path.exists(self._outputFile):
+            return None
+        return self._outputFile
+
+    def explodeTeX(self, tex):
+        """Turn single TeX output into lots of files"""
+        def mimeToExt(mime):
+            if mime == 'application/postscript':
+                return '.eps'
+            else:
+                return mimetypes.guess_extension(mime)
+
+        def replaceDataBlock(m):
+            if not(hasattr(self, '_imgcount')):
+                self._imgcount = 0
+            outFile = os.path.join(self.dir, 'img%d%s' % (
+                self._imgcount,
+                mimeToExt(m.group(1)),
+            ))
+            self._imgcount += 1
+
+            with open(outFile, 'w') as f:
+                f.write(binascii.a2b_base64(m.group(2)))
+            return '\\includegraphics{%s}' % os.path.basename(os.path.splitext(outFile)[0])
+
+        with open(os.path.join(self.dir, 'exploded.tex'), 'w') as outputTeX:
+            outputTeX.write(re.sub(
+                r'\\includegraphicsdata\{data:([^:}]+):base64,([^:}]+)\}',
+                replaceDataBlock,
+                tex,
+            ))
+
+    def close(self):
+        """Get rid of temporary directory"""
+        shutil.rmtree(self.dir)
+
+
 class TexGenerator(object):
     def __init__(self, tutorial):
         """Produce TeX based on tutorial, return a list of file paths"""
         def children(obj, portal_type):
+            # TODO: Should filter by workflow state
             return (
                 l.getObject()
                 for l
                 in obj.restrictedTraverse('@@folderListing')(Type=portal_type)
             )
 
-        self.dir = tempfile.mkdtemp()
-        self.texFile = open(self.newFile('output.tex'), 'w')
+        self._tex = ""
 
         self.texPreamble(tutorial)
         self.texTutorialHeader(tutorial)
@@ -49,118 +119,24 @@ class TexGenerator(object):
         self.texTutorialFooter(tutorial)
         self.texPostamble(tutorial)
 
-        self.texFile.close()
-
-    def createPDF(self):
-        """Convert output into PDF"""
-        for b in [TIMEOUT_BINARY, RUBBER_BINARY]:
-            if not os.path.isfile(b):
-                raise ValueError("Binary %s not available" % b)
-
-        self.explodeTeX()
-
-        p = subprocess.Popen(
-            [
-                TIMEOUT_BINARY, TIMEOUT,
-                RUBBER_BINARY, '--inplace', '--pdf', '-Wall', '--maxerr=100', '--force',
-                os.path.join(self.dir, 'exploded.tex'),
-            ],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        (processOut, processErr) = p.communicate("")
-        exitCode = p.wait()
-        if exitCode != 0:
-            return processOut + processErr + "\nCompilation of document failed!"
-
-        if os.path.exists(os.path.join(self.dir, 'exploded.pdf')):
-            self.newFile('exploded.pdf')
-        return processOut + processErr
-
-    def explodeTeX(self):
-        """Turn single TeX output into lots of files"""
-        def mimeToExt(mime):
-            if mime == 'application/postscript':
-                return '.eps'
-            else:
-                return mimetypes.guess_extension(mime)
-
-        def replaceDataBlock(m):
-            if not(hasattr(self, '_imgcount')):
-                self._imgcount = 0
-            outFile = self.newFile('img%d%s' % (
-                self._imgcount,
-                mimeToExt(m.group(1)),
-            ))
-            self._imgcount += 1
-
-            with open(outFile, 'w') as f:
-                f.write(binascii.a2b_base64(m.group(2)))
-            return '\\includegraphics{%s}' % os.path.basename(os.path.splitext(outFile)[0])
-
-        with open(self.outputFiles()[0], 'r') as inputTeX:
-            with open(self.newFile('exploded.tex'), 'w') as outputTeX:
-                outputTeX.write(re.sub(
-                    r'\\includegraphicsdata\{data:([^:}]+):base64,([^:}]+)\}',
-                    replaceDataBlock,
-                    inputTeX.read(),
-                ))
-
-    def newFile(self, name):
-        """Create a new file, noting it's name in outputFiles"""
-        if not hasattr(self, '_files'):
-            self._files = []
-        self._files.append(name)
-        return os.path.join(self.dir, name)
+    def tex(self):
+        return self._tex
 
     def writeTeX(self, lines):
+        def rtConvert(obj, newMimeType):
+            """Create new RichTextValue with outputMimeType we want"""
         for l in lines:
-            if l is None:
-                pass
-            elif hasattr(l, 'raw_encoded'):
-                self.texFile.writelines([
-                    self.rtConvert(l, 'text/x-tex'),
-                    '\n',
-                ])
-            else:
-                self.texFile.writelines([
-                    l.encode('utf-8'),
-                    '\n',
-                ])
-
-    def outputFiles(self):
-        """Return a list of files created"""
-        return [os.path.join(self.dir, f) for f in self._files]
-
-    def close(self):
-        """Get rid of temporary directory"""
-        shutil.rmtree(self.dir)
-
-    def rtConvert(self, obj, newMimeType):
-        """Create new RichTextValue with outputMimeType we want"""
-        return RichTextValue(
-            raw=obj.raw,
-            mimeType=obj.mimeType,
-            outputMimeType='text/x-uri' if newMimeType == 'text/x-url' else newMimeType,
-            encoding=obj.encoding,
-        ).output
-
-    def scriptToImage(self, script):
-        tf = ScriptToTeX()
-        data = tf.convert(
-            script.raw,
-            datastream("scriptToImage"),
-            mimetype='text/x-uri' if script.mimeType == 'text/x-url' else script.mimeType)
-        return data.getData()
-
-    def convertImage(self, img):
-        """Convert an image into an included data-URI"""
-        return '\\includegraphicsdata{%s}' % ":".join([
-            'data',
-            img.contentType,
-            "base64,%s" % img.data.encode("base64").replace("\n", ""),
-        ])
+            if hasattr(l, 'raw_encoded'):
+                l = RichTextValue(
+                    raw=l.raw,
+                    mimeType=l.mimeType,
+                    outputMimeType='text/x-tex',
+                    encoding=l.encoding,
+                ).output
+            if isinstance(l, unicode):
+                l = l.encode('utf-8')
+            if l is not None:
+                self._tex += l + "\n"
 
     ############### TeX File header / footer
 
@@ -228,6 +204,14 @@ class TexGenerator(object):
     ############### TeX Tutorials
 
     def texTutorialHeader(self, tutorial):
+        def convertImage(img):
+            """Convert an image into an included data-URI"""
+            return '\\includegraphicsdata{%s}' % ":".join([
+                'data',
+                img.contentType,
+                "base64,%s" % img.data.encode("base64").replace("\n", ""),
+            ])
+
         self.writeTeX([
             '%% Tutorial ' + tutorial.absolute_url(),
             '\\title{%s\n%s\n}' % (tutorial.id, tutorial.Title()),
@@ -251,7 +235,7 @@ class TexGenerator(object):
                     '\\begin{tabular}{p{6cm}l}',
                     institution.title,
                     institution.url,
-                    '& \\resizebox{3cm}{!}{' + self.convertImage(institution.logo) + '}',
+                    '& \\resizebox{3cm}{!}{' + convertImage(institution.logo) + '}',
                     '\\end{tabular}',
                 ])
             self.writeTeX([tutorial.sponsors_description])
@@ -260,7 +244,7 @@ class TexGenerator(object):
         self.writeTeX(['\\newpage', '\\tableofcontents', '\\newpage'])
 
     def texTutorialFooter(self, tutorial):
-        if tutorial.pdf_reference > 0:
+        if tutorial.pdf_reference:
             self.writeTeX([
                 '\\section{References}',
                 tutorial.pdf_reference
@@ -275,7 +259,7 @@ class TexGenerator(object):
         ])
 
     def texLectureFooter(self, lecture):
-        if lecture.pdf_reference > 0:
+        if lecture.pdf_reference:
             self.writeTeX([
                 '{\\bf References}',
                 lecture.pdf_reference,
@@ -294,6 +278,14 @@ class TexGenerator(object):
         self.writeTeX([""])
 
     def texSlideSection(self, section):
+        def scriptToImage(script):
+            tf = ScriptToTeX()
+            data = tf.convert(
+                script.raw,
+                datastream("scriptToImage"),
+                mimetype='text/x-uri' if script.mimeType == 'text/x-url' else script.mimeType)
+            return data.getData()
+
         if not section.image_code or not section.image_code.raw:
             self.writeTeX([section.text])
             return
@@ -304,7 +296,7 @@ class TexGenerator(object):
             '\\begin{tabular}{ll}',
             '\\begin{minipage}{%s\\textwidth}' % ('0.75' if section.text else '1.0'),
             '\\resizebox{7cm}{!}{',
-            self.scriptToImage(section.image_code),
+            scriptToImage(section.image_code),
             '}',
         ])
         if section.image_caption:
