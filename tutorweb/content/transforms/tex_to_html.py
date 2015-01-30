@@ -72,9 +72,13 @@ class TexToHtml(object):
                     out.strip(),
                 ))
         else:
-            data.setData('<div class="parse-as-tex">' +
-                         convertWebIntelligentPlainTextToHtml(orig) +
-                         '</div>')
+            out = convertWebIntelligentPlainTextToHtml(orig.decode(kwargs['encoding'])).decode('utf8')
+            # Bodge back entities, to save space
+            from htmlentitydefs import entitydefs
+            for entity, letter in entitydefs.items():
+                if entity not in ('amp', 'lt', 'gt',):
+                    out = out.replace('&' + entity + ';', letter.decode('latin-1'))
+            data.setData('<div class="parse-as-tex">%s</div>' % out.encode(kwargs['encoding']))
         return data
 
 
