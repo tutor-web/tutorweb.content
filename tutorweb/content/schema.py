@@ -274,7 +274,7 @@ class IClass(model.Schema):
         required=True)
     students = schema.List(
         title=_(u'Students in class'),
-        description=_(u"All students within the class"),
+        description=_(u"Usernames (or @hi.is email addresses) of all students in the class. Add students by adding a new line with their username on, delete students by deleting the line."),
         default=[],
         value_type=schema.TextLine(),
         required=False)
