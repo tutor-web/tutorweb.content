@@ -283,7 +283,10 @@ class IClass(model.Schema):
         description=_(u"Lectures"),
         default=[],
         value_type=RelationChoice(
-            source=ObjPathSourceBinder(Type='Lecture'),
+            source=ObjPathSourceBinder(
+                Type='Lecture',
+                navigation_tree_query=dict(Type=['department', 'Tutorial', 'Lecture']),
+            ),
         ),
         required=False)
 
