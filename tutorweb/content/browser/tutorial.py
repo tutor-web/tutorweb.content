@@ -19,7 +19,7 @@ class TutorialUpdatePDFView(BrowserView):
                 with open(pdfOut, 'r') as f:
                     self.context.pdf = NamedBlobFile(
                         data=f.read(),
-                        contentType=u'application/pdf',
+                        contentType='application/pdf',
                         filename=u'',
                     )
                 self.request.response.write("Tutorial PDF updated with %s\n" % pdfOut)
