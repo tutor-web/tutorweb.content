@@ -1,4 +1,3 @@
-from plone.app.textfield.value import RichTextValue
 from plone.app.testing import login
 from plone.namedfile.file import NamedBlobImage
 from Products.CMFCore.utils import getToolByName
@@ -91,13 +90,6 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
         qnView.updateStats(8,9)
         self.assertEqual(qn.timesanswered, 8)
         self.assertEqual(qn.timescorrect, 9)
-
-    def rtv(self, string, mimeType="application/x-tex"):
-        return RichTextValue(
-            string,
-            mimeType="text/x-tex",
-            outputMimeType='text/html',
-        )
 
     def questionToDict(self, qnData):
         if not hasattr(self, 'qnCounter'):

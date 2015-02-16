@@ -1,7 +1,6 @@
 import cStringIO
 import urllib
 
-from plone.app.textfield.value import RichTextValue
 from plone.app.testing import login
 from plone.namedfile.file import NamedBlobImage
 
@@ -70,13 +69,6 @@ b.true) yay
 xa) lastone
 xb) reallylastone
         """.strip())
-
-    def rtv(self, string, mimeType="application/x-tex"):
-        return RichTextValue(
-            string,
-            mimeType="text/x-tex",
-            outputMimeType='text/html',
-        )
 
     def questionToTeX(self, qnData):
         if not hasattr(self, 'qnCounter'):

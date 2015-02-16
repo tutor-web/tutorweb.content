@@ -15,6 +15,7 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, login, logout
+from plone.app.textfield.value import RichTextValue
 from plone.testing.z2 import Browser
 from zope.configuration import xmlconfig
 
@@ -156,8 +157,15 @@ TUTORWEB_CONTENT_FUNCTIONAL_TESTING = FunctionalTesting(
 class IntegrationTestCase(TestCase):
     layer = TUTORWEB_CONTENT_INTEGRATION_TESTING
 
+    def rtv(self, string, mimeType="text/x-tex", outputMimeType='text/html'):
+        return RichTextValue(
+            string,
+            mimeType=mimeType,
+            outputMimeType=outputMimeType,
+        )
 
-class FunctionalTestCase(TestCase):
+
+class FunctionalTestCase(IntegrationTestCase):
     layer = TUTORWEB_CONTENT_FUNCTIONAL_TESTING
 
     def getBrowser(self, url, user=USER_A_ID):
