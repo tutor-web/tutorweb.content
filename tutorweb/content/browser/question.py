@@ -5,6 +5,8 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 
+from ..datauri import encodeDataUri
+
 
 class BaseQuestionStruct(BrowserView):
     security = ClassSecurityInfo()
@@ -48,9 +50,8 @@ class BaseQuestionStruct(BrowserView):
         if hasattr(f, 'output'):  # i.e. a RichTextField
             return f.output
         if hasattr(f, 'getImageSize'):  # i.e. a NamedBlobImage
-            return '<img src="data:%s;base64,%s" width="%d" height="%d" />' % ((
-                f.contentType,
-                f.data.encode("base64").replace("\n", ""),
+            return '<img src="%s" width="%d" height="%d" />' % ((
+                encodeDataUri(f.data, f.contentType),
             ) + f.getImageSize())
         raise ValueError("Cannot interpret %s" % f)
 

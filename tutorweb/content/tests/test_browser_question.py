@@ -1,7 +1,9 @@
+# -*- coding: utf8 -*-
 from plone.app.testing import login
 from plone.namedfile.file import NamedBlobImage
 from Products.CMFCore.utils import getToolByName
 
+from ..datauri import encodeDataUri
 from .base import IntegrationTestCase, MANAGER_ID, testImage
 
 
@@ -70,7 +72,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             _type='multichoice',
             title=u'qtd image question',
             text=self.doTransform('Here is some text with an image below')
-                +'<img src="data:image/png;base64,%s" width="1" height="1" />' % imageContents.encode("base64").replace("\n", ""),
+                + '<img src="%s" width="1" height="1" />' % encodeDataUri(imageContents, "image/png"),
             choices=[],
             shuffle=[],
             answer=dict(
