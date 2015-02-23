@@ -173,3 +173,14 @@ class TestDataUri(unittest.TestCase):
             decodeDataUri("data:text/plain;charset=UTF-8;base64,16nXnNeV150="),
             dict(data=u"שלום", mimeType="text/plain"),
         )
+
+    def test_unofficialExtras(self):
+        """Should be able to store arbitary key/values"""
+        self.assertEqual(
+            encodeDataUri("camel", "text/x-tex", encoding=None, extra=dict(humps=2, spits="yes")),
+            'data:text/x-tex;spits=yes;humps=2,camel',
+        )
+        self.assertEqual(
+            decodeDataUri('data:text/x-tex;spits=yes;humps=2,camel'),
+            dict(data=u"camel", mimeType="text/x-tex", extra=dict(spits="yes", humps="2")),
+        )

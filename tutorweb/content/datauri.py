@@ -1,7 +1,7 @@
 import re
 import urllib
 
-def encodeDataUri(data, mimeType=None, characterSet=None, encoding="base64"):
+def encodeDataUri(data, mimeType=None, characterSet=None, encoding="base64", extra=dict()):
     if encoding is None or encoding == "uri":
         encodedData = "," + urllib.quote(data.encode(characterSet if characterSet else 'US-ASCII'))
     elif encoding == "base64":
@@ -13,6 +13,7 @@ def encodeDataUri(data, mimeType=None, characterSet=None, encoding="base64"):
         "data:",
         mimeType if mimeType else "",
         ";charset=%s" % characterSet if characterSet else "",
+        "".join(";%s=%s" % (k, v) for k, v in extra.items()),
         encodedData,
     ])
 
@@ -37,6 +38,11 @@ def decodeDataUri(uri):
             out['mimeType'] = l
         elif l.startswith("charset="):
             charSet = l.replace("charset=", "")
+        elif '=' in l:
+            parts = l.split('=', 1)
+            if 'extra' not in out:
+                out['extra'] = {}
+            out['extra'][parts[0]] = parts[1]
 
     # Decode Data
     data = m.group(3)
