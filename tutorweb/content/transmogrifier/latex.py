@@ -9,6 +9,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import openFileReference
 from collective.transmogrifier.utils import defaultMatcher
 
+from ..datauri import encodeDataUri, decodeDataUri
+
 
 class LatexSourceSection(object):
     """
@@ -83,6 +85,14 @@ def readQuestions(file):
 
         elif re.search(r'%title\s+', line):
             item['title'] = line.replace('%title', '', 1).strip()
+
+        elif re.search(r'%image\s+data:', line):
+            data = decodeDataUri(line.replace('%image', '', 1).strip())
+            item['image'] = dict(
+                filename=data.get('extra', {}).get('filename', "%s-image" % item.get('id', None)),
+                data=data['data'],
+                contenttype=data['mimeType'],
+            )
 
         elif re.search(r'%image\s+', line):
             response = urllib2.urlopen(line.replace('%image', '', 1).strip())
@@ -168,7 +178,11 @@ def objectsToTex(gen):
         out += "%%title %s\n" % obj.title
         out += "%format latex\n"
         if obj.image is not None:
-            out += "%%image %s\n" % (obj.absolute_url() + '/@@download-image')
+            out += "%%image %s\n" % encodeDataUri(
+                obj.image.data,
+                mimeType=obj.image.contentType,
+                extra=dict(filename=obj.image.filename.encode('utf-8')) if obj.image.filename else dict(),
+            )
         if obj.text:
             out += obj.text.raw + "\n\n"
         for (i, x) in enumerate(obj.choices or []):

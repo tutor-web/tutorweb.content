@@ -1,8 +1,11 @@
 import cStringIO
+import os.path
 import urllib
 
 from plone.app.testing import login
 from plone.namedfile.file import NamedBlobImage
+
+from ..datauri import encodeDataUri
 
 from .base import IntegrationTestCase, FunctionalTestCase, MANAGER_ID, testImage
 
@@ -34,7 +37,43 @@ class LaTeXQuestionTeXViewTest(IntegrationTestCase):
 %ID qtd0
 %title qtd image question
 %format latex
-%image http://nohost/plone/dept1/tut1/lec1/qtd0/@@download-image
+%image data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEX///+nxBvIAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==
+Here is some text with an image below
+
+a) woo
+b) yay
+xa.true) lastone
+
+%Explanation
+Apparently you are
+%r 640
+%n 980
+        """.strip())
+
+        # Make sure image filename gets encoded too
+        self.assertEqual(self.questionToTeX(dict(
+            title="qtd image question",
+            text=self.rtv("Here is some text with an image below"),
+            image=NamedBlobImage(
+                data=imageContents,
+                contentType='image/png',
+                filename=u"moo.png",
+            ),
+            choices=[
+                dict(text='woo', correct=False),
+                dict(text='yay', correct=False),
+            ],
+            finalchoices=[
+                dict(text='lastone', correct=True),
+            ],
+            explanation=self.rtv("Apparently you are"),
+            timesanswered=980,
+            timescorrect=640,
+        )).strip(),"""
+%ID qtd1
+%title qtd image question
+%format latex
+%image data:image/png;filename=moo.png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEX///+nxBvIAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==
 Here is some text with an image below
 
 a) woo
@@ -59,7 +98,7 @@ Apparently you are
                 dict(text='reallylastone', correct=False),
             ],
         )).strip(),"""
-%ID qtd1
+%ID qtd2
 %title qtd text question
 %format latex
 Here is some text
@@ -151,18 +190,19 @@ c)      ouch, it was an iron bar.
 
     def test_imageTeX(self):
         imagetf = testImage()
+        imagetf.seek(0)
         browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
 %%ID	q92
 %%title	Question with image
 %%format	latex
-%%image file://%s
-        """ % imagetf.name)
+%%image %s
+        """ % encodeDataUri(imagetf.read(), mimeType="image/png", extra = dict(filename=os.path.basename(imagetf.name))))
         # Browser returned to lecture page
         self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
         # The question got created
         qn = self.getObject('dept1/tut1/lec2/q92')
         self.assertEqual(qn.title, u'Question with image')
-        self.assertEqual(qn.image.filename, u'file%%3A%%2F%%2F%s' % urllib.quote_plus(imagetf.name))
+        self.assertEqual(qn.image.filename, os.path.basename(imagetf.name))
         self.assertEqual(qn.image.contentType, 'image/png')
         imagetf.seek(0)
         self.assertEqual(qn.image.data, imagetf.read())
