@@ -9,7 +9,7 @@ from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtm
 
 from Products.PortalTransforms.interfaces import ITransform
 
-TTM_BINARY = os.path.join(os.environ['INSTANCE_HOME'], '..', 'ttm/ttm') if os.environ.get('INSTANCE_HOME', False) else '/usr/bin/ttm'
+TTM_BINARY = 'go/away'
 LATEX_PREAMBLE = u"""\\documentclass{article}
 \\newcommand{\\mathbb}[1]{\\special{html:<mo>&#1opf;</mo>}}
 \\begin{document}
