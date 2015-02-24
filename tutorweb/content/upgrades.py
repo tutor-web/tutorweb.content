@@ -3,41 +3,35 @@ import logging
 from Products.CMFCore.utils import getToolByName
 
 
-def reimportTypes(context, logger=None):
-    """"Re-run the types step, to add new types"""
+def reimportSteps(context, logger, steps):
+    """Re-import a list of steps"""
     if logger is None:
         logger = logging.getLogger('tutorweb.content')
 
-    context.runImportStepFromProfile(
-        'profile-tutorweb.content:default',
+    for s in steps:
+        context.runImportStepFromProfile('profile-tutorweb.content:default', s)
+
+
+def reimportTypes(context, logger=None):
+    """Re-run the types step, to add new types"""
+    reimportSteps(context, logger, [
         'typeinfo',
-    )
+    ])
 
 
 def reimportRegistry(context, logger=None):
-    """"Re-run the plone.app.registry step to update registry keys"""
-    if logger is None:
-        logger = logging.getLogger('tutorweb.content')
-
-    context.runImportStepFromProfile(
-        'profile-tutorweb.content:default',
+    """Re-run the plone.app.registry step to update registry keys"""
+    reimportSteps(context, logger, [
         'plone.app.registry',
-    )
+    ])
 
 
 def reimportMemberdata(context, logger=None):
-    """"Re-run the steps related to member data"""
-    if logger is None:
-        logger = logging.getLogger('tutorweb.content')
-
-    context.runImportStepFromProfile(
-        'profile-tutorweb.content:default',
+    """Re-run the steps related to member data"""
+    reimportSteps(context, logger, [
         'memberdata-properties',
-    )
-    context.runImportStepFromProfile(
-        'profile-tutorweb.content:default',
         'propertiestool',
-    )
+    ])
 
 
 def updateLectureSettings(context, logger=None):
