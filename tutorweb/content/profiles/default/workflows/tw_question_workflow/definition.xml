@@ -37,6 +37,7 @@
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>Teacher</permission-role>
   </permission-map>
  </state>
 

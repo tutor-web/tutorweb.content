@@ -212,5 +212,13 @@
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 12.0 -> 13.0"
+        description="Add Teacher role, add to question workflow. Use wf for tw_questiontemplate"
+        source="12000"
+        destination="13000"
+        handler="tutorweb.content.upgrades.reimportRolesWorkflow"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>

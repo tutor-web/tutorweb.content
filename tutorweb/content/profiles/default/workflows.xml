@@ -5,5 +5,8 @@
         <type type_id="tw_latexquestion">
             <bound-workflow workflow_id="tw_question_workflow"/>
         </type>
+        <type type_id="tw_questiontemplate">
+            <bound-workflow workflow_id="tw_question_workflow"/>
+        </type>
     </bindings>
 </object>

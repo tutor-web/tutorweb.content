@@ -34,6 +34,17 @@ def reimportMemberdata(context, logger=None):
     ])
 
 
+def reimportRolesWorkflow(context, logger=None):
+    """Re-run the steps related to member data"""
+    reimportSteps(context, logger, [
+        'rolemap',
+        'workflow',
+        'update-workflow-rolemap',
+        'placeful_marker',
+        'placeful_workflow',
+    ])
+
+
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
     def inSettings(settings, key):
