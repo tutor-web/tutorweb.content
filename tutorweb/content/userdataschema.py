@@ -10,6 +10,7 @@ from plone.app.users.browser.userdatapanel import UserDataPanel
 from plone.supermodel import model
 from plone.z3cform.fieldsets import extensible
 
+from Products.CMFCore.utils import getToolByName
 from Products.statusmessages.interfaces import IStatusMessage
 
 from tutorweb.content import _
@@ -77,8 +78,13 @@ class FormExtender(extensible.FormExtender):
         self.form.fields['email'].field.description = u'The email address we should use when sending you forgotten passwords, etc'
         self.form.buttons = self.form.buttons.omit('cancel')
 
-        messages = IStatusMessage(self.request)
-        messages.add(u"Make sure you accept the terms and conditions below", type=u"info")
+        # If at beginning of editing process, and editing ourself, add nag.
+        if not self.request.form.get('userid', None):
+            mt = getToolByName(self.context, 'portal_membership')
+            mb = mt.getAuthenticatedMember()
+            if not mb.getProperty('accept', False):
+                messages = IStatusMessage(self.request)
+                messages.add(u"Make sure you accept the terms and conditions below", type=u"info")
 
 class UserDataPanelExtender(FormExtender):
     adapts(Interface, IDefaultBrowserLayer, UserDataPanel)
