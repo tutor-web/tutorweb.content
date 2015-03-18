@@ -220,5 +220,13 @@
         handler="tutorweb.content.upgrades.reimportRolesWorkflow"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 13.0 -> 14.0"
+        description="Set default state to published"
+        source="13000"
+        destination="14000"
+        handler="tutorweb.content.upgrades.reimportRolesWorkflow"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
