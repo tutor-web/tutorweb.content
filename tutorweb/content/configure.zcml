@@ -228,5 +228,13 @@
         handler="tutorweb.content.upgrades.reimportRolesWorkflow"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 14.0 -> 15.0"
+        description="Add question-stats action"
+        source="14000"
+        destination="15000"
+        handler="tutorweb.content.upgrades.reimportTypes"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>

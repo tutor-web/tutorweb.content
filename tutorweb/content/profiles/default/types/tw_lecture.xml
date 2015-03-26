@@ -54,6 +54,11 @@
     url_expr="string:${object_url}" visible="True">
   <permission value="View"/>
  </action>
+ <action title="Questions" action_id="question-stats"
+    category="object" condition_expr=""
+    url_expr="string:${object_url}/@@question-stats" visible="True">
+  <permission value="Modify portal content"/>
+ </action>
  <action title="Edit" action_id="edit" category="object" condition_expr=""
     url_expr="string:${object_url}/edit" visible="True">
   <permission value="Modify portal content"/>
