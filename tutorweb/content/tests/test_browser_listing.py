@@ -8,23 +8,6 @@ from .base import MANAGER_ID, USER_A_ID, USER_B_ID, USER_C_ID
 
 class ListingViewTest(IntegrationTestCase):
 
-    def test_questionListing(self):
-        """questions will not be listed unless you are an editor"""
-        portal = self.layer['portal']
-        self.path = 'dept1/tut1/lec1'
-
-        # User A is just a member, can't see questions
-        login(portal, USER_A_ID)
-        self.assertEquals([q['url'] for q in self.getView().questionListing()], [
-        ])
-
-        # Manager however, can.
-        login(portal, MANAGER_ID)
-        self.assertEquals([q['url'] for q in self.getView().questionListing()], [
-            'http://nohost/plone/dept1/tut1/lec1/qn1',
-            'http://nohost/plone/dept1/tut1/lec1/qn2',
-        ])
-
     def test_lectureListing(self):
         """Get counts of questions within lectures"""
         portal = self.layer['portal']

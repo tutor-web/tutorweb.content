@@ -17,23 +17,6 @@ from tutorweb.content.schema import IQuestion, ICourse
 
 class ListingView(BrowserView):
     """Class for all views that just list sub-content"""
-    def questionListing(self):
-        """Listing of all question items"""
-        listing = self.context.restrictedTraverse('@@folderListing')(
-            object_provides=IQuestion.__identifier__,
-            sort_on="id",
-        )
-        out = []
-        for o in (l.getObject() for l in listing):
-            out.append(dict(
-                url=o.absolute_url(),
-                id=o.id,
-                title=o.Title(),
-                timesanswered=getattr(o, 'timesanswered', 'N/A'),
-                timescorrect=getattr(o, 'timescorrect', 'N/A'),
-            ))
-        return out
-
     def slideListing(self):
         """Listing of all slide items"""
         listing = self.context.restrictedTraverse('@@folderListing')(

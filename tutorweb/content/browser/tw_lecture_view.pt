@@ -58,46 +58,6 @@
       </table>
     </dd>
 
-    <tal:t tal:define="questions view/questionListing"
-           tal:condition="python: view.canEdit() or len(questions) > 0">
-      <dt id="fieldsetlegend-questions">Questions</dt>
-      <dd id="fieldset-questions">
-        <tal:t tal:condition="view/canEdit">
-          <h3>Upload / download replacement questions</h3>
-          <a tal:attributes="href string:${context/absolute_url}/tex">Download questions in TeX form</a>
-          <form method="POST" enctype="multipart/form-data"
-                tal:attributes="action string:${context/absolute_url}/tex-import">
-            <div>
-              <label for="lecture-media">Update questions from TeX file</label>
-            </div>
-            <div>
-              <input type="file" name="media" id="lecture-media" />
-              <input type="submit" value="Upload">
-            </div>
-          </form>
-        </tal:t>
-        <table class="listing">
-          <thead>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Answers</th>
-            <th>Answers correct</th>
-          </thead>
-          <tbody>
-            <tr tal:repeat="item view/questionListing">
-              <td tal:content="item/id">q01</td>
-              <td>
-                <a href="#" tal:attributes="href item/url"
-                            tal:content="item/title">question</a>
-              </td>
-              <td tal:content="item/timesanswered">q01</td>
-              <td tal:content="item/timescorrect">q01</td>
-            </tr>
-          </tbody>
-        </table>
-      </dd>
-    </tal:t>
-
     <dt id="fieldsetlegend-files">Data files</dt>
     <dd id="fieldset-files">
 

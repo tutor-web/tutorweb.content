@@ -263,10 +263,23 @@ A man walks into a tree
         self.assertEqual(qn.timescorrect, 990)
 
     def uploadTeX(self, lecUrl, tex):
+        import mechanize
         browser = self.getBrowser(lecUrl, user=MANAGER_ID)
-        ctrl = browser.getControl('Update questions from TeX file')
-        ctrl.add_file(cStringIO.StringIO(tex), 'text/plain', 'test.tex')
-        browser.getControl('Upload').click()
+        browser.mech_browser.open(mechanize.Request(
+            lecUrl + '/@@tex-import',
+            data="\r\n".join([
+                "",
+                "--AaB03x",
+                'Content-Disposition: form-data; name="media"; filename="file1.txt"',
+                'Content-Type: text/x-tex',
+                '',
+            ] + tex.split("\n") + [
+                "--AaB03x--",
+            ]),
+            headers={
+                "Content-Type": "multipart/form-data; boundary=AaB03x",
+            },
+        ))
         return browser
 
     def getObject(self, path):
