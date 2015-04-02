@@ -278,43 +278,53 @@ class TexGenerator(object):
         self.writeTeX([""])
 
     def texSlideSection(self, section):
-        def scriptToImage(script):
-            tf = ScriptToTeX()
-            data = tf.convert(
-                script.raw,
-                datastream("scriptToImage"),
-                mimetype='text/x-uri' if script.mimeType == 'text/x-url' else script.mimeType)
-            return data.getData()
-
-        if not section.image_code or not section.image_code.raw:
-            self.writeTeX([section.text])
+        # Neither image or text, ignore section
+        if not section.image_code and not section.text:
             return
 
-        # Otherwise, write an image
-        self.writeTeX([
-            '\\begin{figure}[h]',
-            '\\begin{tabular}{ll}',
-            '\\begin{minipage}{%s\\textwidth}' % ('0.75' if section.text else '1.0'),
-            '\\resizebox{7cm}{!}{',
-            scriptToImage(section.image_code),
-            '}',
-        ])
-        if section.image_caption:
-            self.writeTeX(['\\caption{%s}' % section.image_caption])
-        self.writeTeX([
-            '\\end{minipage}',
-        ])
-        if section.text:
-            self.writeTeX([
-                '\\begin{minipage}{0.5\\textwidth}{',
+        figureContent = []
+
+        # If there is an image, write it into a minipage
+        if section.image_code and section.image_code.raw:
+            tf = ScriptToTeX()
+            data = tf.convert(
+                section.image_code.raw,
+                datastream("scriptToImage"),
+                mimetype='text/x-uri' if section.image_code.mimeType == 'text/x-url' else section.image_code.mimeType)
+
+            figureContent.extend([
+                '\\begin{minipage}{%s\\textwidth}' % ('0.48' if section.title != "" or section.text else '0.97'),
+                '\\resizebox{7cm}{!}{',
+                data.getData(),
+                '}',
+            ])
+            if section.image_caption:
+                figureContent.extend(['\\caption{%s}' % section.image_caption])
+            figureContent.extend([
+                '\\end{minipage}',
+            ])
+
+        # Main section text goes into a slide minipage
+        if section.title == "" and section.text and section.text.raw:
+            figureContent.extend([
+                '\\begin{minipage}{%s\\textwidth}' % ('0.48' if section.image_code else '0.97'),
                 '\\tiny\\fbox{',
                 '\\parbox[c]{3truecm}{',
                 section.text,
-                '}}}',
+                '}}',
                 '\\end{minipage}',
             ])
-        self.writeTeX([
-            '\\end{tabular}',
-            '\\end{figure}',
-            '\\clearpage',
-        ])
+
+        # Write out any figure content
+        if figureContent:
+            self.writeTeX([
+                '\\begin{figure}[h]',
+                '\\begin{tabular}{ll}',
+            ] + figureContent + [
+                '\\end{tabular}',
+                '\\end{figure}',
+            ])
+
+        # Other section's text is regular text
+        if section.title != "":
+            self.writeTeX([section.text])
