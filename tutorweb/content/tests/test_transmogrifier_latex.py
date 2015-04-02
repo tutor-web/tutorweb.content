@@ -323,6 +323,60 @@ e) Mauve
             filename=self.tf.name,
         ), None)
 
+class ObjectsToTexTest(unittest.TestCase):
+    maxDiff = None
+
+    def test_additionalstats(self):
+        """Supplied stats override question stats"""
+        def justStats(str):
+            return [x for x in str.split("\n") if x.startswith("%ID") or x.startswith("%r") or x.startswith("%n")]
+
+        qns = [
+            FakeQn(dict(
+                id=u'q100',
+                title=u'What is my favourite colour?',
+                text=dict(data=u"Maybe you should bust a move?", contenttype='text/x-tex', encoding='utf-8'),
+                explanation=dict(data=u"Shouldn't have played", contenttype='text/x-tex', encoding='utf-8'),
+                choices=[
+                    dict(text='woo', correct=True),
+                    dict(text='aww', correct=False),
+                ],
+                timesanswered=44,
+                timescorrect=4,
+            )),
+            FakeQn(dict(
+                id=u'q101',
+                title=u'What is the minning move?',
+                text=dict(data=u"Maybe you should bust a move?", contenttype='text/x-tex', encoding='utf-8'),
+                explanation=dict(data=u"Shouldn't have played", contenttype='text/x-tex', encoding='utf-8'),
+                choices=[
+                    dict(text='woo', correct=True),
+                    dict(text='aww', correct=False),
+                ],
+                timesanswered=33,
+                timescorrect=3,
+            )),
+        ]
+
+        # No stats given, return original
+        qnTex = justStats(objectsToTex(qns, stats=dict()))
+        self.assertEqual(qnTex, [
+            u'%ID q100', u'%r 4', u'%n 44',
+            u'%ID q101', u'%r 3', u'%n 33'
+        ])
+
+        # Stats for q100 replaced
+        qnTex = justStats(objectsToTex(qns, stats=dict('q100'=dict(timesAnswered=99, timesCorrect=9))))
+        self.assertEqual(qnTex, [
+            u'%ID q100', u'%r 9', u'%n 99',
+            u'%ID q101', u'%r 3', u'%n 33'
+        ])
+        qnTex = justStats(objectsToTex(qns, stats=dict('q101'=dict(timesAnswered=88, timesCorrect=8))))
+        self.assertEqual(qnTex, [
+            u'%ID q100', u'%r 4', u'%n 44',
+            u'%ID q101', u'%r 8', u'%n 88'
+        ])
+
 
 class FakeQn:
     id = None

@@ -19,7 +19,11 @@ class LaTeXQuestionTeXView(BrowserView):
             'Content-disposition',
             "attachment; filename=%s.tex" % context.id,
         )
-        return objectsToTex([context])
+        statsList = self.context.restrictedTraverse('@@question-stats').getStats()
+        return objectsToTex(
+            [self.context],
+            stats={context.id: statsList[0]} if len(statsList) > 0 else {},
+        )
 
 
 class LectureTeXView(BrowserView):
@@ -35,7 +39,11 @@ class LectureTeXView(BrowserView):
             'Content-disposition',
             "attachment; filename=%s.tex" % self.context.id,
         )
-        return objectsToTex(l.getObject() for l in listing)
+        statsList = self.context.restrictedTraverse('@@question-stats').getStats()
+        return objectsToTex(
+            (l.getObject() for l in listing),
+            stats=dict((s.id, s) for s in statsList),
+        )
 
 
 class LectureTeXImport(BrowserView):

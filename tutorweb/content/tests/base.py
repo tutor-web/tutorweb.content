@@ -35,8 +35,10 @@ class TestFixture(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         import tutorweb.content
+        import tutorweb.content.tests.mockviews
         xmlconfig.include(configurationContext, 'meta.zcml', tutorweb.content)
         xmlconfig.include(configurationContext, 'configure.zcml', tutorweb.content)
+        xmlconfig.include(configurationContext, 'configure.zcml', tutorweb.content.tests.mockviews)
         xmlconfig.includeOverrides(configurationContext, 'overrides.zcml', tutorweb.content)
         configurationContext.execute_actions()
 

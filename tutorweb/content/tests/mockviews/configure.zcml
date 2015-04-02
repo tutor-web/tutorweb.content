@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="tutorweb.content">
+
+    <browser:page name="question-stats"
+      for="tutorweb.content.schema.ILecture"
+      permission="cmf.ModifyPortalContent"
+      class=".questionstats.MockQuestionStatsView"
+      />
+    <browser:page name="question-stats"
+      for="tutorweb.content.schema.IQuestion"
+      permission="cmf.ModifyPortalContent"
+      class=".questionstats.MockQuestionStatsView"
+      />
+</configure>

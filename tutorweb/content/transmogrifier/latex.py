@@ -167,7 +167,7 @@ def readQuestions(file):
         yield finalise(item)
 
 
-def objectsToTex(gen):
+def objectsToTex(gen, stats=dict()):
     """Convert a generator of plone objects into a string of TeX"""
     out = ""
     for obj in gen:
@@ -200,8 +200,14 @@ def objectsToTex(gen):
         if obj.explanation:
             out += "\n%Explanation\n"
             out += obj.explanation.raw + "\n"
-        if obj.timescorrect:
-            out += "%%r %d\n" % obj.timescorrect
-        if obj.timesanswered:
-            out += "%%n %d\n" % obj.timesanswered
+
+        statsObj = stats.get(obj.id, None)
+        if statsObj:
+            out += "%%r %d\n" % statsObj['timesCorrect']
+            out += "%%n %d\n" % statsObj['timesAnswered']
+        else:
+            if obj.timescorrect:
+                out += "%%r %d\n" % obj.timescorrect
+            if obj.timesanswered:
+                out += "%%n %d\n" % obj.timesanswered
     return out
