@@ -81,18 +81,6 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             )
         ))
 
-    def test_updateStats(self):
-        portal = self.layer['portal']
-        login(portal, MANAGER_ID)
-        qn = portal.restrictedTraverse('dept1/tut1/lec1/qn1')
-        qnView = qn.restrictedTraverse('@@data')
-
-        qn.timesanswered = 5
-        qn.timescorrect = 6
-        qnView.updateStats(8,9)
-        self.assertEqual(qn.timesanswered, 8)
-        self.assertEqual(qn.timescorrect, 9)
-
     def questionToDict(self, qnData):
         if not hasattr(self, 'qnCounter'):
             self.qnCounter = 0
