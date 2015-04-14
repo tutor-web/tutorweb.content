@@ -366,12 +366,12 @@ class ObjectsToTexTest(unittest.TestCase):
         ])
 
         # Stats for q100 replaced
-        qnTex = justStats(objectsToTex(qns, stats=dict('q100'=dict(timesAnswered=99, timesCorrect=9))))
+        qnTex = justStats(objectsToTex(qns, stats={'q100':dict(timesAnswered=99, timesCorrect=9)}))
         self.assertEqual(qnTex, [
             u'%ID q100', u'%r 9', u'%n 99',
             u'%ID q101', u'%r 3', u'%n 33'
         ])
-        qnTex = justStats(objectsToTex(qns, stats=dict('q101'=dict(timesAnswered=88, timesCorrect=8))))
+        qnTex = justStats(objectsToTex(qns, stats={'q101':dict(timesAnswered=88, timesCorrect=8)}))
         self.assertEqual(qnTex, [
             u'%ID q100', u'%r 4', u'%n 44',
             u'%ID q101', u'%r 8', u'%n 88'
