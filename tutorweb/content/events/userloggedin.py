@@ -1,3 +1,4 @@
+from zope.app.component.hooks import getSite
 from zope.globalrequest import getRequest
 
 
