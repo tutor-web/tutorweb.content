@@ -82,8 +82,8 @@ xa.true) lastone
 
 %Explanation
 Apparently you are
-%r 640
-%n 980
+%r 3
+%n 99
         """.strip())
 
         self.assertEqual(self.questionToTeX(dict(
@@ -143,6 +143,8 @@ b.true) purple
 %format latex
 a) pink
 b.true) purple
+%r 4
+%n 44
             """.strip(),
         )
 

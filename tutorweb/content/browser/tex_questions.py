@@ -22,7 +22,7 @@ class LaTeXQuestionTeXView(BrowserView):
         statsList = self.context.restrictedTraverse('@@question-stats').getStats()
         return objectsToTex(
             [self.context],
-            stats={context.id: statsList[0]} if len(statsList) > 0 else {},
+            stats=dict((s['id'], s) for s in statsList),
         )
 
 
@@ -42,7 +42,7 @@ class LectureTeXView(BrowserView):
         statsList = self.context.restrictedTraverse('@@question-stats').getStats()
         return objectsToTex(
             (l.getObject() for l in listing),
-            stats=dict((s.id, s) for s in statsList),
+            stats=dict((s['id'], s) for s in statsList),
         )
 
 
