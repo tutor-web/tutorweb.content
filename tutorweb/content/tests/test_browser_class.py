@@ -28,7 +28,7 @@ class BulkAddStudentViewTest(IntegrationTestCase):
         return [(
             m.getProperty('email'),
             m.id,
-        ) for m in sorted(mtool.listMembers())]
+        ) for m in sorted(mtool.listMembers(), key=lambda m: m.id)]
 
     def test_uploadLog(self):
         view = self.getView()
