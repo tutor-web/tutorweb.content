@@ -236,5 +236,13 @@
         handler="tutorweb.content.upgrades.reimportTypes"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 15.0 -> 16.0"
+        description="Add tw_questionpack type"
+        source="15000"
+        destination="16000"
+        handler="tutorweb.content.upgrades.reimportTypes"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>

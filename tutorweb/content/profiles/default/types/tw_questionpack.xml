@@ -1,37 +1,32 @@
 <?xml version="1.0"?>
-<object name="tutorweb.content.tw_lecture" meta_type="Dexterity FTI"
+<object name="tutorweb.content.tw_questionpack" meta_type="Dexterity FTI"
    i18n:domain="tutorweb.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="">Lecture</property>
- <property name="description" i18n:translate="">Lecture containing slides and quiz questions</property>
- <property name="content_icon">/++theme++www.tutor-web.net/images/content/folder_lecture.png</property>
+ <property name="title" i18n:translate="">Question Pack</property>
+ <property name="description" i18n:translate="">Multiple questions in a single file</property>
+ <property name="content_icon">form_icon.png</property>
  <property name="allow_discussion">False</property>
 
  <!-- Type heirarchy -->
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-     <element value="tw_slide"/>
-     <element value="tw_latexquestion"/>
-     <element value="tw_questiontemplate"/>
-     <element value="tw_questionpack"/>
-     <element value="Image"/>
-     <element value="File"/>
  </property>
 
  <!-- Class used for content items -->
  <property name="klass">plone.dexterity.content.Container</property>
 
  <!-- Schema interface -->
- <property name="schema">tutorweb.content.schema.ILecture</property>
+ <property name="schema">tutorweb.content.schema.IQuestionPack</property>
  <property name="model_file"></property>
  <property name="model_source"></property>
 
  <!-- Behaviors -->
  <property name="behaviors">
+     <element value="plone.app.dexterity.behaviors.filename.INameFromFileName" />
      <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
-     <element value="plone.app.dexterity.behaviors.nextprevious.INextPreviousEnabled"/>
+     <element value="tutorweb.content.schema.IQuestion" />
  </property>
 
  <!-- Add permission -->
@@ -54,11 +49,6 @@
  <action title="View" action_id="view" category="object" condition_expr=""
     url_expr="string:${object_url}" visible="True">
   <permission value="View"/>
- </action>
- <action title="Questions" action_id="question-stats"
-    category="object" condition_expr=""
-    url_expr="string:${object_url}/@@question-stats" visible="True">
-  <permission value="Modify portal content"/>
  </action>
  <action title="Edit" action_id="edit" category="object" condition_expr=""
     url_expr="string:${object_url}/edit" visible="True">
