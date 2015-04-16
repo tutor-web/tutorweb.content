@@ -1,18 +1,20 @@
 import json
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
+from zope.publisher.interfaces import NotFound
 
 from Products.CMFCore.utils import getToolByName
-from Products.Five.browser import BrowserView
 
 from ..datauri import encodeDataUri
 
+from .jsonbrowserview import JSONBrowserView
 
-class BaseQuestionStruct(BrowserView):
+
+class BaseQuestionStruct(JSONBrowserView):
     security = ClassSecurityInfo()
 
     security.declarePrivate('asDict')
-    def asDict(self):
+    def asDict(self, data=None):
         """
         Return struct representing question as dict. An example is:
         {
@@ -55,20 +57,6 @@ class BaseQuestionStruct(BrowserView):
             ) + f.getImageSize())
         raise ValueError("Cannot interpret %s" % f)
 
-    def __call__(self):
-        try:
-            out = self.asDict()
-            self.request.response.setStatus(200)
-            self.request.response.setHeader("Content-type", "application/json")
-            return json.dumps(out)
-        except Exception, ex:
-            self.request.response.setStatus(500)
-            self.request.response.setHeader("Content-type", "application/json")
-            return json.dumps(dict(
-                error=ex.__class__.__name__,
-                message=str(ex),
-            ))
-
 
 class LaTeXQuestionStruct(BaseQuestionStruct):
     security = ClassSecurityInfo()
@@ -79,7 +67,7 @@ class LaTeXQuestionStruct(BaseQuestionStruct):
         return (self.context.choices or []) + (self.context.finalchoices or [])
 
     security.declarePrivate('asDict')
-    def asDict(self):
+    def asDict(self, data=None):
         """Pull fields out into struct"""
         all_choices = self.allChoices()
         out = dict(
@@ -101,7 +89,7 @@ class QuestionTemplateStruct(BaseQuestionStruct):
     security = ClassSecurityInfo()
 
     security.declarePrivate('asDict')
-    def asDict(self):
+    def asDict(self, data=None):
         """Pull fields out into struct"""
         out = dict(
             _type='template',
