@@ -3,6 +3,7 @@ import json
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from zope.publisher.interfaces import NotFound
 
+from plone.memoize import ram
 from Products.CMFCore.utils import getToolByName
 
 from ..datauri import encodeDataUri
@@ -98,5 +99,65 @@ class QuestionTemplateStruct(BaseQuestionStruct):
             example_text=getattr(self.context.example_text, 'raw', ''),
             example_choices=[x['text'] for x in self.context.example_choices or []],
             example_explanation=getattr(self.context.example_explanation, 'raw', ''),
+        )
+        return out
+
+
+def _allQuestionsDict_cachekey(method, self):
+    """Cache key of path and last modified date"""
+    return (
+        '/'.join(self.context.getPhysicalPath()),
+        self.context.modified(),
+    )
+
+
+class QuestionPackStruct(BaseQuestionStruct):
+    security = ClassSecurityInfo()
+
+    @ram.cache(_allQuestionsDict_cachekey)
+    def allQuestionsDict(self):
+        """Convert all questions to intermediate JSON"""
+        from tutorweb.content.transmogrifier.latex import readQuestions
+        out = dict()
+
+        with self.context.questionfile.open() as fh:
+            for qn in readQuestions(fh):
+                out[qn['id']] = qn
+        return out
+
+    security.declarePrivate('asDict')
+    def asDict(self, data={}):
+        """Render Selected question"""
+        if isinstance(data, dict) and 'question_id' in data:
+            qnId = data['question_id']
+            if isinstance(qnId, list):
+                # Bodge for querystring data coming in
+                qnId = qnId[0]
+        elif 'question_id' in self.request:
+            qnId = self.request.get('question_id', None)
+        else:
+            raise NotFound(self, "Missing question_id", self.request)
+
+        qn = self.allQuestionsDict().get(qnId, None)
+        if not qn:
+            raise NotFound(self, qnId, self.request)
+
+        all_choices = qn.get('choices', []) + qn.get('finalchoices', [])
+        text = self.render(qn.get('text', dict(data=''))['data'], 'TeX')
+        if qn.get('image', None):
+            text += '<img src="%s" />' % encodeDataUri(
+                qn['image']['data'],
+                qn['image']['contenttype'],
+            )
+        out = dict(
+            _type='multichoice',
+            title=qn.get('title', ''),
+            text=text,
+            choices=[self.render(x['text'], 'TeX') for x in all_choices],
+            shuffle=range(len(qn.get('choices', []))),
+            answer=dict(
+                explanation=self.render(qn.get('explanation', dict(data=''))['data'], 'TeX'),
+                correct=[i for (i, x) in enumerate(all_choices) if x['correct']],
+            ),
         )
         return out

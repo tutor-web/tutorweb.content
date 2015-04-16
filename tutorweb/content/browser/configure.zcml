@@ -13,6 +13,11 @@
       class=".question.QuestionTemplateStruct"
       permission="cmf.ManagePortal"
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
+    <browser:page name="data"
+      for="tutorweb.content.schema.IQuestionPack"
+      class=".question.QuestionPackStruct"
+      permission="cmf.ManagePortal"
+      /><!--NB: Regular users should not see these, they'll go via an allocation -->
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ILaTeXQuestion"
