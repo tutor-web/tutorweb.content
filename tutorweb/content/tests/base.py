@@ -36,14 +36,20 @@ class TestFixture(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         import tutorweb.content
         import tutorweb.content.tests.mockviews
+        import collective.alias
         xmlconfig.include(configurationContext, 'meta.zcml', tutorweb.content)
         xmlconfig.include(configurationContext, 'configure.zcml', tutorweb.content)
         xmlconfig.include(configurationContext, 'configure.zcml', tutorweb.content.tests.mockviews)
         xmlconfig.includeOverrides(configurationContext, 'overrides.zcml', tutorweb.content)
+        xmlconfig.include(configurationContext, 'configure.zcml', collective.alias)
         configurationContext.execute_actions()
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'tutorweb.content:default')
+
+        # Import just collective.alias types, since we don't have Collections installed
+        setup = getToolByName(portal, 'portal_setup')
+        setup.runImportStepFromProfile('profile-collective.alias:default', 'typeinfo')
 
         # Creates some users
         acl_users = getToolByName(portal, 'acl_users')
