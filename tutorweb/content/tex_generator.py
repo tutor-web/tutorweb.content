@@ -97,7 +97,10 @@ class TexGenerator(object):
             return (
                 l.getObject()
                 for l
-                in obj.restrictedTraverse('@@folderListing')(Type=portal_type)
+                in obj.restrictedTraverse('@@folderListing')(
+                    Type=portal_type,
+                    sort_on="id",
+                )
             )
 
         self._tex = ""
