@@ -1,34 +1,29 @@
 <registry>
 
     <record name="tutorweb.content.lectureSettings">
-        <field type="plone.registry.field.Tuple">
-            <title>Lecture settings</title>
+        <field type="plone.registry.field.Dict">
+            <title>Defaults for lecture settings</title>
+            <key_type type="plone.registry.field.ASCIILine" />
             <value_type type="plone.registry.field.TextLine" />
         </field>
         <value>
-            <element>hist_sel</element>
-            <element>timeout_max</element>
-            <element>timeout_min</element>
-            <element>timeout_grade</element>
-            <element>timeout_std</element>
-            <element>question_cap</element>
-            <element>cap_template_qns</element>
-            <element>cap_template_qn_reviews</element>
-            <element>grade_alpha:min</element>
-            <element>grade_alpha:max</element>
-            <element>grade_s:min</element>
-            <element>grade_s:max</element>
-            <element>grade_nmin</element>
-            <element>grade_nmax</element>
-            <element>grade_nmax:min</element>
-            <element>grade_nmax:max</element>
-            <element>prob_template:min</element>
-            <element>prob_template:max</element>
-            <element>prob_template_eval:min</element>
-            <element>prob_template_eval:max</element>
-            <element>award_lecture_answered</element>
-            <element>award_lecture_aced</element>
-            <element>award_tutorial_aced</element>
+            <element key="hist_sel">0</element>
+            <element key="timeout_max">10</element>
+            <element key="timeout_min">3</element>
+            <element key="timeout_grade">5</element>
+            <element key="timeout_std">2</element>
+            <element key="question_cap">100</element>
+            <element key="cap_template_qns">5</element>
+            <element key="cap_template_qn_reviews">10</element>
+            <element key="grade_alpha">0.125</element>
+            <element key="grade_s">2</element>
+            <element key="grade_nmin">8</element>
+            <element key="grade_nmax">30</element>
+            <element key="prob_template">0.1</element>
+            <element key="prob_template_eval">0.8</element>
+            <element key="award_lecture_answered">1000</element>
+            <element key="award_lecture_aced">10000</element>
+            <element key="award_tutorial_aced">100000</element>
         </value>
     </record>
 

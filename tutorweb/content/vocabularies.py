@@ -16,8 +16,10 @@ class LectureSettingsVocabulary(object):
             return []
 
         terms = []
-        for v in registry.get('tutorweb.content.lectureSettings', ()):
-            terms.append(SimpleVocabulary.createTerm(v))
+        for (k, default) in registry.get('tutorweb.content.lectureSettings', ()).items():
+            terms.append(SimpleVocabulary.createTerm(k, k, "%s (default %s)" % (k, default)))
+            terms.append(SimpleVocabulary.createTerm(k + ":min"))
+            terms.append(SimpleVocabulary.createTerm(k + ":max"))
         return SimpleVocabulary(terms)
 
 LectureSettingsVocabularyFactory = LectureSettingsVocabulary()
