@@ -22,6 +22,7 @@ class DrillSettingsView(JSONBrowserView):
 
         # Combine, later items override previous ones
         return dict(itertools.chain(
+            registry.get('tutorweb.content.lectureSettings', ()).items(),
             tlate(aq_parent(self.context).settings),
             tlate(self.context.settings),
         ))
