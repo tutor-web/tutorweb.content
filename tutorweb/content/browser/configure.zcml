@@ -52,6 +52,11 @@
       class=".listing.ListingView"
       template="tw_lecture_view.pt"
       />
+    <browser:page name="drill-settings"
+      for="tutorweb.content.schema.ILecture"
+      class=".drill_settings.DrillSettingsView"
+      permission="cmf.ManagePortal"
+      />
 
     <browser:page name="tex"
       for="tutorweb.content.schema.ITutorial"
