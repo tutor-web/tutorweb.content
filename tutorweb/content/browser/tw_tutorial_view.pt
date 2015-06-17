@@ -95,8 +95,9 @@
     <dd id="fieldset-courses">
       <h4>Primary course</h4>
       <ul>
-        <li><a tal:attributes="href context/primarycourse/to_object/absolute_url"
-               tal:content="context/primarycourse/to_object/Title">course</a></li>
+        <li><a tal:define="pcourse nocall:context/primarycourse/to_object|nothing"
+               tal:attributes="href pcourse/absolute_url"
+               tal:content="pcourse/Title">course</a></li>
       </ul>
       <h4>Other courses this tutorial appears in</h4>
       <ul tal:repeat="item view/relatedCourses">
