@@ -20,7 +20,7 @@
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
 
     <browser:page name="tex"
-      for="tutorweb.content.schema.ILaTeXQuestion"
+      for="tutorweb.content.schema.IQuestion"
       class=".tex_questions.LaTeXQuestionTeXView"
       permission="cmf.ManagePortal"
       />

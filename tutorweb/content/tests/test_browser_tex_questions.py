@@ -109,21 +109,51 @@ xa) lastone
 xb) reallylastone
         """.strip())
 
+        # We can serialise question templates
+        self.assertEqual(self.questionToTeX(dict(
+            type_name='tw_questiontemplate',
+            title='Question Template',
+            hints=self.rtv('Here is a hint\nIt\'s a multiline string'),
+            example_text=self.rtv('Here is some example text\nIt\'s a multiline string too'),
+            example_choices=[
+                dict(text='woo', correct=False),
+                dict(text='yay', correct=True),
+            ],
+            example_explanation=self.rtv('Here is some example explanation\nIt\'s a multiline string too'),
+        )).strip(),"""
+%ID qtd3
+%title Question Template
+%format tw_questiontemplate
+
+%hints
+Here is a hint
+It's a multiline string
+
+%example_text
+Here is some example text
+It's a multiline string too
+a) woo
+b.true) yay
+
+%example_explanation
+Here is some example explanation
+It's a multiline string too
+        """.strip())
+
     def questionToTeX(self, qnData):
         if not hasattr(self, 'qnCounter'):
             self.qnCounter = 0
         else:
             self.qnCounter += 1
-        qnId = "qtd%d" % self.qnCounter
+        qnData['id'] = "qtd%d" % self.qnCounter
+
+        if 'type_name' not in qnData:
+            qnData['type_name'] = "tw_latexquestion"
 
         portal = self.layer['portal']
         login(portal, MANAGER_ID)
         lecture = portal['dept1']['tut1']['lec1']
-        lecture.invokeFactory(
-            type_name="tw_latexquestion",
-            id=qnId,
-            **qnData)
-        return lecture[qnId].restrictedTraverse('@@tex')()
+        return lecture[lecture.invokeFactory(**qnData)].restrictedTraverse('@@tex')()
 
 class LectureTeXViewTest(FunctionalTestCase):
     """Convert an entire lecture in one go"""

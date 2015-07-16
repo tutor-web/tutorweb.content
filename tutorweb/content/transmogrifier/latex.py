@@ -174,40 +174,75 @@ def objectsToTex(gen, stats=dict()):
         if out:
             out += "\n%===\n"
 
-        out += "%%ID %s\n" % obj.id
-        out += "%%title %s\n" % obj.title
-        out += "%format latex\n"
-        if obj.image is not None:
-            out += "%%image %s\n" % encodeDataUri(
-                obj.image.data,
-                mimeType=obj.image.contentType,
-                extra=dict(filename=obj.image.filename.encode('utf-8')) if obj.image.filename else dict(),
-            )
-        if obj.text:
-            out += obj.text.raw + "\n\n"
-        for (i, x) in enumerate(obj.choices or []):
-            out += "%s%s) %s\n" % (
-                chr(97 + i),
-                '.true' if x['correct'] else '',
-                x['text'].replace("\n", "")
-            )
-        for (i, x) in enumerate(obj.finalchoices or []):
-            out += "x%s%s) %s\n" % (
-                chr(97 + i),
-                '.true' if x['correct'] else '',
-                x['text'].replace("\n", "")
-            )
-        if obj.explanation:
-            out += "\n%Explanation\n"
-            out += obj.explanation.raw + "\n"
+        out += dict(
+            tw_latexquestion=latexQuestionToTex,
+            tw_questiontemplate=questionTemplateToTex,
+        )[obj.portal_type](obj, stats.get(obj.id, None))
 
-        statsObj = stats.get(obj.id, None)
-        if statsObj:
-            out += "%%r %d\n" % statsObj['timesCorrect']
-            out += "%%n %d\n" % statsObj['timesAnswered']
-        else:
-            if obj.timescorrect:
-                out += "%%r %d\n" % obj.timescorrect
-            if obj.timesanswered:
-                out += "%%n %d\n" % obj.timesanswered
+    return out
+
+
+def latexQuestionToTex(obj, statsObj):
+    out = ""
+    out += "%%ID %s\n" % obj.id
+    out += "%%title %s\n" % obj.title
+    out += "%format latex\n"
+    if obj.image is not None:
+        out += "%%image %s\n" % encodeDataUri(
+            obj.image.data,
+            mimeType=obj.image.contentType,
+            extra=dict(filename=obj.image.filename.encode('utf-8')) if obj.image.filename else dict(),
+        )
+    if obj.text:
+        out += obj.text.raw + "\n\n"
+    for (i, x) in enumerate(obj.choices or []):
+        out += "%s%s) %s\n" % (
+            chr(97 + i),
+            '.true' if x['correct'] else '',
+            x['text'].replace("\n", "")
+        )
+    for (i, x) in enumerate(obj.finalchoices or []):
+        out += "x%s%s) %s\n" % (
+            chr(97 + i),
+            '.true' if x['correct'] else '',
+            x['text'].replace("\n", "")
+        )
+    if obj.explanation:
+        out += "\n%Explanation\n"
+        out += obj.explanation.raw + "\n"
+
+    if statsObj:
+        out += "%%r %d\n" % statsObj['timesCorrect']
+        out += "%%n %d\n" % statsObj['timesAnswered']
+    else:
+        if obj.timescorrect:
+            out += "%%r %d\n" % obj.timescorrect
+        if obj.timesanswered:
+            out += "%%n %d\n" % obj.timesanswered
+    return out
+
+def questionTemplateToTex(obj, statsObj):
+    out = ""
+    out += "%%ID %s\n" % obj.id
+    out += "%%title %s\n" % obj.title
+    out += "%%format %s\n" % obj.portal_type
+    if obj.hints:
+        out += "\n%hints\n"
+        out += obj.hints.raw + "\n"
+    if obj.example_text:
+        out += "\n%example_text\n"
+        out += obj.example_text.raw + "\n"
+    for (i, x) in enumerate(obj.example_choices or []):
+        out += "%s%s) %s\n" % (
+            chr(97 + i),
+            '.true' if x['correct'] else '',
+            x['text'].replace("\n", "")
+        )
+    if obj.example_explanation:
+        out += "\n%example_explanation\n"
+        out += obj.example_explanation.raw + "\n"
+
+    if statsObj:
+        out += "%%r %d\n" % statsObj['timesCorrect']
+        out += "%%n %d\n" % statsObj['timesAnswered']
     return out

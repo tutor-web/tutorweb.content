@@ -380,6 +380,7 @@ class ObjectsToTexTest(unittest.TestCase):
 
 class FakeQn:
     id = None
+    portal_type = 'tw_latexquestion'
     title = None
     text = None
     explanation = None
