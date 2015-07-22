@@ -12,7 +12,7 @@
       tal:content="string:${context/title} (${context/id})">title (code)</h1>
 </metal:content-title>
 
-<metal:content-core fill-slot="content-core">
+<metal:content-core fill-slot="content-core" tal:define="listing view/lectureListing">
 
   <ul class="tw-actions">
     <tal:t tal:condition="python:request['URL'].startswith('http://mobile.')">
@@ -22,8 +22,10 @@
     </tal:t>
     <tal:t tal:condition="python:not(request['URL'].startswith('http://mobile.'))">
       <tal:t tal:condition="not:context/portal_membership/isAnonymousUser">
+      <tal:t tal:condition="python:len(listing) > 0">
         <li><a tal:attributes="href view/quizUrl">
-          Take a drill on this tutorial</a></li>
+          Take a drill on <span tal:content="python:listing[0]['title']"></span></a></li>
+      </tal:t>
       </tal:t>
       <tal:t tal:condition="context/portal_membership/isAnonymousUser">
         <li>If you would like to take a drill, please register or log-in in the top-right hand corner first</li>
@@ -48,7 +50,7 @@
       </tal:t>
 
       <table class="listing"
-             tal:define="listing view/lectureListing;
+             tal:define="
                          subitems python:sum(item['slides'] + item['questions'] for item in listing)">
         <thead>
           <th>Code</th>
