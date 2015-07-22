@@ -71,10 +71,7 @@ def readQuestions(file):
     )
     item = initialitem.copy()
     for line in (l.strip().decode('utf8') for l in file):
-        if not line:
-            pass
-
-        elif line == '%===':
+        if line == '%===':
             # Separator, return this and move on to next item
             if item.get('id', None):
                 yield finalise(item)
@@ -160,7 +157,7 @@ def readQuestions(file):
                 # Line that needs appending to
                 if item['_deffield'] not in item:
                     item[item['_deffield']] = ""
-                item[item['_deffield']] = (item[item['_deffield']] + "\n" + line).strip()
+                item[item['_deffield']] = (item[item['_deffield']] + "\n" + line).lstrip()
 
     if item.get('id', None):
         # Return final item too

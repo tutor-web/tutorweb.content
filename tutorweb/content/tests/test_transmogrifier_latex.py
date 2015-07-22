@@ -33,22 +33,22 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
         self.assertEqual(qns, [
             {
                 '_type': 'tw_latexquestion',
-                'id': 'q03',
+                'id': u'q03',
                 'title': 'Sum',
                 'processLatex': True,
                 'text': {
                     'contenttype': 'text/x-tex',
-                    'data': 'Find the values of $x$ and $y$ such that the sum of the first  20',
+                    'data': u'Find the values of $x$ and $y$ such that the sum of the first  20\n',
                     'encoding': 'utf-8',
                 },
                 'choices': [
-                    {'correct': True, 'text': '$x=20$ and $y=190$.'},
-                    {'correct': False, 'text': '$x = 190$ and $y = 20$.'},
-                    {'correct': False, 'text': '$x = 20$ and $y = 20$.'}
+                    {'correct': True, 'text': u'$x=20$ and $y=190$.'},
+                    {'correct': False, 'text': u'$x = 190$ and $y = 20$.'},
+                    {'correct': False, 'text': u'$x = 20$ and $y = 20$.'}
                 ],
                 'explanation': {
                     'contenttype': 'text/x-tex',
-                    'data': 'We use that $\\log(a^x b^y) = x \\log a + y \\log b$. By rules for logarithm we get the sum',
+                    'data': u'We use that $\\log(a^x b^y) = x \\log a + y \\log b$. By rules for logarithm we get the sum\n',
                     'encoding': 'utf-8',
                 },
             },
@@ -146,7 +146,7 @@ c)  $N(2000)=20\cdot (\frac12 + e^{\frac{200}{573}})$.
         self.assertEqual(len(qns), 1)
         self.assertEqual(qns[0]['title'], u'Question')
         self.assertEqual(qns[0]['id'], u'question-053')
-        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.')
+        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.\n')
         self.assertEqual([x['text'] for x in qns[0]['choices']], [
             """$N(2000)=20\cdot 2^{-\frac{200}{573}}$.""",
             """$N(2000)=20\cdot (2 + e^{-\frac{200}{573}})$.""",
@@ -177,9 +177,9 @@ Don't catch on quickly, do you?
         self.assertEqual(len(qns), 1)
         self.assertEqual(qns[0]['title'], u'Question')
         self.assertEqual(qns[0]['id'], u'question-053')
-        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.')
+        self.assertEqual(qns[0]['text']['data'], u'Helmingunartími $C^{14}$ er 5730 ár.\n')
         self.assertEqual(qns[0]['text']['contenttype'], u'text/x-web-intelligent')
-        self.assertEqual(qns[0]['explanation']['data'], u"Don't catch on quickly, do you?")
+        self.assertEqual(qns[0]['explanation']['data'], u"Don't catch on quickly, do you?\n")
         self.assertEqual(qns[0]['explanation']['contenttype'], u'text/x-web-intelligent')
 
     def test_anyOfTheAbove(self):
@@ -293,6 +293,8 @@ e) Mauve
             out = orig.copy()
             out['_type'] = "tw_latexquestion"
             out['processLatex'] = True
+            out['text'] = out['text'].copy()
+            out['text']['data'] += "\n"
             return out
 
         qnHash = dict(
@@ -301,8 +303,8 @@ e) Mauve
             text=dict(data=u"Maybe you should bust a move?", contenttype='text/x-tex', encoding='utf-8'),
             explanation=dict(data=u"Shouldn't have played", contenttype='text/x-tex', encoding='utf-8'),
             choices=[
-                dict(text='woo', correct=True),
-                dict(text='aww', correct=False),
+                dict(text=u'woo', correct=True),
+                dict(text=u'aww', correct=False),
             ],
             timesanswered=44,
             timescorrect=4,

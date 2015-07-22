@@ -272,7 +272,7 @@ A man walks into a lamp post
         # Question still has answered / correct values
         qn = self.getObject('dept1/tut1/lec2/q88')
         self.assertEqual(qn.title, u'Imported question')
-        self.assertEqual(qn.text.raw, u'A man walks into a lamp post')
+        self.assertEqual(qn.text.raw, u'A man walks into a lamp post\n')
         self.assertEqual(qn.timesanswered, 19)
         self.assertEqual(qn.timescorrect, 22)
 
@@ -290,7 +290,7 @@ A man walks into a tree
         # Question still has answered / correct values
         qn = self.getObject('dept1/tut1/lec2/q88')
         self.assertEqual(qn.title, u'Imported question')
-        self.assertEqual(qn.text.raw, u'A man walks into a tree')
+        self.assertEqual(qn.text.raw, u'A man walks into a tree\n')
         self.assertEqual(qn.timesanswered, 999)
         self.assertEqual(qn.timescorrect, 990)
 

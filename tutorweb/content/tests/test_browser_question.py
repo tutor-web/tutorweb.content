@@ -162,18 +162,18 @@ Stak sem er í annaðhvort $A$ eða $B$ og er í $C$ en
                         u'<div class="parse-as-tex">$-\x0crac{19}{4}$</div>',
                         u'<div class="parse-as-tex">$\x0crac{19}{4}$</div>'],
             'shuffle': [0, 1, 2, 3],
-            'text': u'<div class="parse-as-tex">Einangri\xf0 og finni\xf0 \xfeannig gildi $x$ \xed eftirfarandi j\xf6fnu. Merki\xf0 vi\xf0 \xfeann m\xf6guleika sem best \xe1 vi\xf0.<br />$$\x0crac{7}{4x-8}-8=3$$</div>',
+            'text': u'<div class="parse-as-tex">Einangri\xf0 og finni\xf0 \xfeannig gildi $x$ \xed eftirfarandi j\xf6fnu. Merki\xf0 vi\xf0 \xfeann m\xf6guleika sem best \xe1 vi\xf0.<br />$$\x0crac{7}{4x-8}-8=3$$<br /></div>',
             'title': u'Einf\xf6ld Umr\xf6\xf0un',
         })
         self.assertEqual(view.asDict(data=dict(question_id=['Ag10q16'])), {
             '_type': 'multichoice',
             'answer': {'correct': [0],
-                       'explanation': u'<div class="parse-as-tex">Stak sem er \xed anna\xf0hvort $A$ e\xf0a $B$ og er \xed $C$ en</div>'},
+                       'explanation': u'<div class="parse-as-tex">Stak sem er \xed anna\xf0hvort $A$ e\xf0a $B$ og er \xed $C$ en<br /></div>'},
             'choices': [u'<div class="parse-as-tex">$\\left((A \\cup B) \\cap C \right) \x08ackslash B \\subset A \\cap C$</div>',
                         u'<div class="parse-as-tex">$\\left((A \\cup B) \\cap C \right) \x08ackslash B =  \\emptyset $</div>',
                         u'<div class="parse-as-tex">$\\left((A \\cup B) \\cap C \right) \x08ackslash B \\supset  A \\cap C$</div>'],
             'shuffle': [0, 1, 2],
-            'text': u'<div class="parse-as-tex">Hvert af eftirt\xf6ldu er r\xe9tt fyrir \xf6ll mengi $A,B,C$?</div>' +
+            'text': u'<div class="parse-as-tex">Hvert af eftirt\xf6ldu er r\xe9tt fyrir \xf6ll mengi $A,B,C$?<br /></div>' +
                     u'<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
             'title': u'T\xe1knm\xe1l mengjafr\xe6\xf0innar - mengi',
         })
