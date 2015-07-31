@@ -48,6 +48,7 @@ setup(
     extras_require={
         'test': [
             'plone.app.testing',
+            'Products.CMFPlacefulWorkflow',  # Missing dependency somewhere
         ],
     },
     entry_points="""

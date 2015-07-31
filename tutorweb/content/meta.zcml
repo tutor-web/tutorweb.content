@@ -3,6 +3,5 @@
 
     <include package="plone.app.dexterity" file="meta.zcml" />
     <include package="collective.transmogrifier" file="meta.zcml" />
-    <include package="transmogrify.dexterity" file="meta.zcml" />
 
 </configure>

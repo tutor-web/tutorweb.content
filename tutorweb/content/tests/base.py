@@ -16,7 +16,7 @@ from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles, login, logout
 from plone.app.textfield.value import RichTextValue
-from plone.testing.z2 import Browser
+from plone.testing.z2 import Browser, installProduct
 from zope.configuration import xmlconfig
 
 from Products.CMFCore.utils import getToolByName
@@ -43,6 +43,9 @@ class TestFixture(PloneSandboxLayer):
         xmlconfig.includeOverrides(configurationContext, 'overrides.zcml', tutorweb.content)
         xmlconfig.include(configurationContext, 'configure.zcml', collective.alias)
         configurationContext.execute_actions()
+
+        # https://github.com/plone/plone.app.event/issues/81#issuecomment-23930996
+        installProduct(app, 'Products.DateRecurringIndex')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'tutorweb.content:default')
