@@ -196,7 +196,7 @@ class TexGenerator(object):
                 '\\begin{document}',
             ])
         else:
-            self.writeTeX(preamble)
+            self.writeTeX([preamble])
 
     def texPostamble(self, tutorial):
         if tutorial.pdf_postamble:
