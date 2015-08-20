@@ -34,7 +34,7 @@ class TexWriter(object):
         p = subprocess.Popen(
             [
                 TIMEOUT_BINARY, TIMEOUT,
-                RUBBER_BINARY, '--inplace', '--pdf', '-Wall', '--maxerr=100', '--force',
+                RUBBER_BINARY, '--inplace', '--ps', '-ops2pdf', '-Wall', '--maxerr=100', '--force',
                 os.path.join(self.dir, 'exploded.tex'),
             ],
             stdin=subprocess.PIPE,
