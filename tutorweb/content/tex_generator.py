@@ -126,26 +126,15 @@ def main():
 class TexGenerator(object):
     def __init__(self, tutorial):
         """Produce TeX based on tutorial, return a list of file paths"""
-        def children(obj, portal_type):
-            # TODO: Should filter by workflow state
-            return (
-                l.getObject()
-                for l
-                in obj.restrictedTraverse('@@folderListing')(
-                    Type=portal_type,
-                    sort_on="id",
-                )
-            )
-
         self._tex = ""
 
         self.texPreamble(tutorial)
         self.texTutorialHeader(tutorial)
 
-        for lecture in children(tutorial, 'Lecture'):
+        for lecture in self.children(tutorial):
             self.texLectureHeader(lecture)
 
-            for slide in children(lecture, 'Slide'):
+            for slide in self.children(lecture):
                 self.texSlideHeader(slide)
                 for section in slide.sections:
                     self.texSlideSection(section)
@@ -155,6 +144,20 @@ class TexGenerator(object):
 
         self.texTutorialFooter(tutorial)
         self.texPostamble(tutorial)
+
+    def children(self, obj):
+        # TODO: Should filter by workflow state
+        return (
+            l.getObject()
+            for l
+            in obj.restrictedTraverse('@@folderListing')(
+                Type=dict(
+                    Tutorial='Lecture',
+                    Lecture='Slide',
+                )[obj.Type()],
+                sort_on="id",
+            )
+        )
 
     def tex(self):
         return self._tex
