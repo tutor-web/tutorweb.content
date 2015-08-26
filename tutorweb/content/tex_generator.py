@@ -84,9 +84,43 @@ class TexWriter(object):
                 tex,
             ))
 
-    def close(self):
+    def close(self, keepOutput=False):
         """Get rid of temporary directory"""
-        shutil.rmtree(self.dir)
+        if not keepOutput:
+            shutil.rmtree(self.dir)
+
+
+def main():
+    import argparse
+    import shutil
+    import sys
+
+    parser = argparse.ArgumentParser(description='Turn TeX into PDF')
+    parser.add_argument(
+        '--keep-output',
+        action="store_true",
+        default=False,
+        help='Keep temporary directory with intermediate files')
+    parser.add_argument(
+        'filename',
+        type=str,
+        help='Name of TeX file')
+    args = parser.parse_args()
+
+    targetFileName = 'output.pdf'
+    tw = TexWriter()
+    print "Working in tempdir %s" % tw.dir
+    with open(args.filename) as f:
+        print tw.createPDF(f.read())
+
+    pdfOut = tw.outputPdf()
+    if pdfOut is None:
+        print "No PDF generated"
+        return 1
+    shutil.copy(pdfOut, targetFileName)
+    print "Saved %s" % targetFileName
+    tw.close(args.keep_output)
+    return 0
 
 
 class TexGenerator(object):

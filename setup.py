@@ -54,6 +54,8 @@ setup(
     entry_points="""
         [z3c.autoinclude.plugin]
         target = plone
+        [console_scripts]
+        create_pdf = tutorweb.content.tex_generator:main
     """,
     include_package_data=True,
     zip_safe=False,
