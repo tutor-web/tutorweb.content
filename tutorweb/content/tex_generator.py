@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 
+from Acquisition import aq_parent
 
 from Products.PortalTransforms.data import datastream
 from Products.CMFCore.utils import getToolByName
@@ -368,3 +369,157 @@ class TexGenerator(object):
         # Other section's text is regular text
         if section.title != "":
             self.writeTeX([section.text])
+
+
+class TexSlideGenerator(TexGenerator):
+    def __init__(self, lecture):
+        """Produce TeX slides"""
+        self._tex = ""
+
+        self.texPreamble(lecture)
+        self.texLectureHeader(lecture)
+
+        for slide in self.children(lecture):
+            self.texSlideHeader(slide)
+            for section in slide.sections:
+                self.texSlideSection(section)
+            self.texSlideFooter(slide)
+
+        self.texLectureFooter(lecture)
+        self.texPostamble(lecture)
+
+    ############### TeX File header / footer
+
+    def texPreamble(self, obj):
+        tutorial = aq_parent(obj)
+        self.writeTeX([
+            '\\documentclass[%\n]{beamer}',
+            '\\usepackage{graphics,amsmath,amsfonts,amssymb}',
+            '\\usepackage[T1]{fontenc}',
+            '\\usepackage[numbers, sort&compress]{natbib}',
+            '\\usepackage[utf8]{inputenc}',
+            '\\usepackage{float, rotating, subfigure}',
+            '\\usepackage[skip=2pt]{caption}',
+            '\\usepackage{setspace}',
+            '\\usepackage{etex}',
+            '\\usepackage{wrapfig}',
+            '\\usepackage{pictexwd}',
+            '\\newcommand{\\bs}{\\boldsymbol}',
+            '\\newcommand{\\bi}{\\begin{itemize}\\item}',
+            '\\newcommand{\\ei}{\\end{itemize}}',
+            '\\newcommand{\\eq}[1]{\\begin{equation} #1 \\end{equation}}',
+            '\\newcommand{\\ea}[1]{\\begin{eqnarray} #1 \\end{eqnarray}}',
+            '\\newcommand{\\vs}{\\vspace{2mm}}',
+            '\\makeatletter',
+            '\\makeatother',
+            '\\usetheme{CambridgeUS}',
+            '\\usecolortheme{dolphin}',
+            '\\setbeamerfont{caption name}{size=\scriptsize}',
+            '\\title{' + obj.Title() + '}',
+            '\\subtitle{%s\n%s\n}' % (tutorial.id, tutorial.Title()),
+            '\\author{{%s}}' % (tutorial.author or 'No author set yet'),
+
+            '\\begin{document}'+'\n',
+            '\\maketitle' + '\n',
+        ])
+
+    def texPostamble(self, obj):
+        self.writeTeX([
+            '\\end{document}',
+        ])
+
+    ############### TeX Slides
+
+    def texSlideHeader(self, obj):
+        self.writeTeX([
+            '%% Slide ' + obj.absolute_url(),
+            '\\begin{frame}[fragile]',
+            '\\frametitle{' + obj.Title() +'}',
+        ])
+
+        mainSection = None
+        explSection = None
+        for section in obj.sections:
+            if section.title == "":
+                mainSection = section
+            elif section.title == 'Explanation':
+                explSection = section
+
+        self.slideInfo = dict(
+            mainText=(mainSection and mainSection.text and mainSection.text.raw),
+            mainImage=(mainSection and mainSection.image_code and mainSection.image_code.raw),
+            explText=(explSection and explSection.text and explSection.text.raw),
+            explImage=(explSection and explSection.image_code and explSection.image_code.raw),
+        )
+
+    def texSlideFooter(self, obj):
+        self.writeTeX([
+            '\\end{frame}',
+        ])
+
+    def texSlideSection(self, obj):
+        if obj.title == "":  # Main section
+            isExpl = False
+        elif obj.title == 'Explanation':
+            isExpl = True
+        else:
+            # Ignore other sections
+            return
+
+        haveText = (obj.text and obj.text.raw)
+        haveImage = (obj.image_code and obj.image_code.raw)
+
+        if self.slideInfo['mainText'] and self.slideInfo['explText']:
+            imageSize = 5
+        elif self.slideInfo['mainText'] and not self.slideInfo['explText']:
+            imageSize = 6
+        elif not self.slideInfo['mainText'] and self.slideInfo['explText']:
+            imageSize = 7
+        else:
+            imageSize = 9
+        if self.slideInfo['explImage'] or isExpl:
+            imageSize -= 1
+        imageSize -= 1
+        imageSize = str(imageSize)
+
+        self.writeTeX([
+            '%% Section ' + (obj.title or "main"),
+            '\\begin{tabular}{ll}',
+        ])
+
+        # Slide text
+        if haveText:
+            self.writeTeX([
+                '\\begin{minipage}{' + ('0.58' if haveImage else '0.97') + '\\textwidth}',
+                '{\\scriptsize' if isExpl else '',
+                '\\vfill' if isExpl else '',
+                obj.text,
+                '}' if isExpl else '',
+                '\\end{minipage}',
+            ])
+
+        # Slide image
+        if haveImage:
+            tf = ScriptToTeX()
+            data = tf.convert(
+                obj.image_code.raw,
+                datastream("scriptToImage"),
+                mimetype='text/x-uri' if obj.image_code.mimeType == 'text/x-url' else obj.image_code.mimeType)
+
+            self.writeTeX([
+                '\\hspace{0.5mm}',
+                '\\begin{minipage}{' + ('0.38' if haveText else '0.97') + '\\textwidth}',
+                '\\begin{figure}',
+                '\\resizebox{' + imageSize + 'cm}{!}{',
+                '\\rotatebox{90}{',
+                data.getData(),
+                '}',
+                '}',
+                '\\caption{\scriptsize ' + obj.image_caption + '}' if obj.image_caption else '',
+                '\\end{figure}',
+                '\\end{minipage}',
+            ])
+
+        self.writeTeX([
+            '\\end{tabular}',
+        ])
