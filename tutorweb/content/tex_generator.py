@@ -440,9 +440,9 @@ class TexSlideGenerator(TexGenerator):
         mainSection = None
         explSection = None
         for section in obj.sections:
-            if section.title == "":
+            if not section.title:
                 mainSection = section
-            elif section.title == 'Explanation':
+            elif section.title.strip().lower() == 'explanation':
                 explSection = section
 
         self.slideInfo = dict(
@@ -458,9 +458,9 @@ class TexSlideGenerator(TexGenerator):
         ])
 
     def texSlideSection(self, obj):
-        if obj.title == "":  # Main section
+        if not obj.title:  # Main section
             isExpl = False
-        elif obj.title == 'Explanation':
+        elif obj.title.strip().lower() == 'explanation':
             isExpl = True
         else:
             # Ignore other sections
