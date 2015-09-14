@@ -179,6 +179,13 @@ class TexGenerator(object):
             if l is not None:
                 self._tex += l + "\n"
 
+    def slideSectionType(self, obj):
+        if not obj.title:  # Main section
+            return 'main'
+        if obj.title.strip().lower() == 'explanation':
+            return 'explanation'
+        return 'other'
+
     ############### TeX File header / footer
 
     def texPreamble(self, tutorial):
@@ -319,8 +326,12 @@ class TexGenerator(object):
         self.writeTeX([""])
 
     def texSlideSection(self, section):
+        type = self.slideSectionType(section)
         # Neither image or text, ignore section
         if not section.image_code and not section.text:
+            return
+        if type == 'explanation':
+            # Explanations are only useful as footnotes to slides
             return
 
         if section.title:
@@ -440,19 +451,15 @@ class TexSlideGenerator(TexGenerator):
             '\\frametitle{' + obj.Title() +'}',
         ])
 
-        mainSection = None
-        explSection = None
-        for section in obj.sections:
-            if not section.title:
-                mainSection = section
-            elif section.title.strip().lower() == 'explanation':
-                explSection = section
-
+        sect = dict(
+            (self.slideSectionType(obj), section)
+            for section in obj.sections
+        )
         self.slideInfo = dict(
-            mainText=(mainSection and mainSection.text and mainSection.text.raw),
-            mainImage=(mainSection and mainSection.image_code and mainSection.image_code.raw),
-            explText=(explSection and explSection.text and explSection.text.raw),
-            explImage=(explSection and explSection.image_code and explSection.image_code.raw),
+            mainText=(sect.get('main', None) and sect['main'].text and sect['main'].text.raw),
+            mainImage=(sect.get('main', None) and sect['main'].image_code and mainSection.image_code.raw),
+            explText=(sect.get('explanation', None) and sect['explanation'].text and sect['explanation'].text.raw),
+            explImage=(sect.get('explanation', None) and sect['explanation'].image_code and sect['explanation'].image_code.raw),
         )
 
     def texSlideFooter(self, obj):
@@ -461,9 +468,10 @@ class TexSlideGenerator(TexGenerator):
         ])
 
     def texSlideSection(self, obj):
-        if not obj.title:  # Main section
+        type = self.slideSectionType(obj)
+        if type == 'main':
             isExpl = False
-        elif obj.title.strip().lower() == 'explanation':
+        elif type == 'explanation':
             isExpl = True
         else:
             # Ignore other sections
