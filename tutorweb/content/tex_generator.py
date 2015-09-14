@@ -76,7 +76,7 @@ class TexWriter(object):
 
             with open(outFile, 'w') as f:
                 f.write(binascii.a2b_base64(m.group(2)))
-            return '\\includegraphics{%s}' % os.path.basename(os.path.splitext(outFile)[0])
+            return '\\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{%s}' % os.path.basename(os.path.splitext(outFile)[0])
 
         with open(os.path.join(self.dir, 'exploded.tex'), 'w') as outputTeX:
             outputTeX.write(re.sub(
@@ -334,54 +334,59 @@ class TexGenerator(object):
             # Explanations are only useful as footnotes to slides
             return
 
-        if section.title:
+        if type == 'main':
+            # Write out approximation to slide
+
+            self.writeTeX(['\\fbox{']);
+
+            # Main section text goes into a slide minipage
+            if section.text and section.text.raw:
+                self.writeTeX([
+                    '\\begin{minipage}{' + ('0.58' if section.image_code else '0.97') + '\\textwidth}',
+                    section.text,
+                    '\\end{minipage}',
+                ])
+
+            # If there is an image, write it into a minipage
+            if section.image_code and section.image_code.raw:
+                tf = ScriptToTeX()
+                data = tf.convert(
+                    section.image_code.raw,
+                    datastream("scriptToImage"),
+                    mimetype='text/x-uri' if section.image_code.mimeType == 'text/x-url' else section.image_code.mimeType)
+
+                self.writeTeX([
+                    '\\hspace{0.5mm}',
+                    '\\begin{minipage}{' + ('0.38' if type != 'main' or section.text else '0.97') + '\\textwidth}',
+                    data.getData(),
+                    '\scriptsize ' + section.image_caption if section.image_caption else '',
+                    '\\end{minipage}',
+                ])
+
+            self.writeTeX(['}']);
+
+        else:
             self.writeTeX(['\\subsubsection{' + section.title + '}'])
 
-        figureContent = []
+            # Write out floating image
+            if section.image_code and section.image_code.raw:
+                tf = ScriptToTeX()
+                data = tf.convert(
+                    section.image_code.raw,
+                    datastream("scriptToImage"),
+                    mimetype='text/x-uri' if section.image_code.mimeType == 'text/x-url' else section.image_code.mimeType)
 
-        # If there is an image, write it into a minipage
-        if section.image_code and section.image_code.raw:
-            tf = ScriptToTeX()
-            data = tf.convert(
-                section.image_code.raw,
-                datastream("scriptToImage"),
-                mimetype='text/x-uri' if section.image_code.mimeType == 'text/x-url' else section.image_code.mimeType)
+                self.writeTeX([
+                    '\\begin{figure}[h]',
+                    '\\hspace{0.5mm}',
+                    '\\begin{minipage}{0.48\\textwidth}',
+                    data.getData(),
+                    '\\caption{%s}' % section.image_caption if section.image_caption else '',
+                    '\\end{minipage}',
+                    '\\end{figure}',
+                ])
 
-            figureContent.extend([
-                '\\begin{minipage}{%s\\textwidth}' % ('0.48' if section.title != "" or section.text else '0.97'),
-                '\\resizebox{7cm}{!}{',
-                data.getData(),
-                '}',
-            ])
-            if section.image_caption:
-                figureContent.extend(['\\caption{%s}' % section.image_caption])
-            figureContent.extend([
-                '\\end{minipage}',
-            ])
-
-        # Main section text goes into a slide minipage
-        if type == 'main' and section.text and section.text.raw:
-            figureContent.extend([
-                '\\begin{minipage}{%s\\textwidth}' % ('0.48' if section.image_code else '0.97'),
-                '\\tiny\\fbox{',
-                '\\parbox[c]{3truecm}{',
-                section.text,
-                '}}',
-                '\\end{minipage}',
-            ])
-
-        # Write out any figure content
-        if figureContent:
-            self.writeTeX([
-                '\\begin{figure}[h]',
-                '\\begin{tabular}{ll}',
-            ] + figureContent + [
-                '\\end{tabular}',
-                '\\end{figure}',
-            ])
-
-        # Other section's text is regular text
-        if type != 'main':
+            # Rest of text goes in verbatim
             self.writeTeX([section.text])
 
 
@@ -521,9 +526,7 @@ class TexSlideGenerator(TexGenerator):
                 '\\hspace{0.5mm}',
                 '\\begin{minipage}{' + ('0.38' if haveText else '0.97') + '\\textwidth}',
                 '\\begin{figure}',
-                '\\resizebox{' + imageSize + 'cm}{!}{',
                 data.getData(),
-                '}',
                 '\\caption{\scriptsize ' + obj.image_caption + '}' if obj.image_caption else '',
                 '\\end{figure}',
                 '\\end{minipage}',
