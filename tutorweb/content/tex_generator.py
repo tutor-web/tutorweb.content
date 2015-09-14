@@ -323,6 +323,9 @@ class TexGenerator(object):
         if not section.image_code and not section.text:
             return
 
+        if section.title:
+            self.writeTeX(['\\subsubsection{' + section.title + '}'])
+
         figureContent = []
 
         # If there is an image, write it into a minipage
