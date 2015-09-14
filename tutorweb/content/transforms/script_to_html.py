@@ -36,7 +36,7 @@ class ScriptToMarkup(object):
     def _rConvert(self, script):
         tmpFile = tempfile.mktemp()
         preamble = {
-            'text/x-tex': 'postscript(file="%s")\n' % tmpFile,
+            'text/x-tex': 'postscript(file="%s", paper="special", width=10, height=10, horizontal=FALSE)\n' % tmpFile,
             'text/html': 'svg("%s", width= 4, height=4, onefile = TRUE, bg = "transparent")\n' % tmpFile,
         }
 
@@ -140,13 +140,13 @@ set terminal svg \
             if self.output == "text/html":
                 content = '<img src="%s" />' % content
             elif self.output == "text/x-tex":
-                content = "\\rotatebox{-90}{\\includegraphicsdata{%s}}" % content
+                content = "\\includegraphicsdata{%s}" % content
 
         elif content.strip().endswith("%EOF") and "%!PS-Adobe" in content:
             if self.output == "text/html":
                 raise NotImplmented
             elif self.output == "text/x-tex":
-                content = "\\rotatebox{-90}{\\includegraphicsdata{%s}}" % ":".join([
+                content = "\\includegraphicsdata{%s}" % ":".join([
                     "data",
                     "application/postscript",
                     "base64,%s" % content.encode("base64").replace("\n", ""),
