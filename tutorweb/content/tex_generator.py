@@ -360,7 +360,7 @@ class TexGenerator(object):
             ])
 
         # Main section text goes into a slide minipage
-        if section.title == "" and section.text and section.text.raw:
+        if type == 'main' and section.text and section.text.raw:
             figureContent.extend([
                 '\\begin{minipage}{%s\\textwidth}' % ('0.48' if section.image_code else '0.97'),
                 '\\tiny\\fbox{',
@@ -381,7 +381,7 @@ class TexGenerator(object):
             ])
 
         # Other section's text is regular text
-        if section.title != "":
+        if type != 'main':
             self.writeTeX([section.text])
 
 
