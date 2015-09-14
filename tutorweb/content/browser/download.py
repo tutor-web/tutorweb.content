@@ -1,3 +1,5 @@
+import mimetypes
+
 from zope.publisher.interfaces import NotFound
 
 from plone.namedfile.utils import set_headers, stream_data
@@ -15,7 +17,15 @@ class DownloadView(BrowserView):
         if file is None:
             raise NotFound(self.context, fieldName, self.request)
 
-        set_headers(file, self.request.response, filename=file.filename)
+        if file.filename:
+            fileName = file.fileName
+        else:
+            fileName = ''.join([
+                self.context.id, '-', fieldName,
+                mimetypes.guess_extension(file.contentType) or '.dat',
+            ])
+
+        set_headers(file, self.request.response, filename=fileName)
         return stream_data(file)
 
 
