@@ -83,7 +83,7 @@ set terminal svg \
             resp = urllib2.urlopen(urllib2.Request(script))
             return self._formatOutput(":".join([
                 "data",
-                resp.contentType(),
+                resp.info().type,
                 "base64,%s" % resp.read().encode("base64").replace("\n", ""),
             ]))
 
