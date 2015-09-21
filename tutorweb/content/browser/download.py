@@ -17,8 +17,8 @@ class DownloadView(BrowserView):
         if file is None:
             raise NotFound(self.context, fieldName, self.request)
 
-        if file.filename:
-            fileName = file.fileName
+        if getattr(file, 'filename', False):
+            fileName = file.filename
         else:
             fileName = ''.join([
                 self.context.id, '-', fieldName,
