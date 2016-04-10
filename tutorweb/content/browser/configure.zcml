@@ -18,6 +18,11 @@
       class=".question.QuestionPackStruct"
       permission="cmf.ManagePortal"
       /><!--NB: Regular users should not see these, they'll go via an allocation -->
+    <browser:page name="view"
+      for="tutorweb.content.schema.IQuestion"
+      permission="zope2.View"
+      template="js_preview.pt"
+      />
 
     <browser:page name="tex"
       for="tutorweb.content.schema.IQuestion"
@@ -106,6 +111,11 @@
       template="tw_class_bulk_add_student.pt"
       />
 
+    <browser:page name="view"
+      for="tutorweb.content.schema.ISlide"
+      permission="zope2.View"
+      template="js_preview.pt"
+      />
     <browser:page name="slide-html"
       for="tutorweb.content.schema.ISlide"
       permission="zope2.View"

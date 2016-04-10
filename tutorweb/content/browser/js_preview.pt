@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="tutorweb.content">
+<body>
+
+<metal:content-core fill-slot="content-core">
+
+<iframe src="#"
+    tal:define="
+        type python:'slide' if context.Type() == 'Slide' else 'question';
+        data_view  python:'slide-html' if context.Type() == 'Slide' else 'data';"
+    tal:attributes="src string:${portal_state/portal_url}/++resource++tutorweb.quiz/preview.html?type=${type}&url=${context/absolute_url}/@@${data_view}"
+    style="width: 100%;height: 900px"></iframe>
+
+</metal:content-core>
+
+</body>
+</html>
