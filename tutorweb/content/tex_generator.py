@@ -189,7 +189,7 @@ class TexGenerator(object):
     ############### TeX File header / footer
 
     def texPreamble(self, tutorial):
-        preamble = tutorial.pdf_preamble or ""
+        preamble = getattr(tutorial, 'pdf_preamble', "") or ""
         if len(preamble) == 0:
             self.writeTeX([
                 '\\documentclass[titlepage]{article}',
@@ -244,7 +244,7 @@ class TexGenerator(object):
             self.writeTeX([preamble])
 
     def texPostamble(self, tutorial):
-        if tutorial.pdf_postamble:
+        if getattr(tutorial, 'pdf_postamble', ''):
             self.writeTeX([tutorial.pdf_postamble])
         else:
             self.writeTeX(['\\end{document}'])
