@@ -18,9 +18,11 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
              'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec1/quizdb-sync',
              'pdf': None, 'questions': 2, 'slides': 0},
             {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
              'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec2/quizdb-sync',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -45,9 +47,11 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
              'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec1/quizdb-sync',
              'pdf': None, 'questions': 4, 'slides': 0},
             {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
              'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec2/quizdb-sync',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -67,12 +71,15 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(self.getView().lectureListing(), [
             {'id': 'lec0', 'title': 'ZZUnittest D1 T1 L0',
              'url': 'http://nohost/plone/dept1/tut1/lec0',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec0/quizdb-sync',
              'pdf': None, 'questions': 0, 'slides': 0},
             {'id': 'lec1', 'title': 'Unittest D1 T1 L1',
              'url': 'http://nohost/plone/dept1/tut1/lec1',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec1/quizdb-sync',
              'pdf': None, 'questions': 2, 'slides': 0},
             {'id': 'lec2', 'title': 'Unittest D1 T1 L2',
              'url': 'http://nohost/plone/dept1/tut1/lec2',
+             'sync_url': 'http://nohost/plone/dept1/tut1/lec2/quizdb-sync',
              'pdf': None, 'questions': 2, 'slides': 0},
         ])
 
@@ -190,17 +197,15 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut1/lec2'
         self.assertEquals(
             self.getView().quizUrl(),
-            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
+            "http://nohost/plone/++resource++tutorweb.quiz/quiz.html" +
             "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
-            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync",
         )
         # For the tutorial above it formulates a link to the first lecture
         self.path = 'dept1/tut1'
         self.assertEquals(
             self.getView().quizUrl(),
-            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
+            "http://nohost/plone/++resource++tutorweb.quiz/quiz.html" +
             "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync" +
-            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync",
         )
 
         # Create a new tutorial with no lectures, not going to be very
@@ -220,9 +225,8 @@ class ListingViewTest(IntegrationTestCase):
         self.path = 'dept1/tut2'
         self.assertEquals(
             self.getView().quizUrl(portal['dept1']['tut1']['lec2']),
-            "http://nohost/plone/++resource++tutorweb.quiz/load.html" +
-            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
-            "&tutUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Fquizdb-sync"
+            "http://nohost/plone/++resource++tutorweb.quiz/quiz.html" +
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync"
         )
 
     def test_partOfClass(self):

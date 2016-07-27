@@ -1,4 +1,5 @@
 from collections import defaultdict
+import re
 import urllib
 
 from AccessControl import getSecurityManager
@@ -44,6 +45,7 @@ class ListingView(BrowserView):
             contentCount = self.contentCount(o)
             out.append(dict(
                 url=o.absolute_url(),
+                sync_url=self.lectureObjToUrl(o),
                 id=o.id,
                 title=o.Title(),
                 slides=contentCount['Slide'],
@@ -138,6 +140,12 @@ class ListingView(BrowserView):
                 out[l.Type()] += 1
         return out
 
+
+    def lectureObjToUrl(self, lectureObj, view='quizdb-sync'):
+        """Given a plonePath to a lecture, return public URL"""
+        # TODO: Switch to absolute_url_path()
+        return re.sub(r'/?$', '/' + view, lectureObj.absolute_url())
+
     def quizUrl(self, obj=None):
         """Return URL to the quiz for specified object, or context"""
         portal_state = getMultiAdapter(
@@ -147,11 +155,10 @@ class ListingView(BrowserView):
         if obj is None:
             obj = self.context
         out = portal_state.portal_url()
-        out += "/++resource++tutorweb.quiz/load.html?"
+        out += "/++resource++tutorweb.quiz/quiz.html?"
         if obj.portal_type == 'tw_lecture':
             out += urllib.urlencode(dict(
-                tutUri=obj.aq_parent.absolute_url() + '/quizdb-sync',
-                lecUri=obj.absolute_url() + '/quizdb-sync',
+                lecUri=self.lectureObjToUrl(obj),
             ))
         elif obj.portal_type == 'tw_tutorial':
             # Start a quiz based on the first lecture
@@ -159,8 +166,7 @@ class ListingView(BrowserView):
                 # No lectures, so it's not going to be a very interesting drill
                 return '#'
             out += urllib.urlencode(dict(
-                tutUri=obj.absolute_url() + '/quizdb-sync',
-                lecUri=self.lectureListing()[0]['url'] + '/quizdb-sync',
+                lecUri=self.lectureListing()[0]['sync_url'],
             ))
         else:
             raise NotImplemented
