@@ -74,7 +74,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             _type='multichoice',
             title=u'qtd image question',
             text=self.doTransform('Here is some text with an image below')
-                + '<img src="%s" width="1" height="1" />' % encodeDataUri(imageContents, "image/png"),
+                + '<img class="mainfigure" src="%s" width="1" height="1" />' % encodeDataUri(imageContents, "image/png"),
             choices=[],
             shuffle=[],
             answer=dict(
@@ -96,7 +96,7 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             _type='multichoice',
             title=u'qtd image question',
             text=self.doTransform('Here is some text with SVG below')
-                + '<img src="%s" />' % encodeDataUri(imageContents, "image/svg"),
+                + '<img class="mainfigure" src="%s" />' % encodeDataUri(imageContents, "image/svg"),
             choices=[],
             shuffle=[],
             answer=dict(
