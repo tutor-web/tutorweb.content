@@ -74,7 +74,29 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             _type='multichoice',
             title=u'qtd image question',
             text=self.doTransform('Here is some text with an image below')
-                + '<img src="%s" width="1" height="1" />' % encodeDataUri(imageContents, "image/png"),
+                + '<img class="mainfigure" src="%s" width="1" height="1" />' % encodeDataUri(imageContents, "image/png"),
+            choices=[],
+            shuffle=[],
+            answer=dict(
+                correct=[],
+                explanation='',
+            )
+        ))
+
+        # SVGs don't have a width/height
+        imageContents = testSvg()
+        self.assertEqual(self.questionToDict(dict(
+            title="qtd image question",
+            text=self.rtv("Here is some text with SVG below"),
+            image=NamedBlobImage(
+                data=imageContents,
+                contentType='image/svg'
+            ),
+        )), dict(
+            _type='multichoice',
+            title=u'qtd image question',
+            text=self.doTransform('Here is some text with SVG below')
+                + '<img class="mainfigure" src="%s" />' % encodeDataUri(imageContents, "image/svg"),
             choices=[],
             shuffle=[],
             answer=dict(
@@ -177,3 +199,11 @@ Stak sem er í annaðhvort $A$ eða $B$ og er í $C$ en
                     u'<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />',
             'title': u'T\xe1knm\xe1l mengjafr\xe6\xf0innar - mengi',
         })
+
+
+def testSvg():
+    return """
+<svg height="210pt" width="500pt">
+  <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:nonzero;"/>
+</svg>
+    """

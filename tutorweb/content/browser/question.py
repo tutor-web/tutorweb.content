@@ -53,9 +53,12 @@ class BaseQuestionStruct(JSONBrowserView):
         if hasattr(f, 'output'):  # i.e. a RichTextField
             return f.output
         if hasattr(f, 'getImageSize'):  # i.e. a NamedBlobImage
-            return '<img src="%s" width="%d" height="%d" />' % ((
+            size = f.getImageSize()
+            if size[0] <= 0:
+                return '<img class="mainfigure" src="%s" />' % (encodeDataUri(f.data, f.contentType))
+            return '<img class="mainfigure" src="%s" width="%d" height="%d" />' % ((
                 encodeDataUri(f.data, f.contentType),
-            ) + f.getImageSize())
+            ) + size)
         raise ValueError("Cannot interpret %s" % f)
 
 
