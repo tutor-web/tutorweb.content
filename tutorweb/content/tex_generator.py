@@ -24,6 +24,13 @@ class TexWriter(object):
     def __init__(self):
         self.dir = tempfile.mkdtemp()
 
+    def addDataFile(self, name, stream, overwrite_existing=True):
+        if not(overwrite_existing) and os.path.exists(os.path.join(self.dir, name)):
+            return False
+        with open(os.path.join(self.dir, name), 'w') as f:
+            shutil.copyfileobj(stream, f)
+        return True
+
     def createPDF(self, tex):
         """Convert output into PDF"""
         for b in [TIMEOUT_BINARY, RUBBER_BINARY]:

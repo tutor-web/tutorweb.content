@@ -1,12 +1,24 @@
 from Products.Five.browser import BrowserView
 from plone.namedfile.file import NamedBlobFile
 
+from plone.namedfile.utils import stream_data
+
 from ..tex_generator import TexGenerator, TexSlideGenerator, TexWriter
 
 class TutorialUpdatePDFView(BrowserView):
     """Convert tutorials into PDF, update local copy"""
     def updateObj(self, context, generator):
         tw = TexWriter()
+
+        # NB: Using self.context since that's always the tutorial
+        for l in self.context.restrictedTraverse('@@folderListing')(Type="File", sort_on="id"):
+            df = l.getObject().file
+            if getattr(df, 'filename', False):
+                next
+            filename = df.filename.encode('utf8')
+            self.request.response.write("Adding data file %s\n" % filename)
+            tw.addDataFile(filename, stream_data(df), overwrite_existing=False)
+
         try:
             self.request.response.write("Generating PDF for %s...\n" % context.id)
             tex = generator(context).tex()
