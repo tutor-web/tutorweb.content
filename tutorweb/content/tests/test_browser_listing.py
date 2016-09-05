@@ -198,14 +198,14 @@ class ListingViewTest(IntegrationTestCase):
         self.assertEquals(
             self.getView().quizUrl(),
             "http://nohost/plone/++resource++tutorweb.quiz/quiz.html" +
-            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync" +
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec2%2Fquizdb-sync"
         )
         # For the tutorial above it formulates a link to the first lecture
         self.path = 'dept1/tut1'
         self.assertEquals(
             self.getView().quizUrl(),
             "http://nohost/plone/++resource++tutorweb.quiz/quiz.html" +
-            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync" +
+            "?lecUri=http%3A%2F%2Fnohost%2Fplone%2Fdept1%2Ftut1%2Flec1%2Fquizdb-sync"
         )
 
         # Create a new tutorial with no lectures, not going to be very
