@@ -60,7 +60,7 @@
     <browser:page name="drill-settings"
       for="tutorweb.content.schema.ILecture"
       class=".drill_settings.DrillSettingsView"
-      permission="cmf.ManagePortal"
+      permission="cmf.ModifyPortalContent"
       />
 
     <browser:page name="tex"
