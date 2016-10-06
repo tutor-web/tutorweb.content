@@ -280,20 +280,21 @@ class TexGenerator(object):
         # Acknowledgements
         if len(getattr(tutorial, 'sponsors', [])) > 0:
             self.writeTeX([
-                '{\\bf ACKNOWLEDGEMENTS}',
-                ' ',
+                '\n\n',
                 '\\vspace{12pt}',
+                '{\\small'
+                '{\\bf Acknowledgements}',
+                ' ',
+                tutorial.sponsors_description,
             ])
             for rel in tutorial.sponsors:
                 institution = rel.to_object;
                 self.writeTeX([
-                    '\\begin{tabular}{p{6cm}l}',
-                    institution.title,
-                    institution.url,
-                    '& \\resizebox{3cm}{!}{' + convertImage(institution.logo) + '}',
-                    '\\end{tabular}',
+                    '\n\n',
+                    institution.text,
+                    '\\\\ {\\tt %s}' % institution.url.strip(),
                 ])
-            self.writeTeX([tutorial.sponsors_description])
+            self.writeTeX(['}\n\n'])
 
         # ToC
         self.writeTeX(['\\newpage', '\\tableofcontents', '\\newpage'])

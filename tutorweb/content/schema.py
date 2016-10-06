@@ -361,3 +361,11 @@ class IInstitution(model.Schema):
         title=_(u'Logo'),
         description=_(u'The institution logo'),
         required=False)
+    text = RichText(
+        title=u"Text",
+        description=_(u'Some words about this sponsor, e.g. EU required text'),
+        default_mime_type='text/html',
+        output_mime_type='text/html',
+        allowed_mime_types=('text/plain', 'text/html', 'text/x-tex', 'text/restructured', 'text/structured',),
+        default=u"",
+        required=False)

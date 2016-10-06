@@ -133,16 +133,17 @@
 
   <div class="sponsors" tal:condition="python:(context.sponsors is not None and len(context.sponsors) > 0) or context.sponsors_description">
     <h3>Sponsors</h3>
-    <tal:t tal:repeat="rel context/sponsors">
-      <a href="#"
-         tal:define="s nocall:rel/to_object"
-         tal:attributes="href s/url;">
-        <img tal:define="scale s/@@images"
-             tal:replace="structure python: scale.scale('logo').tag()"
-             />
-      </a>
-    </tal:t>
-    <p tal:replace="structure context/sponsors_description/output"></p>
+    <ul><tal:t tal:repeat="rel context/sponsors">
+      <li class="sponsor" tal:define="s nocall:rel/to_object">
+        <a href="#" class="logo" tal:attributes="href s/url;">
+          <img tal:define="scale s/@@images"
+               tal:replace="structure python: scale.scale('logo').tag()"
+               />
+        </a>
+        <p tal:condition="python:s.text" tal:replace="structure s/text/output"></p>
+      </li>
+    </tal:t></ul>
+    <p tal:condition="python:context.sponsors_description" tal:replace="structure context/sponsors_description/output"></p>
   </div>
 
 </metal:content-core>
