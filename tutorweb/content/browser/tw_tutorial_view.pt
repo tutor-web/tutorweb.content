@@ -15,8 +15,10 @@
 <metal:content-core fill-slot="content-core" tal:define="listing view/lectureListing">
 
   <ul class="tw-actions">
-    <li><a tal:attributes="href view/quizUrl">
-      Take a drill on <span tal:content="python:listing[0]['title']"></span></a></li>
+    <tal:t tal:condition="python:len(listing) > 0">
+      <li><a tal:attributes="href view/quizUrl">
+        Take a drill on <span tal:content="python:listing[0]['title']"></span></a></li>
+    </tal:t>
     <li><a tal:attributes="href string:${context/absolute_url}/@@download-pdf">
         <img src="pdf.png" tal:attributes="src string:${context/absolute_url}/pdf.png">
         Download tutorial notes
