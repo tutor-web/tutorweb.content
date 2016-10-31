@@ -34,7 +34,7 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
             {
                 '_type': 'tw_latexquestion',
                 'id': u'q03',
-                'title': 'Sum',
+                'title': u'Sum',
                 'processLatex': True,
                 'text': {
                     'contenttype': 'text/x-tex',
@@ -82,10 +82,10 @@ c.false)x = 21
         qns = [x for x in self.createSource("%ID camel       \n%title I'm a camel\n%Explanation  I   \nGot 2 humps, see")]
         self.assertEqual(qns, [{
             '_type': 'tw_latexquestion',
-            'id': 'camel',
-            'title': "I'm a camel",
+            'id': u'camel',
+            'title': u"I'm a camel",
             'processLatex': True,
-            'explanation': {'contenttype': 'text/x-tex', 'data': 'I\nGot 2 humps, see', 'encoding': 'utf-8'},
+            'explanation': {'contenttype': 'text/x-tex', 'data': u'I\nGot 2 humps, see', 'encoding': 'utf-8'},
         }])
 
     def test_multipleQns(self):
