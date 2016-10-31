@@ -41,41 +41,44 @@ def readQuestions(file):
     def finalise(item):
         # Convert rich text fields into dicts
         for field in ['text', 'explanation']:
-            if field in item:
-                item[field] = dict(
-                    contenttype=item['_defmime'],
-                    data=item[field],
-                    encoding='utf-8',
-                )
+            item[field] = dict(
+                contenttype=item['_defmime'],
+                data=item[field],
+                encoding='utf-8',
+            )
 
         # Unless otherwise marked, last item is correct
-        if 'choices' in item:
+        if len(item['choices']) > 0:
             # Has to be at least one correct answer, choose first if none marked
             if len([i for i in item['choices'] + item.get('finalchoices', []) if i['correct']]) == 0:
                 item['choices'][0]['correct'] = True
-
-        # Set portal type for content
-        if '_type' not in item:
-            item['_type'] = 'tw_latexquestion'
 
         # Tidy up and return
         del item['_defmime']
         del item['_deffield']
         return item
 
-    initialitem = dict(
-        processLatex=True,
-        _defmime='text/x-tex',
-        _deffield='text',
-        _type='tw_latexquestion',
-    )
-    item = initialitem.copy()
+    def newItem():
+        return dict(
+            processLatex=True,
+            _defmime='text/x-tex',
+            _deffield='text',
+            _type='tw_latexquestion',
+            id=None,
+            title=None,
+            text='',
+            choices=[],
+            finalchoices=[],
+            explanation='',
+        )
+
+    item = newItem()
     for line in (l.strip().decode('utf8') for l in file):
         if line == '%===':
             # Separator, return this and move on to next item
             if item.get('id', None):
                 yield finalise(item)
-            item = initialitem.copy()
+            item = newItem()
 
         elif re.search(r'%ID\s+', line):
             item['id'] = line.replace('%ID', '', 1).strip()
@@ -101,10 +104,8 @@ def readQuestions(file):
 
         elif line.startswith('%Explanation'):
             # Any un %'ed lines are now part of the explanation
-            initExplanation = line.replace('%Explanation', '', 1).strip()
             item['_deffield'] = 'explanation'
-            if initExplanation:
-                item[item['_deffield']] = initExplanation
+            item[item['_deffield']] = line.replace('%Explanation', '', 1).strip()
 
         elif re.search(r'%format\s+', line):
             # Format tag: Don't understand anything other than LaTeX
@@ -130,8 +131,6 @@ def readQuestions(file):
                 item['_deffield']='choices'
 
             # Add to field
-            if item['_deffield'] not in item:
-                item[item['_deffield']] = []
             item[item['_deffield']].append(dict(
                 text=re.sub(r'^.*?\)\s*', '', line),
                 #NB: if in the form a), then the following is still false.

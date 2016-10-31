@@ -287,12 +287,49 @@ A man walks into a tree
         """)
         # Browser returned to lecture page
         self.assertEqual(browser.url, 'http://nohost/plone/dept1/tut1/lec2')
-        # Question still has answered / correct values
+        # Question still has answered / correct values, title removed
         qn = self.getObject('dept1/tut1/lec2/q88')
-        self.assertEqual(qn.title, u'Imported question')
+        self.assertEqual(qn.title, None)
         self.assertEqual(qn.text.raw, u'A man walks into a tree\n')
         self.assertEqual(qn.timesanswered, 999)
         self.assertEqual(qn.timescorrect, 990)
+
+    def test_replaceAllValues(self):
+        browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
+%ID     q88
+%title  Imported question
+%format latex
+A man walks into a bar
+a)      $T_h = a$
+b)      $T_h = b$
+xa.true)      ouch, it was an iron bar.
+%r 22
+%n 19
+        """)
+        qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.choices, [
+            {'text': u'$T_h = a$', 'correct': False},
+            {'text': u'$T_h = b$', 'correct': False},
+        ])
+        self.assertEqual(qn.finalchoices, [
+            {'text': u'ouch, it was an iron bar.', 'correct': True},
+        ])
+
+        # Upload a new version, without finalchoices and less questions
+        browser = self.uploadTeX('http://nohost/plone/dept1/tut1/lec2', """
+%ID     q88
+%title  Imported question
+%format latex
+A man walks into a bar
+a.true)      $T_h = x$
+%r 22
+%n 19
+        """)
+        qn = self.getObject('dept1/tut1/lec2/q88')
+        self.assertEqual(qn.choices, [
+            {'text': u'$T_h = x$', 'correct': True},
+        ])
+        self.assertEqual(qn.finalchoices, [])
 
     def uploadTeX(self, lecUrl, tex):
         import mechanize

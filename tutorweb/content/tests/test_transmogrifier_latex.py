@@ -46,6 +46,7 @@ We use that $\log(a^x b^y) = x \log a + y \log b$. By rules for logarithm we get
                     {'correct': False, 'text': u'$x = 190$ and $y = 20$.'},
                     {'correct': False, 'text': u'$x = 20$ and $y = 20$.'}
                 ],
+                'finalchoices': [],
                 'explanation': {
                     'contenttype': 'text/x-tex',
                     'data': u'We use that $\\log(a^x b^y) = x \\log a + y \\log b$. By rules for logarithm we get the sum\n',
@@ -84,7 +85,10 @@ c.false)x = 21
             '_type': 'tw_latexquestion',
             'id': u'camel',
             'title': u"I'm a camel",
+            'text': {'contenttype': 'text/x-tex', 'data': '', 'encoding': 'utf-8'},
             'processLatex': True,
+            'choices': [],
+            'finalchoices': [],
             'explanation': {'contenttype': 'text/x-tex', 'data': u'I\nGot 2 humps, see', 'encoding': 'utf-8'},
         }])
 
@@ -229,7 +233,7 @@ e) Mauve
             dict(correct=False, text=u"Blue"),
             dict(correct=False, text=u"Mauve"),
         ])
-        self.assertTrue('finalchoices' not in qns[1])
+        self.assertEqual(qns[1]['finalchoices'], [])
 
     def test_image(self):
         imagetf = testImage()
@@ -295,6 +299,9 @@ e) Mauve
             out['processLatex'] = True
             out['text'] = out['text'].copy()
             out['text']['data'] += "\n"
+            for f in ['choices', 'finalchoices']:
+                if f not in out:
+                    out[f] = []
             return out
 
         qnHash = dict(
