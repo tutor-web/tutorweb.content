@@ -39,7 +39,7 @@
     <browser:page name="tex-import"
       for="tutorweb.content.schema.ILecture"
       class=".tex_questions.LectureTeXImport"
-      permission="cmf.ManagePortal"
+      permission="cmf.ModifyPortalContent"
       />
     <browser:page name="slide-copy"
       for="tutorweb.content.schema.ILecture"
