@@ -31,9 +31,9 @@ class DrillSettingsViewTest(IntegrationTestCase):
                 dict(key='base_tut_lec', value=u'0.003'),
             ],
         ), dict(
-            base_only = u'0.1',
-            base_tut = u'0.02',
-            base_tut_lec = u'0.003',
+            base_only=dict(value=u'0.1'),
+            base_tut=dict(value=u'0.02'),
+            base_tut_lec=dict(value=u'0.003'),
         ))
 
         # min/max properties override existing static values
@@ -46,12 +46,24 @@ class DrillSettingsViewTest(IntegrationTestCase):
                 dict(key='prop:max', value=u'1.0'),
             ],
             lec_settings=[
+            ],
+        ), dict(
+            prop=dict(min=u'0.1', max=u'1.0'),
+        ))
+        self.assertEqual(self.get_settings(
+            base_settings=dict(
+                prop = u'0.5',
+            ),
+            tut_settings=[
+                dict(key='prop:min', value=u'0.1'),
+                dict(key='prop:max', value=u'1.0'),
+            ],
+            lec_settings=[
                 dict(key='prop:max', value=u'2.0'),
             ],
-        ), {
-            'prop:min': u'0.1',
-            'prop:max': u'2.0',
-        })
+        ), dict(
+            prop=dict(max=u'2.0'),
+        ))
 
         # can override back to static value again
         self.assertEqual(self.get_settings(
@@ -65,6 +77,6 @@ class DrillSettingsViewTest(IntegrationTestCase):
             lec_settings=[
                 dict(key='prop', value=u'8.0'),
             ],
-        ), {
-            'prop': u'8.0',
-        })
+        ), dict(
+            prop=dict(value=u'8.0'),
+        ))
