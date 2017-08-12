@@ -146,4 +146,10 @@
       permission="zope2.View"
       />
 
+    <browser:page name="sync-all"
+      for="Products.CMFCore.interfaces.ISiteRoot"
+      class=".sync_all.SyncAllView"
+      permission="cmf.ManagePortal"
+      />
+
 </configure>

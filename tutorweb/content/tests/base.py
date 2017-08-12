@@ -183,9 +183,23 @@ class IntegrationTestCase(TestCase):
 class FunctionalTestCase(IntegrationTestCase):
     layer = TUTORWEB_CONTENT_FUNCTIONAL_TESTING
 
-    def getBrowser(self, url, user=USER_A_ID):
+    def getBrowser(self, url, user=USER_A_ID, streaming=False):
         """Create a browser, optionally with auth details in headers"""
+        import plone.testing._z2_testbrowser
+
+        if streaming:
+            old_getresponse = plone.testing._z2_testbrowser.Zope2Connection.getresponse
+            def newgetresponse(self):
+                if self.response.body == '':
+                    # Read stdout, and plonk data from there into body so rest will pick it up
+                    self.response.stdout.seek(0)
+                    out = self.response.stdout.read()
+                    self.response.body = out.split("\r\n\r\n")[-1]
+                return old_getresponse(self)
+            plone.testing._z2_testbrowser.Zope2Connection.getresponse = newgetresponse
+
         browser = Browser(self.layer['app'])
+
         if user:
             browser.addHeader('Authorization', 'Basic %s:%s' % (
                 user,
