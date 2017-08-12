@@ -27,12 +27,16 @@ class DrillSettingsView(JSONBrowserView):
                     # :min / :max property
                     if m.group(1) not in out:
                         out[m.group(1)] = dict()
-                    out[m.group(1)][m.group(2)] = v
+                    out[m.group(1)][m.group(2)] = v.strip()
                 else:
                     if k not in out:
                         out[k] = dict()
-                    out[k]['value'] = v
+                    out[k]['value'] = v.strip()
 
+            # Someone seems to have been setting :min == :max, creating needless noise
+            for (k, v) in out.iteritems():
+                if 'min' in v and 'max' in v and v['min'] == v['max']:
+                    out[k] = dict(value=v['max'])
             return out
 
         registry = queryUtility(IRegistry)

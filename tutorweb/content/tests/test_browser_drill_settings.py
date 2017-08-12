@@ -80,3 +80,20 @@ class DrillSettingsViewTest(IntegrationTestCase):
         ), dict(
             prop=dict(value=u'8.0'),
         ))
+
+        # We munge :min == :max as a value
+        self.assertEqual(self.get_settings(
+            base_settings=dict(
+                prop = u'0.5',
+            ),
+            tut_settings=[
+                dict(key='prop:min', value=u'0.1'),
+                dict(key='prop:max', value=u'1.0'),
+            ],
+            lec_settings=[
+                dict(key='prop:min', value=u'0.4 '), # NB: Make sure we're stripping whitespace
+                dict(key='prop:max', value=u'0.4'),
+            ],
+        ), dict(
+            prop=dict(value=u'0.4'),
+        ))
