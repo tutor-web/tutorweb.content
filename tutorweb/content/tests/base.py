@@ -54,6 +54,10 @@ class TestFixture(PloneSandboxLayer):
         setup = getToolByName(portal, 'portal_setup')
         setup.runImportStepFromProfile('profile-collective.alias:default', 'typeinfo')
 
+        # Configure default chain, so tutorweb.quizdb can publish content
+        workflowTool = getToolByName(portal, 'portal_workflow')
+        workflowTool.setDefaultChain("simple_publication_workflow")
+
         # Creates some users
         acl_users = getToolByName(portal, 'acl_users')
         mtool = getToolByName(portal, 'portal_membership')
