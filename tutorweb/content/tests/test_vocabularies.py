@@ -25,6 +25,7 @@ Coin awards for students:
 * ``prob_template``: Probability that a student will get a question template instead of a regular question. Default 0.1
 * ``grade_algorithm``: Grading algorithm to use. One of weighted, ratiocorrect. Default 'weighted'
 * ``chat_competent_grade``: If a student gets a grade higher than this in a lecture, they can be a tutor. Default None
+* ``grade_alpha``: Default 0.125
          """)
          self.assertEqual(settings, [
              dict(name='award_lecture_answered', desc='Milli-SMLY awarded for getting grade 5 in a lecture.', default=1000),
@@ -32,6 +33,7 @@ Coin awards for students:
              dict(name='prob_template', desc='Probability that a student will get a question template instead of a regular question.', default=0.1),
              dict(name='grade_algorithm', desc='Grading algorithm to use. One of weighted, ratiocorrect.', default='weighted'),
              dict(name='chat_competent_grade', desc='If a student gets a grade higher than this in a lecture, they can be a tutor.', default=None),
+             dict(name='grade_alpha', desc='', default=0.125),
          ])
 
 class LectureSettingsVocabularyTest(IntegrationTestCase):

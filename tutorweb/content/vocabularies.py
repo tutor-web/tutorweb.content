@@ -26,7 +26,7 @@ def parseSettingsFile(settingsDoc):
     out = []
     with open(settingsDoc, 'r') as f:
         for line in f:
-            m = re.match(r'^\* ``(.*)``: (.*) Default (.*)', line)
+            m = re.match(r'^\* ``(.*)``: (.*)Default (.*)', line)
             if not m:
                 continue
 
@@ -44,7 +44,7 @@ def parseSettingsFile(settingsDoc):
                     except ValueError:
                         pass
 
-            out.append(dict(name=m.group(1), desc=m.group(2), default=default))
+            out.append(dict(name=m.group(1), desc=m.group(2).strip(), default=default))
     return out
 
 
