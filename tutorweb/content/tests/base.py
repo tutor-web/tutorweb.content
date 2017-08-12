@@ -1,8 +1,10 @@
 from unittest import TestCase
+import os.path
 import tempfile
 
 import transaction
 
+from App.config import getConfiguration
 from zope.app.intid.interfaces import IIntIds
 from zope.component import getUtility
 from zope.event import notify
@@ -43,6 +45,13 @@ class TestFixture(PloneSandboxLayer):
         xmlconfig.includeOverrides(configurationContext, 'overrides.zcml', tutorweb.content)
         xmlconfig.include(configurationContext, 'configure.zcml', collective.alias)
         configurationContext.execute_actions()
+
+        config = getConfiguration()
+        if not hasattr(config, 'product_config'):
+            config.product_config = {}
+        config.product_config['tutorweb.content'] = {
+            'settings-documentation': os.path.join(os.path.dirname(__file__), 'example_settings.rst'),
+        }
 
         # https://github.com/plone/plone.app.event/issues/81#issuecomment-23930996
         installProduct(app, 'Products.DateRecurringIndex')
