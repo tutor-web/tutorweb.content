@@ -27,11 +27,11 @@ class DrillSettingsView(JSONBrowserView):
                     # :min / :max property
                     if m.group(1) not in out:
                         out[m.group(1)] = dict()
-                    out[m.group(1)][m.group(2)] = v.strip()
+                    out[m.group(1)][m.group(2)] = str(v).strip()
                 else:
                     if k not in out:
                         out[k] = dict()
-                    out[k]['value'] = v.strip()
+                    out[k]['value'] = str(v).strip()
 
             # Someone seems to have been setting :min == :max, creating needless noise
             for (k, v) in out.iteritems():

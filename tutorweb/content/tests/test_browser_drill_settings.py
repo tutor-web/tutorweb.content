@@ -97,3 +97,19 @@ class DrillSettingsViewTest(IntegrationTestCase):
         ), dict(
             prop=dict(value=u'0.4'),
         ))
+
+        # Floats are fine too
+        self.assertEqual(self.get_settings(
+            base_settings=dict(
+                prop = u'0.5',
+            ),
+            tut_settings=[
+                dict(key='prop', value=0.2),
+            ],
+            lec_settings=[
+                dict(key='plop:max', value=0.8),
+            ],
+        ), dict(
+            prop=dict(value=u'0.2'),
+            plop=dict(max=u'0.8'),
+        ))
