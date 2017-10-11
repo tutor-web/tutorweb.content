@@ -113,3 +113,17 @@ class DrillSettingsViewTest(IntegrationTestCase):
             prop=dict(value=u'0.2'),
             plop=dict(max=u'0.8'),
         ))
+
+        # We convert award_registered into :registered
+        self.assertEqual(self.get_settings(base_settings=dict(), tut_settings=[], lec_settings=[
+            dict(key='award_rogistered_argle', value=u'0.7'),
+            dict(key='award_registered_argle', value=u'0.8'),
+            dict(key='award_registered_argle:max', value=u'0.9'),
+            dict(key='award_registered_bargle', value=u'1.0'),
+            dict(key='award_registered_cargle:shape', value=u'1.1'),
+        ]), {
+            "award_rogistered_argle": dict(value=u'0.7'),
+            "award_argle:registered": dict(value=u'0.8', max=u'0.9'),
+            "award_bargle:registered": dict(value=u'1.0'),
+            "award_cargle:registered": dict(shape=u'1.1'),
+        })

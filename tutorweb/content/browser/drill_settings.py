@@ -21,8 +21,11 @@ class DrillSettingsView(JSONBrowserView):
             """Take iterator of single values, combine everything into a dict"""
             out = dict()
             for (k, v) in settings:
-                m = re.match("(.*):(min|max|shape)$", k)
+                # Bodge award_registered_* -> award_*:registered
+                if "award_registered" in k:
+                    k = re.sub("^award_registered_([^:]+)(:min|:max|:shape|)$", "award_\\1:registered\\2", k)
 
+                m = re.match("(.*):(min|max|shape)$", k)
                 if m:
                     # :min / :max property
                     if m.group(1) not in out:
