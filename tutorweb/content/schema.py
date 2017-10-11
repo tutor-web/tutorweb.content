@@ -12,6 +12,7 @@ from plone.supermodel import model
 from collective.z3cform.datagridfield import DictRow
 
 from tutorweb.content import _
+from tutorweb.content.vocabularies import variantsVocab
 
 
 class ILaTeXQuestionAnswer(model.Schema):
@@ -28,6 +29,11 @@ class ILectureSettings(model.Schema):
         title=_(u"Setting"),
         vocabulary='tutorweb.content.vocabularies.lectureSettings',
         required=True)
+    variant = schema.Choice(
+        title=_(u"Variant"),
+        vocabulary=variantsVocab,
+        default=u'',
+        required=False)
     value = schema.TextLine(
         title=_(u'Value'),
         required=True)

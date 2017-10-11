@@ -4,7 +4,7 @@ from App.config import getConfiguration
 
 from zope.interface import implements
 from zope.schema.interfaces import IVocabularyFactory
-from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 from plone.registry.interfaces import IRegistry
 
@@ -68,3 +68,9 @@ class LectureSettingsVocabulary(object):
         return SimpleVocabulary(terms)
 
 LectureSettingsVocabularyFactory = LectureSettingsVocabulary()
+
+
+variantsVocab = SimpleVocabulary([
+    SimpleTerm(value=u'', title=(u'default')),
+    SimpleTerm(value=u'registered', title=(u'registered (student is subscribed to a course)')),
+])

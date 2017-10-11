@@ -127,3 +127,19 @@ class DrillSettingsViewTest(IntegrationTestCase):
             "award_bargle:registered": dict(value=u'1.0'),
             "award_cargle:registered": dict(shape=u'1.1'),
         })
+
+        # We add :registered to arbitary properties with variant set
+        self.assertEqual(self.get_settings(base_settings={
+            "global:min:registered": u"2",
+            "global:max": u"5",
+        }, tut_settings=[], lec_settings=[
+            dict(key='prop', value=u'0.7'),
+            dict(key='prop:max', variant=u'registered', value=u'0.8'),
+            dict(key='plop', variant=u'registered', value=u'0.9'),
+        ]), {
+            'global:registered': {'min': '2'},
+            'global': {'max': '5'},
+            "prop": dict(value='0.7'),
+            "prop:registered": dict(max='0.8'),
+            "plop:registered": dict(value='0.9'),
+        })

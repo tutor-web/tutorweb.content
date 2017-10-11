@@ -15,26 +15,38 @@ class DrillSettingsView(JSONBrowserView):
             """Settings are stored as list of dicts, turn into list of tuples"""
             if not settings:
                 return []
-            return ((i['key'], i['value']) for i in settings)
+            return ((i['key'], i.get('variant', ''), i['value']) for i in settings)
+
+        def tlate_registry(settings):
+            for (k, v) in settings.items():
+                if k.endswith(':registered'):
+                    k = k[:k.rindex(':registered')]
+                    variant = "registered"
+                else:
+                    variant = ''
+                yield (k, variant, v)
 
         def combine_settings(settings):
             """Take iterator of single values, combine everything into a dict"""
             out = dict()
-            for (k, v) in settings:
+            for (k, variant, v) in settings:
                 # Bodge award_registered_* -> award_*:registered
-                if "award_registered" in k:
-                    k = re.sub("^award_registered_([^:]+)(:min|:max|:shape|)$", "award_\\1:registered\\2", k)
+                if k.startswith("award_registered"):
+                    k = re.sub("^award_registered_", "award_", k)
+                    variant = "registered"
 
                 m = re.match("(.*):(min|max|shape)$", k)
                 if m:
-                    # :min / :max property
-                    if m.group(1) not in out:
-                        out[m.group(1)] = dict()
-                    out[m.group(1)][m.group(2)] = str(v).strip()
+                    k = m.group(1)
+                    prop = m.group(2) # :min / :max property
                 else:
-                    if k not in out:
-                        out[k] = dict()
-                    out[k]['value'] = str(v).strip()
+                    prop = 'value'
+                if variant:
+                    k = "%s:%s" % (k, variant)
+
+                if k not in out:
+                    out[k] = dict()
+                out[k][prop] = str(v).strip()
 
             # Someone seems to have been setting :min == :max, creating needless noise
             for (k, v) in out.iteritems():
@@ -49,7 +61,7 @@ class DrillSettingsView(JSONBrowserView):
         # Combine, later items override previous ones
         out = {}
         for iter in (
-                registry.get('tutorweb.content.lectureSettings', ()).items(),
+                tlate_registry(registry.get('tutorweb.content.lectureSettings', ())),
                 tlate(aq_parent(self.context).settings),
                 tlate(self.context.settings)):
             out.update(combine_settings(iter))
