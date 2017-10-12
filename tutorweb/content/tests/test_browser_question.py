@@ -2,7 +2,7 @@
 from zope.publisher.interfaces import NotFound
 
 from plone.app.testing import login
-from plone.namedfile.file import NamedBlobImage
+from plone.namedfile.file import NamedBlobImage, NamedBlobFile
 from Products.CMFCore.utils import getToolByName
 
 from ..datauri import encodeDataUri
@@ -97,6 +97,28 @@ class LaTeXQuestionStructTest(IntegrationTestCase):
             title=u'qtd image question',
             text=self.doTransform('Here is some text with SVG below')
                 + '<img class="mainfigure" src="%s" />' % encodeDataUri(imageContents, "image/svg"),
+            choices=[],
+            shuffle=[],
+            answer=dict(
+                correct=[],
+                explanation='',
+            )
+        ))
+
+        # GeoGebra files turn into hrefs with data URIs
+        self.assertEqual(self.questionToDict(dict(
+            title="qtd image question",
+            text=self.rtv("Here is some text with a GGB below"),
+            image=NamedBlobFile(
+                data="GGB Innit",
+                contentType='application/vnd.geogebra.file',
+                filename=u'my.ggb',
+            ),
+        )), dict(
+            _type='multichoice',
+            title=u'qtd image question',
+            text=self.doTransform('Here is some text with a GGB below')
+                + '<a class="geogebra_applet" download="my.ggb" href="data:application/vnd.geogebra.file;base64,R0dCIElubml0">Click to download applet</a>',
             choices=[],
             shuffle=[],
             answer=dict(

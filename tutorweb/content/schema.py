@@ -62,7 +62,7 @@ class ILaTeXQuestion(model.Schema):
         output_mime_type='text/html',
         allowed_mime_types=('text/html', 'text/x-tex',),
         required=False)
-    image = NamedBlobImage(
+    image = NamedBlobFile(
         title=_(u'Question Image'),
         description=_(u'An image associated to the question'),
         required=False)

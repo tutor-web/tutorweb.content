@@ -4,6 +4,7 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from zope.publisher.interfaces import NotFound
 
 from plone.memoize import ram
+from plone.namedfile import NamedImage
 from Products.CMFCore.utils import getToolByName
 
 from ..datauri import encodeDataUri
@@ -52,13 +53,30 @@ class BaseQuestionStruct(JSONBrowserView):
             ).getData().decode('utf-8')
         if hasattr(f, 'output'):  # i.e. a RichTextField
             return f.output
-        if hasattr(f, 'getImageSize'):  # i.e. a NamedBlobImage
-            size = f.getImageSize()
-            if size[0] <= 0:
-                return '<img class="mainfigure" src="%s" />' % (encodeDataUri(f.data, f.contentType))
-            return '<img class="mainfigure" src="%s" width="%d" height="%d" />' % ((
+        if hasattr(f, 'contentType'):  # i.e. a namedBlobFile
+            if f.contentType.startswith('image/'):
+                # Upgrade to a NamedImage
+                f = NamedImage(f.data, f.contentType, f.filename)
+                size = f.getImageSize()
+                if size[0] <= 0:
+                    return '<img class="mainfigure" src="%s" />' % (encodeDataUri(f.data, f.contentType))
+                return '<img class="mainfigure" src="%s" width="%d" height="%d" />' % ((
+                    encodeDataUri(f.data, f.contentType),
+                ) + size)
+
+            download_class = ''
+            download_thing = ''
+            if f.filename.endswith('.ggb'):
+                # TODO: Should get plone to work it out
+                f.contentType = 'application/vnd.geogebra.file'
+                download_class = "geogebra_applet"
+                download_thing = "applet"
+            return '<a class="%s" download="%s" href="%s">%s</a>' % (
+                download_class,
+                f.filename,
                 encodeDataUri(f.data, f.contentType),
-            ) + size)
+                " ".join(("Click to download", download_thing)),
+            )
         raise ValueError("Cannot interpret %s" % f)
 
 
