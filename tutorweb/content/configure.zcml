@@ -252,5 +252,13 @@
         handler="tutorweb.content.upgrades.reimportRegistry"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 17.0 -> 18.0"
+        description="Add extra transform steps"
+        source="17000"
+        destination="18000"
+        handler="tutorweb.content.setuphandlers.installTransforms"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>
