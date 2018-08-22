@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib2
 
 from Acquisition import aq_parent
 
@@ -85,12 +86,29 @@ class TexWriter(object):
                 f.write(binascii.a2b_base64(m.group(2)))
             return '\\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{%s}' % os.path.basename(os.path.splitext(outFile)[0])
 
+        def fetchImage(m):
+            if not(hasattr(self, '_imgcount')):
+                self._imgcount = 0
+            outFile = os.path.join(self.dir, 'img%d%s' % (
+                self._imgcount,
+                os.path.splitext(m.group(1))[1],
+            ))
+            self._imgcount += 1
+
+            with open(outFile, 'w') as f:
+                f.write(urllib2.urlopen(m.group(1)).read())
+            return '\\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{%s}' % os.path.basename(os.path.splitext(outFile)[0])
+
         with open(os.path.join(self.dir, 'exploded.tex'), 'w') as outputTeX:
-            outputTeX.write(re.sub(
+            tex = re.sub(
                 r'\\includegraphicsdata\{data:([^:}]+):base64,([^:}]+)\}',
                 replaceDataBlock,
-                tex,
-            ))
+                tex)
+            tex = re.sub(
+                r'\\includegraphics\{(https?://[^}]+)\}',
+                fetchImage,
+                tex)
+            outputTeX.write(tex)
 
     def close(self, keepOutput=False):
         """Get rid of temporary directory"""
