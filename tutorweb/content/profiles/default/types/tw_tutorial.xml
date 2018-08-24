@@ -15,6 +15,7 @@
    <element value="tw_lecture"/>
    <element value="Image"/>
    <element value="File"/>
+   <element value="Folder"/>
  </property>
 
  <!-- Class used for content items -->
