@@ -56,6 +56,7 @@ setup(
         target = plone
         [console_scripts]
         create_pdf = tutorweb.content.tex_generator:main
+        sync_all = tutorweb.content.browser.sync_all:script
     """,
     include_package_data=True,
     zip_safe=False,

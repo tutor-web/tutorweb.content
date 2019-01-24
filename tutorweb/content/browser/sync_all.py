@@ -2,6 +2,9 @@ import zope.event
 from Products.Five.browser import BrowserView
 from zope.lifecycleevent import ObjectModifiedEvent
 
+from tutorweb.content.script import scriptInit, scriptCommit
+
+
 class SyncAllView(BrowserView):
     def __call__(self):
         response = self.request.response
@@ -21,3 +24,29 @@ class SyncAllView(BrowserView):
 
             zope.event.notify(ObjectModifiedEvent(lec))
             response.write(" (notified)\n")
+
+
+def script():
+    import argparse
+    import transaction
+
+    parser = argparse.ArgumentParser(description='Sync Plone->MySQL')
+    parser.add_argument(
+        '--zope-conf',
+        help='Zope configuration file',
+    )
+    parser.add_argument(
+        '--debug',
+        default=False,
+        action='store_true',
+        help='Output debug messages',
+    )
+    args = parser.parse_args()
+    if args.debug:
+        sqllog = logging.getLogger('sqlalchemy.engine')
+        sqllog.addHandler(logging.StreamHandler())
+        sqllog.setLevel(logging.INFO)
+
+    app, site = scriptInit('tutor-web', configFile=args.zope_conf)
+    site.unrestrictedTraverse('@@sync-all')()
+    scriptCommit(app)
