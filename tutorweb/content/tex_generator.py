@@ -337,8 +337,17 @@ class TexGenerator(object):
             self.writeTeX([
                 '{\\bf References}',
                 lecture.pdf_reference,
-                '\\clearpage'
             ])
+        self.writeTeX([
+            '{\\bf Copyright}',
+            str(lecture.modified().year()) + ', ' + lecture.author + '\n',
+            "This work is licensed under the Creative Commons",
+            "Attribution-ShareAlike License. To view a copy of this license, visit",
+            "http://creativecommons.org/licenses/by-sa/1.0/ or send a letter to",
+            "Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305,",
+            "USA.",
+            '\\clearpage'
+        ])
 
     ############### TeX Slides
 
