@@ -6,5 +6,6 @@
     <dependency>profile-plone.app.contenttypes:default</dependency>
     <dependency>profile-collective.z3cform.datagridfield:default</dependency>
     <dependency>profile-collective.mathjax:default</dependency>
+    <dependency>profile-wildcard.foldercontents:default</dependency>
   </dependencies>
 </metadata>

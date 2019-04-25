@@ -43,6 +43,7 @@ setup(
         'collective.transmogrifier',
         'plone.app.transmogrifier',
         'transmogrify.dexterity',  
+        'wildcard.foldercontents',
         'zope.app.component',
     ],
     extras_require={
