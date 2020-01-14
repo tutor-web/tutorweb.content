@@ -2,6 +2,8 @@ import logging
 logger = logging.getLogger('tutorweb.content')
 
 from AccessControl import Unauthorized
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
@@ -53,6 +55,7 @@ class BulkAddStudentView(BrowserView):
             else:
                 self.uploadLog('%s (%s) already on course' % (id, email))
         self.context.reindexObject()
+        notify(ObjectModifiedEvent(self.context))
 
     def __call__(self):
         if 'userlist' in self.request.form:
