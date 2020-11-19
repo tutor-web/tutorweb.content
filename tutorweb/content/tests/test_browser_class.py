@@ -69,12 +69,14 @@ class BulkAddStudentViewTest(IntegrationTestCase):
         log = doAddUsers("""
 badgercamelferret
 moo@example.com
+baa@example.com baa baa123
         """)
         self.assertTrue("Creating new user moo@example.com" in log)
         self.assertTrue('"badgercamelferret" not a valid email address, skipping' in log)
         self.assertTrue("Adding moo@example.com (moo@example.com) to course" in log)
         self.assertEquals(c.students, [
             "moo@example.com",
+            'baa',
         ])
         self.assertEquals(self.getAllMemberEmails(), [
             ('Arnold@example.com', 'Arnold'),
@@ -82,6 +84,7 @@ moo@example.com
             ('', 'BigBoss'),
             ('Caroline@example.com', 'Caroline'),
             ('Daryl@example.com', 'Daryl'),
+            ('baa@example.com', 'baa'),
             ('moo@example.com', 'moo@example.com'),
             ('', 'test_user_1_'),
         ])
@@ -89,9 +92,11 @@ moo@example.com
         log = doAddUsers("""
 moo@example.com
 oink@example.com
+baa@example.com baa baa123
         """)
         self.assertEquals(c.students, [
             "moo@example.com",
+            "baa",
             "oink@example.com",
         ])
         self.assertEquals(sorted(self.getAllMemberEmails(), key=itemgetter(1, 0)), [
@@ -100,6 +105,7 @@ oink@example.com
             ('', 'BigBoss'),
             ('Caroline@example.com', 'Caroline'),
             ('Daryl@example.com', 'Daryl'),
+            ('baa@example.com', 'baa'),
             ('moo@example.com', 'moo@example.com'),
             ('oink@example.com', 'oink@example.com'),
             ('', 'test_user_1_'),
@@ -114,6 +120,7 @@ oink@example.com
         log = doAddUsers("dave@example.com")
         self.assertEquals(c.students, [
             "moo@example.com",
+            "baa",
             "oink@example.com",
             'dave@example.com',
         ])

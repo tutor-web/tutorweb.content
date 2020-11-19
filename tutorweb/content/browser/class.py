@@ -25,7 +25,17 @@ class BulkAddStudentView(BrowserView):
         rtool = getToolByName(self.context, 'portal_registration')
 
         self.uploadLog('Adding users to %s' % self.context.absolute_url())
-        for email in (e.lower() for e in emails):
+        for parts in (e.split() for e in emails):
+            if len(parts) == 0:
+                continue
+            email = parts[0].lower()
+
+            # Use e-mail for id if not provided
+            id = parts[1] if len(parts) > 1 else email
+
+            # If password is provided use it, otherwise assign a random password later
+            pwd = parts[2] if len(parts) > 2 else None
+
             if not rtool.isValidEmail(email):
                 self.uploadLog(
                     '"%s" not a valid email address, skipping'
@@ -33,17 +43,18 @@ class BulkAddStudentView(BrowserView):
                 )
                 continue
 
-            # We always use email as the id now
-            id = email
-
             if not(mtool.getMemberById(id)):
                 # User doesn't exist, create them first.
                 self.uploadLog('Creating new user %s' % id)
-                rtool.addMember(id, rtool.generatePassword(), properties=dict(
+                rtool.addMember(id, pwd or rtool.generatePassword(), properties=dict(
                     email=email,
                     username=id,
                 ))
-                rtool.registeredNotify(id)
+                if pwd is None:
+                    self.uploadLog('Creating new user %s and e-mailing a link' % id)
+                    rtool.registeredNotify(id)
+                else:
+                    self.uploadLog('Creating new user %s with password %s' % (id, pwd))
 
             # Ensure user is on the list
             if not getattr(self.context, 'students', None):

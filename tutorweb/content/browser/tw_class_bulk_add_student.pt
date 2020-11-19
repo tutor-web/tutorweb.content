@@ -10,7 +10,11 @@
 <metal:content-core fill-slot="content-core">
 
 <form method="POST" name="bulkaddstudent">
-  <label for="bulkaddstudent-userlist">User email addresses, one per line</label>
+  <label for="bulkaddstudent-userlist">User email addresses, one per line.</label>
+  <p>
+    You can optionally include an id and password, for example "student@university.org student password123".
+    If a password is not provided, new students will be e-mailed a link.
+  </p>
   <textarea name="userlist" id="bulkaddstudent-userlist" style="height: 10em;"></textarea>
   <input type="submit" name="submit" value="Upload" />
 </form>
