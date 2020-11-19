@@ -54,7 +54,11 @@ class BulkAddStudentView(BrowserView):
                     self.uploadLog('Creating new user %s and e-mailing a link' % id)
                     rtool.registeredNotify(id)
                 else:
-                    self.uploadLog('Creating new user %s with password %s' % (id, pwd))
+                    self.uploadLog('Creating new user %s with password %s - please explain terms & conditions to the user' % (id, pwd))
+                    mtool.getMemberById(id).setMemberProperties(dict(
+                        fullname=id,
+                        accept=True,
+                    ))
 
             # Ensure user is on the list
             if not getattr(self.context, 'students', None):
