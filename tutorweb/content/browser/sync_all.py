@@ -29,6 +29,7 @@ class SyncAllView(BrowserView):
 def script():
     import argparse
     import transaction
+    import logging
 
     parser = argparse.ArgumentParser(description='Sync Plone->MySQL')
     parser.add_argument(
