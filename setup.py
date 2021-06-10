@@ -30,6 +30,7 @@ setup(
         'setuptools',
         'collective.alias',
         'collective.mathjax',
+        'plone.app.iterate',
         'plone.app.contentlisting',
         'plone.app.contenttypes',
         'plone.app.dexterity',
