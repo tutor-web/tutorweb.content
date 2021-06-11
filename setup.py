@@ -43,7 +43,12 @@ setup(
         'collective.z3cform.datagridfield',
         'collective.transmogrifier',
         'plone.app.transmogrifier',
+        # NB: plone.app.transmogrifier needs archetypes, but doesn't declare it
+        'Products.Archetypes',
+        'Products.ATContentTypes',
         'transmogrify.dexterity',  
+        'zope.app.intid',
+        'plone.formwidget.contenttree',
         'wildcard.foldercontents',
         'zope.app.component',
     ],
