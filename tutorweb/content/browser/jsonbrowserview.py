@@ -2,7 +2,7 @@ import json
 import logging
 
 from AccessControl import Unauthorized
-from Globals import DevelopmentMode
+from App.config import getConfiguration
 from zope.publisher.interfaces import NotFound
 from zExceptions import Redirect, BadRequest
 
@@ -64,7 +64,7 @@ class JSONBrowserView(BrowserView):
                 message=str(ex),
             ))
         except Exception, ex:
-            if DevelopmentMode:
+            if getConfiguration().debug_mode:
                 import traceback
             logging.error("Failed call: " + self.request['URL'])
             logging.exception(ex)
@@ -73,5 +73,5 @@ class JSONBrowserView(BrowserView):
             return self.json_format(dict(
                 error=ex.__class__.__name__,
                 message=str(ex),
-                stacktrace=traceback.format_exc() if DevelopmentMode else '',
+                stacktrace=traceback.format_exc() if getConfiguration().debug_mode else '',
             ))
