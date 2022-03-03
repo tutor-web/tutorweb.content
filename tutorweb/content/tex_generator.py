@@ -89,15 +89,19 @@ class TexWriter(object):
         def fetchImage(m):
             if not(hasattr(self, '_imgcount')):
                 self._imgcount = 0
+            includegraphics_args = m.group(1) if m.group(1) else '[width=\linewidth,height=5cm,keepaspectratio]'
             outFile = os.path.join(self.dir, 'img%d%s' % (
                 self._imgcount,
-                os.path.splitext(m.group(1))[1],
+                os.path.splitext(m.group(2))[1],
             ))
             self._imgcount += 1
 
             with open(outFile, 'w') as f:
-                f.write(urllib2.urlopen(m.group(1)).read())
-            return '\\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{%s}' % os.path.basename(os.path.splitext(outFile)[0])
+                f.write(urllib2.urlopen(m.group(2)).read())
+            return '\\includegraphics%s{%s}' % (
+                includegraphics_args,
+                os.path.basename(os.path.splitext(outFile)[0]),
+            )
 
         with open(os.path.join(self.dir, 'exploded.tex'), 'w') as outputTeX:
             tex = re.sub(
@@ -105,7 +109,7 @@ class TexWriter(object):
                 replaceDataBlock,
                 tex)
             tex = re.sub(
-                r'\\includegraphics\{(https?://[^}]+)\}',
+                r'\\includegraphics(\[[^\]]*?\])?\{(https?://[^}]+)\}',
                 fetchImage,
                 tex)
             outputTeX.write(tex)
