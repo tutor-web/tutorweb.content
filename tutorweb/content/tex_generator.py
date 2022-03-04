@@ -1,4 +1,5 @@
 import binascii
+import cStringIO
 import mimetypes
 import os.path
 import re
@@ -9,6 +10,7 @@ import tempfile
 import urllib2
 
 from Acquisition import aq_parent
+from PIL import Image
 
 from Products.PortalTransforms.data import datastream
 from Products.CMFCore.utils import getToolByName
@@ -67,23 +69,27 @@ class TexWriter(object):
 
     def explodeTeX(self, tex):
         """Turn single TeX output into lots of files"""
-        def mimeToExt(mime):
-            if mime == 'application/postscript':
-                return '.eps'
-            else:
-                return mimetypes.guess_extension(mime)
-
         def replaceDataBlock(m):
             if not(hasattr(self, '_imgcount')):
                 self._imgcount = 0
+            mime = m.group(1)
+            file_data = binascii.a2b_base64(m.group(2))
             outFile = os.path.join(self.dir, 'img%d%s' % (
                 self._imgcount,
-                mimeToExt(m.group(1)),
+                '.eps',
             ))
             self._imgcount += 1
 
-            with open(outFile, 'w') as f:
-                f.write(binascii.a2b_base64(m.group(2)))
+            if mime == 'application/postscript':
+                with open(outFile, 'w') as f:
+                    f.write(file_data)
+            else:
+                img = Image.open(cStringIO.StringIO(file_data))
+                try:
+                    img.save(outFile)
+                except ValueError:
+                    # Pillow can't write RGBA files to eps
+                    img.convert('CMYK').save(outFile)
             return '\\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{%s}' % os.path.basename(os.path.splitext(outFile)[0])
 
         def fetchImage(m):

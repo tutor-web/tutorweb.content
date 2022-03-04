@@ -30,7 +30,7 @@ class TexWriterTest(unittest.TestCase):
         """.strip())
         self.assertEqual(set(os.listdir(tw.dir)), set((
             'exploded.tex',
-            'img0.gif',
+            'img0.eps',
             'img1.png',
             'img2.png',
         )))
@@ -45,6 +45,7 @@ class TexWriterTest(unittest.TestCase):
 
 \\end{document}
         """.strip())
-        self.assertEqual(slurp(tw.dir, 'img0.gif')[0:6], b'GIF89a')
+        # NB: .gif got converted to .eps
+        self.assertEqual(slurp(tw.dir, 'img0.eps')[0:4], b'%!PS')
         self.assertEqual(slurp(tw.dir, 'img1.png')[0:4], b'\x89PNG')
         self.assertEqual(slurp(tw.dir, 'img2.png')[0:4], b'\x89PNG')
