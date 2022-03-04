@@ -32,7 +32,8 @@ Core list of settings
 Plone stores a list of all settings, and what their defaults should be. You can alter this by going here::
 
     http://zoot:8080/portal_registry/edit/tutorweb.content.lectureSettings
-"""), r"""\section{Tutor-web drill settings}\label{tutor-web-drill-settings}
+"""), r"""\hypertarget{tutor-web-drill-settings}{%
+\section{Tutor-web drill settings}\label{tutor-web-drill-settings}}
 
 There are a bunch of key:value settings that can be used to control the
 behaviour of the drill interface.
@@ -40,7 +41,7 @@ behaviour of the drill interface.
 These can be set by doing one of:
 
 \begin{itemize}
-\itemsep1pt\parskip0pt\parsep0pt
+\tightlist
 \item
   Editing the relevant tutorial
 \item
@@ -52,7 +53,8 @@ These can be set by doing one of:
 For each lecture, the 2 lists of settings will be combined, the settings
 from a lecture winning over any matching settings from a tutorial.
 
-\subsection{Core list of settings}\label{core-list-of-settings}
+\hypertarget{core-list-of-settings}{%
+\subsection{Core list of settings}\label{core-list-of-settings}}
 
 Plone stores a list of all settings, and what their defaults should be.
 You can alter this by going here:
