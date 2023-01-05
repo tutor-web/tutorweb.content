@@ -30,11 +30,13 @@
       permission="cmf.ManagePortal"
       />
 
+    <!-- NB: This is the all-question LaTeX, not the slide LaTeX -->
     <browser:page name="tex"
       for="tutorweb.content.schema.ILecture"
       class=".tex_questions.LectureTeXView"
-      permission="cmf.ManagePortal"
+      permission="cmf.ModifyPortalContent"
       />
+    <!-- NB: This is the slide ReST -->
     <browser:page name="rst"
       for="tutorweb.content.schema.ILecture"
       class=".lecture.LectureRstView"
