@@ -1,0 +1,9 @@
+<sharing xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+         i18n:domain="plone">
+  <role
+      id="Teacher"
+      title="Is a teacher (can view questions and class student responses)"
+      permission="Manage portal"
+      i18n:attributes="title"
+      />
+</sharing>

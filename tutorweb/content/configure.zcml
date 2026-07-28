@@ -262,5 +262,13 @@
         handler="tutorweb.content.setuphandlers.installTransforms"
         sortkey="1"
         profile="tutorweb.content:default"/>
+    <genericsetup:upgradeStep
+        title="Upgrade 18.0 -> 19.0"
+        description="Make teacher role local"
+        source="18000"
+        destination="19000"
+        handler="tutorweb.content.upgrades.reimportTypesRolesSharing"
+        sortkey="1"
+        profile="tutorweb.content:default"/>
 
 </configure>

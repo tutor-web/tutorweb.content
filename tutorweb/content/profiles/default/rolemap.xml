@@ -3,5 +3,12 @@
     <role name="Teacher"/>
   </roles>
   <permissions>
+    <!-- Defined in tutorweb/quizdb/browser/configure.zcml -->
+    <permission name="Tutorweb: View student answers" acquire="False">
+      <role name="Manager" />
+      <role name="Teacher" />
+      <role name="Owner" />
+      <role name="Site Administrator" />
+    </permission>
   </permissions>
 </rolemap>

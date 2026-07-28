@@ -45,6 +45,16 @@ def reimportRolesWorkflow(context, logger=None):
     ])
 
 
+def reimportTypesRolesSharing(context, logger=None):
+    """Re-import types/workflow"""
+    reimportSteps(context, logger, [
+        'typeinfo',
+        'rolemap',
+        'workflow',
+        'sharing',
+    ])
+
+
 def updateLectureSettings(context, logger=None):
     """Update lecture settings dict"""
     def inSettings(settings, key):

@@ -53,7 +53,7 @@
  <action title="Student results" action_id="student-results"
     category="object" condition_expr=""
     url_expr="string:${object_url}/student-results" visible="True">
-  <permission value="Modify portal content"/>
+  <permission value="Tutorweb: View student answers"/>
  </action>
  <action title="Bulk add students" action_id="bulk-add-student"
     category="object" condition_expr=""
